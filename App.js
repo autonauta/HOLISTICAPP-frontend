@@ -9,19 +9,16 @@ import Calendar from './views/Calendar';
 import TherapistProfile from './views/TherapistProfile';
 import TherapistDocument from './views/TherapistDocument';
 import PasswordRecovery from './views/PasswordRecovery';
-import TESTVIEW from './views/TESTVIEW';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
-
 
 const Stack = createStackNavigator();
 
 function App() {
-  
   //---------------------------------End of render list function--------------------------------
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" headerMode="none">
+      <Stack.Navigator initialRouteName="Home" headerMode="none">
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Home" component={Main} />
@@ -29,7 +26,6 @@ function App() {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="Filters" component={Filters} />
         <Stack.Screen name="Calendar" component={Calendar} />
-        <Stack.Screen name="TESTVIEW" component={TESTVIEW} />
         <Stack.Screen name="TherapistProfile" component={TherapistProfile} />
         <Stack.Screen name="TherapistDocument" component={TherapistDocument} />
         <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />

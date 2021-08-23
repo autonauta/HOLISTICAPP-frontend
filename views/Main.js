@@ -11,20 +11,46 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
-import {Card, Button} from 'react-native-paper';
+import {Card} from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Navbar from '../views/Navbar';
 import Filters from '../views/Filters';
 import {API_URL, mainColor, secondaryColor, textColor1} from '../config';
 const defaultImage = require('../assets/avatar.png');
-//--------------------------MAIN EXPORT FUNCTION--------------------------
-function Main({navigation, route}) {
-  const {userLogged} = route.params;
-  const token = route.params.token;
-  const {userCalendar} = route.params;
+//--------------------------MAIN EXPORT FUNCTION------------------------------------------
+function Main({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  //------------------------------States for user data and user Calendar data----------------
+  const [userLogged, setUserLogged] = useState({});
+  const [userCalendar, setUserCalendar] = useState({});
+  const [token, setToken] = useState('');
+  //------------------------------Function for checking if the user is logged..............---
+  const isAuth = async () => {
+    try {
+      const token = await AsyncStorage.getItem('xauthtoken');
+
+      if (token !== null) {
+        setToken(token);
+        console.log(`Token found, user Logedin: ${token}`);
+        let user = await AsyncStorage.getItem('user');
+        let calendar = await AsyncStorage.getItem('userCalendar');
+        setUserLogged(JSON.parse(user));
+        setUserCalendar(JSON.parse(calendar));
+      } else {
+        console.log('No token found, no user logged in');
+        navigation.navigate('Login');
+      }
+    } catch (error) {
+      console.log(`Error in Async Storage from isAuth: ${error}`);
+    }
+  };
+  useEffect(() => {
+    isAuth();
+    getTherapistsData();
+  }, []);
   //------------------------------Function for Querying the therapists available..............
   const getTherapistsData = () => {
     setLoading(true);
@@ -40,6 +66,7 @@ function Main({navigation, route}) {
       console.error(error);
     }
   };
+  //------------------------------Function for Rendering the Therapists cards..............
   const renderList = item => {
     const getStars = (rating, image) => {
       var starString = '';
@@ -85,9 +112,6 @@ function Main({navigation, route}) {
       </Card>
     );
   };
-  useEffect(() => {
-    getTherapistsData();
-  }, []);
   return (
     <View style={styles.container}>
       <StatusBar

@@ -24,22 +24,7 @@ const iconImage = require('../assets/icon.png');
 function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const _isAuth = async () => {
-    try {
-      const token = await AsyncStorage.getItem('xauthtoken');
 
-      if (token !== null) {
-        console.log(`Token found, user Logedin`);
-        let userLogged = await AsyncStorage.getItem('user');
-        let userCalendar = await AsyncStorage.getItem('userCalendar');
-        userLogged = JSON.parse(userLogged);
-        userCalendar = JSON.parse(userCalendar);
-        navigation.navigate('Home', {userLogged, token, userCalendar});
-      } else console.log('No token found, no user logged in');
-    } catch (error) {
-      console.log(`From is Auth: ${error}`);
-    }
-  };
   const _storeData = async (keyName, value) => {
     try {
       await AsyncStorage.setItem(keyName, value);
@@ -48,10 +33,6 @@ function Login({navigation}) {
     }
   };
   //------------------------Codigo para tamaños de letra responsivos-------------------------------
-
-  useEffect(() => {
-    _isAuth();
-  }, []);
 
   const submitData = () => {
     fetch(`${API_URL}/auth`, {
@@ -77,7 +58,7 @@ function Login({navigation}) {
           console.log(JSON.stringify(userLogged));
           setPassword('');
           setEmail('');
-          navigation.navigate('Home', {userLogged, userCalendar, token});
+          navigation.navigate('Home');
         }
       })
       .catch(err => {

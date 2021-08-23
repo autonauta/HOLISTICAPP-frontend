@@ -8,8 +8,6 @@ import {
   Dimensions,
   TextInput,
   Alert,
-  FlatList,
-  ActivityIndicator,
   ScrollView,
   Pressable,
   PixelRatio,
