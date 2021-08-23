@@ -11,7 +11,13 @@ import {
 } from 'react-native';
 import {Button} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {API_URL, mainColor, secondaryColor} from '../config';
+import {
+  API_URL,
+  mainColor,
+  secondaryColor,
+  textColor1,
+  textColor2,
+} from '../config';
 
 const iconImage = require('../assets/icon.png');
 
@@ -169,7 +175,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: secondaryColor,
+    backgroundColor: mainColor,
     paddingTop: 20,
     paddingLeft: 10,
     paddingRight: 10,
@@ -208,7 +214,8 @@ const styles = StyleSheet.create({
   button: {
     width: BUTTON_WIDTH,
     marginTop: BUTTON_MARGIN_TOP,
-    backgroundColor: mainColor,
+    backgroundColor: '#1fc362',
+    color: 'black',
   },
   textButtonsContainer: {
     width: '100%',

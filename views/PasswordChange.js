@@ -11,7 +11,13 @@ import {
   Alert,
 } from 'react-native';
 
-import {API_URL, mainColor, secondaryColor} from '../config';
+import {
+  API_URL,
+  mainColor,
+  secondaryColor,
+  textColor1,
+  textColor2,
+} from '../config';
 
 function PasswordChange({
   navigation,
@@ -42,7 +48,7 @@ function PasswordChange({
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', JSON.parse(token));
+    myHeaders.append('xAuthToken', token);
     return fetch(`${API_URL}/profile/edit`, {
       method: 'post',
       headers: myHeaders,
@@ -142,10 +148,11 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: Dimensions.get('window').width,
-    backgroundColor: 'black',
-    borderRadius: 20,
+    paddingTop: 10,
+    backgroundColor: mainColor,
+    borderTopRightRadius: 60,
     alignItems: 'center',
-    shadowColor: secondaryColor,
+    shadowColor: 'black',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -169,23 +176,21 @@ const styles = StyleSheet.create({
   },
   buttonAplicar: {
     borderRadius: 10,
-    backgroundColor: mainColor,
+    backgroundColor: '#1fc362',
     padding: 10,
     elevation: 2,
     width: '30%',
   },
   textStyle: {
-    color: 'white',
+    color: textColor2,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   modalText: {
     width: '100%',
     textAlign: 'center',
-    color: 'white',
+    color: textColor2,
     fontSize: 30,
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
     marginBottom: 25,
   },
   formView: {

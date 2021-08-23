@@ -9,7 +9,13 @@ import {
   TextInput,
 } from 'react-native';
 import {Button} from 'react-native-paper';
-import {API_URL, mainColor, secondaryColor} from '../config';
+import {
+  API_URL,
+  mainColor,
+  secondaryColor,
+  textColor1,
+  textColor2,
+} from '../config';
 
 const iconImage = require('../assets/icon.png');
 
@@ -129,7 +135,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: secondaryColor,
+    backgroundColor: mainColor,
     paddingTop: 20,
   },
   title: {
@@ -160,7 +166,7 @@ const styles = StyleSheet.create({
   button: {
     width: '90%',
     marginTop: 40,
-    backgroundColor: mainColor,
+    backgroundColor: '#1fc362',
   },
   textButton: {
     marginTop: 30,

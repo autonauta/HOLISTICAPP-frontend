@@ -8,7 +8,8 @@ import {
   Dimensions,
 } from 'react-native';
 import {Button} from 'react-native-paper';
-const defaultImage = require('../assets/user.png');
+import {mainColor, secondaryColor, textColor1, textColor2} from '../config';
+const defaultImage = require('../assets/avatar.png');
 const noDescription =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed felis eget velit aliquet sagittis id consectetur purus ut. Nunc mi ipsum faucibus vitae aliquet nec ullamcorper sit amet.\n Volutpat odio facilisis mauris sit amet massa vitae tortor condimentum. Pellentesque nec nam aliquam sem et tortor consequat. Id eu nisl nunc mi ipsum faucibus vitae. Quam elementum pulvinar etiam non. Volutpat diam ut venenatis tellus in metus. Malesuada fames ac turpis egestas maecenas. Urna nec tincidunt praesent semper feugiat nibh sed pulvinar. Mattis pellentesque id nibh tortor id aliquet lectus proin.';
 //--------------------------MAIN EXPORT FUNCTION--------------------------
@@ -26,7 +27,8 @@ function Therapist({navigation, route}) {
       typeof image === 'undefined' ||
       image === null ||
       typeof image === 'string' ||
-      isEmpty(image) == true
+      isEmpty(image) == true ||
+      image.uri == null
     ) {
       return defaultImage;
     } else {
@@ -67,18 +69,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'black',
+    backgroundColor: secondaryColor,
   },
   top: {
     width: '100%',
-    height: 150,
-    backgroundColor: '#2a1d7d',
+    height: 100,
+    backgroundColor: mainColor,
   },
   image: {
-    height: 200,
-    width: 200,
-    borderRadius: 100,
-    marginTop: -100,
+    height: 150,
+    width: 150,
+    borderRadius: 73,
+    marginTop: -75,
     marginBottom: 10,
   },
   scroll: {
@@ -91,15 +93,16 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   name: {
-    fontSize: 25,
-    color: 'white',
+    fontSize: 30,
+    fontWeight: '700',
+    color: mainColor,
   },
   props: {
     fontSize: 20,
-    color: 'white',
+    color: textColor1,
   },
   description: {
-    color: 'white',
+    color: textColor1,
     fontSize: 18,
     marginTop: 10,
   },
@@ -110,8 +113,9 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   button: {
-    width: '40%',
+    width: '100%',
     marginTop: 40,
+    backgroundColor: mainColor,
   },
 });
 

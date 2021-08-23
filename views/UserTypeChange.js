@@ -8,7 +8,13 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-import {API_URL, mainColor, secondaryColor} from '../config';
+import {
+  API_URL,
+  mainColor,
+  secondaryColor,
+  textColor1,
+  textColor2,
+} from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function UserTypeChange({
@@ -71,7 +77,7 @@ function UserTypeChange({
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Transformación de usuarios</Text>
+            <Text style={styles.modalText}>Ser terapeuta!</Text>
             <View style={styles.formView}>
               <Text style={styles.modalQuestion}>
                 {userLogged.isTherapist === true
@@ -111,8 +117,9 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: Dimensions.get('window').width,
-    backgroundColor: 'black',
-    borderRadius: 20,
+    paddingTop: 20,
+    backgroundColor: mainColor,
+    borderTopRightRadius: 80,
     alignItems: 'center',
     shadowColor: secondaryColor,
     shadowOffset: {
@@ -127,7 +134,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    marginBottom: 20,
+    marginBottom: 48,
   },
   buttonCancel: {
     borderRadius: 10,
@@ -138,23 +145,22 @@ const styles = StyleSheet.create({
   },
   buttonAplicar: {
     borderRadius: 10,
-    backgroundColor: mainColor,
+    backgroundColor: '#1fc362',
     padding: 10,
     elevation: 2,
     width: '30%',
   },
   textStyle: {
-    color: 'white',
+    color: textColor2,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   modalText: {
     width: '100%',
     textAlign: 'center',
-    color: 'white',
+    color: textColor2,
     fontSize: 30,
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
+    fontWeight: '700',
     marginBottom: 25,
   },
   modalQuestion: {
