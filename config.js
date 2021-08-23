@@ -10,7 +10,10 @@ export const UPLOAD_PRESET = ENV_UPLOAD_PRESET;
 export const CLOUD_NAME = ENV_CLOUD_NAME;
 export const CLOUDINARY_URL = ENV_CLOUDINARY_URL;
 
-export const mainColor = '#2a1d7d';
-export const secondaryColor = '#000000';
+export const mainColor = '#4f9cf9';
+export const secondaryColor = 'white';
+export const tertiaryColor = '#0d2770';
+export const textColor1 = 'black';
+export const textColor2 = 'white';
 
 //create a file for ENV variable

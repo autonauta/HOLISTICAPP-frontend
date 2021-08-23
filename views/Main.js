@@ -11,21 +11,46 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
-import {Card, Button} from 'react-native-paper';
-
+import {Card} from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Navbar from '../views/Navbar';
 import Filters from '../views/Filters';
-import {API_URL, mainColor, secondaryColor} from '../config';
-const defaultImage = require('../assets/user.png');
-//--------------------------MAIN EXPORT FUNCTION--------------------------
-function Main({navigation, route}) {
-  const {userLogged} = route.params;
-  const token = route.params.token;
-  const {userCalendar} = route.params;
+import {API_URL, mainColor, secondaryColor, textColor1} from '../config';
+const defaultImage = require('../assets/avatar.png');
+//--------------------------MAIN EXPORT FUNCTION------------------------------------------
+function Main({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  //------------------------------States for user data and user Calendar data----------------
+  const [userLogged, setUserLogged] = useState({});
+  const [userCalendar, setUserCalendar] = useState({});
+  const [token, setToken] = useState('');
+  //------------------------------Function for checking if the user is logged..............---
+  const isAuth = async () => {
+    try {
+      const token = await AsyncStorage.getItem('xauthtoken');
+
+      if (token !== null) {
+        setToken(token);
+        console.log(`Token found, user Logedin: ${token}`);
+        let user = await AsyncStorage.getItem('user');
+        let calendar = await AsyncStorage.getItem('userCalendar');
+        setUserLogged(JSON.parse(user));
+        setUserCalendar(JSON.parse(calendar));
+      } else {
+        console.log('No token found, no user logged in');
+        navigation.navigate('Login');
+      }
+    } catch (error) {
+      console.log(`Error in Async Storage from isAuth: ${error}`);
+    }
+  };
+  useEffect(() => {
+    isAuth();
+    getTherapistsData();
+  }, []);
   //------------------------------Function for Querying the therapists available..............
   const getTherapistsData = () => {
     setLoading(true);
@@ -41,6 +66,7 @@ function Main({navigation, route}) {
       console.error(error);
     }
   };
+  //------------------------------Function for Rendering the Therapists cards..............
   const renderList = item => {
     const getStars = (rating, image) => {
       var starString = '';
@@ -64,7 +90,7 @@ function Main({navigation, route}) {
       ) {
         return defaultImage;
       } else {
-        return image;
+        return defaultImage;
       }
     };
 
@@ -86,18 +112,16 @@ function Main({navigation, route}) {
       </Card>
     );
   };
-  useEffect(() => {
-    getTherapistsData();
-  }, []);
   return (
     <View style={styles.container}>
       <StatusBar
         animated={true}
         backgroundColor={mainColor}
-        barStyle={"default"}
-        showHideTransition={"none"} />
+        barStyle={'default'}
+        showHideTransition={'none'}
+      />
       <Text style={styles.title}>holisticapp</Text>
-      
+
       <Navbar
         navigation={navigation}
         userLogged={userLogged}
@@ -117,9 +141,13 @@ function Main({navigation, route}) {
           keyExtractor={item => `${item._id}`}
           onRefresh={() => getTherapistsData()}
           refreshing={loading}></FlatList>
-          
       )}
-      <View style={{height: 48, width: "100%", backgroundColor: secondaryColor}}></View>
+      <View
+        style={{
+          height: 48,
+          width: '100%',
+          backgroundColor: mainColor,
+        }}></View>
       <Filters
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
@@ -127,7 +155,6 @@ function Main({navigation, route}) {
         setData={setData}
         setLoading={setLoading}
       />
-       
     </View>
   );
 }
@@ -141,7 +168,8 @@ var STARS_SIZE = 25;
 var NAV_HEIGHT = 60;
 
 var STATUS_BAR_HEIGHT = StatusBar.currentHeight;
-var CONTAINER_HEIGHT = Dimensions.get('screen').height - StatusBar.currentHeight;
+var CONTAINER_HEIGHT =
+  Dimensions.get('screen').height - StatusBar.currentHeight;
 
 if (PixelRatio.get() <= 2) {
   TITLE_FONT_SIZE = 20;
@@ -157,7 +185,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: mainColor,
     height: CONTAINER_HEIGHT,
-    alignItems: "center",
+    alignItems: 'center',
   },
   promos: {
     width: '100%',
@@ -169,14 +197,14 @@ const styles = StyleSheet.create({
   title: {
     color: 'white',
     fontSize: TITLE_FONT_SIZE,
-    fontWeight: "600",
-    alignSelf: "flex-start",
+    fontWeight: '600',
+    alignSelf: 'flex-start',
     marginLeft: 10,
     height: 40,
     marginTop: 10,
   },
   flatList: {
-    width: "100%",
+    width: '100%',
   },
   myCard: {
     height: CARD_HEIGHT,
@@ -208,11 +236,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   cardTitle: {
-    color: 'white',
+    color: textColor1,
     fontSize: CARD_TITLE,
     justifyContent: 'center',
   },
-  cardSubtitle: {color: 'white', fontSize: CARD_SUBTITLE},
+  cardSubtitle: {color: textColor1, fontSize: CARD_SUBTITLE},
   cardStars: {
     fontSize: STARS_SIZE,
     color: 'orange',

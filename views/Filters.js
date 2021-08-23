@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 
-import {API_URL, mainColor, secondaryColor} from '../config';
+import {API_URL, mainColor, secondaryColor, textColor1} from '../config';
 
 function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
   const [biomagnetismo, setBiomagnetismo] = useState(false);
@@ -58,6 +58,10 @@ function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
       console.error(error);
     }
   };
+  const checkBoxTheme = {
+    true: mainColor,
+    false: 'grey',
+  };
 
   //------------------------------------------MAIN RETURN---------------------------------------------
   return (
@@ -75,7 +79,7 @@ function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
             <View style={styles.formView}>
               <View style={styles.checkboxView}>
                 <CheckBox
-                  tintColors={{true: 'purple', false: 'white'}}
+                  tintColors={checkBoxTheme}
                   value={biomagnetismo}
                   onValueChange={value => setBiomagnetismo(value)}
                   style={styles.checkbox}
@@ -84,7 +88,7 @@ function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
               </View>
               <View style={styles.checkboxView}>
                 <CheckBox
-                  tintColors={{true: 'purple', false: 'white'}}
+                  tintColors={checkBoxTheme}
                   value={aromaterapia}
                   onValueChange={value => setAromaterapia(value)}
                   style={styles.checkbox}
@@ -93,7 +97,7 @@ function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
               </View>
               <View style={styles.checkboxView}>
                 <CheckBox
-                  tintColors={{true: 'purple', false: 'white'}}
+                  tintColors={checkBoxTheme}
                   value={acupunctura}
                   onValueChange={value => setAcupunctura(value)}
                   style={styles.checkbox}
@@ -102,7 +106,7 @@ function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
               </View>
               <View style={styles.checkboxView}>
                 <CheckBox
-                  tintColors={{true: 'purple', false: 'white'}}
+                  tintColors={checkBoxTheme}
                   value={masajes}
                   onValueChange={value => setMasajes(value)}
                   style={styles.checkbox}
@@ -111,7 +115,7 @@ function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
               </View>
               <View style={styles.checkboxView}>
                 <CheckBox
-                  tintColors={{true: 'purple', false: 'white'}}
+                  tintColors={checkBoxTheme}
                   value={tarot}
                   onValueChange={value => setTarot(value)}
                   style={styles.checkbox}
@@ -120,7 +124,7 @@ function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
               </View>
               <View style={styles.checkboxView}>
                 <CheckBox
-                  tintColors={{true: 'purple', false: 'white'}}
+                  tintColors={checkBoxTheme}
                   value={musicoterapia}
                   onValueChange={value => setMusicoterapia(value)}
                   style={styles.checkbox}
@@ -129,7 +133,7 @@ function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
               </View>
               <View style={styles.checkboxView}>
                 <CheckBox
-                  tintColors={{true: 'purple', false: 'white'}}
+                  tintColors={checkBoxTheme}
                   value={nutricion}
                   onValueChange={value => setNutricion(value)}
                   style={styles.checkbox}
@@ -138,7 +142,7 @@ function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
               </View>
               <View style={styles.checkboxView}>
                 <CheckBox
-                  tintColors={{true: 'purple', false: 'white'}}
+                  tintColors={checkBoxTheme}
                   value={psicologia}
                   onValueChange={value => setPsicologia(value)}
                   style={styles.checkbox}
@@ -147,7 +151,7 @@ function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
               </View>
               <View style={styles.checkboxView}>
                 <CheckBox
-                  tintColors={{true: 'purple', false: 'white'}}
+                  tintColors={checkBoxTheme}
                   value={transgeneracional}
                   onValueChange={value => setTransgeneracional(value)}
                   style={styles.checkbox}
@@ -156,7 +160,7 @@ function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
               </View>
               <View style={styles.checkboxView}>
                 <CheckBox
-                  tintColors={{true: 'purple', false: 'white'}}
+                  tintColors={checkBoxTheme}
                   value={veterinaria}
                   onValueChange={value => setVeterinaria(value)}
                   style={styles.checkbox}
@@ -199,14 +203,14 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: Dimensions.get('window').width,
-    backgroundColor: 'black',
+    backgroundColor: secondaryColor,
     borderRadius: 8,
     alignItems: 'center',
     padding: 10,
-    shadowColor: secondaryColor,
+    shadowColor: 'black',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: -5,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -215,7 +219,8 @@ const styles = StyleSheet.create({
   title: {
     width: '100%',
     textAlign: 'center',
-    color: 'white',
+    color: mainColor,
+    fontWeight: '700',
     fontSize: TITLE_FONT_SIZE,
     borderBottomWidth: 1,
     borderBottomColor: 'white',
@@ -238,7 +243,7 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontSize: LABEL_SIZE,
-    color: 'white',
+    color: textColor1,
   },
   buttons: {
     width: Dimensions.get('window').width,

@@ -13,6 +13,8 @@ import {
   API_URL,
   mainColor,
   secondaryColor,
+  textColor1,
+  textColor2,
   CLOUDINARY_URL,
   UPLOAD_PRESET,
   CLOUD_NAME,
@@ -62,7 +64,7 @@ function ImageChange({
       }),
     })
       .then(data => {
-        console.log(`Response from API change image: ${data}`);
+        console.log(`Response from API change image: ${JSON.stringify(data)}`);
         userLogged = {...userLogged, image: {uri: imageUrl}};
         _storeData('user', JSON.stringify(userLogged));
         Alert.alert(
@@ -222,10 +224,11 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: Dimensions.get('window').width,
-    backgroundColor: 'black',
-    borderRadius: 20,
+    paddingTop: 10,
+    backgroundColor: mainColor,
+    borderTopRightRadius: 50,
     alignItems: 'center',
-    shadowColor: secondaryColor,
+    shadowColor: 'black',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -238,34 +241,34 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    marginBottom: 20,
+    marginBottom: 48,
   },
   buttonCancel: {
     borderRadius: 10,
-    backgroundColor: 'red',
+    backgroundColor: '#f34950',
     padding: 10,
     elevation: 2,
     width: '30%',
+    marginTop: 30,
   },
   buttonAplicar: {
-    borderRadius: 10,
-    backgroundColor: mainColor,
+    borderRadius: 8,
+    backgroundColor: '#1fc362',
     padding: 10,
     elevation: 2,
     width: '30%',
   },
   textStyle: {
-    color: 'white',
+    color: textColor2,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   modalText: {
     width: '100%',
     textAlign: 'center',
-    color: 'white',
+    color: textColor2,
     fontSize: 30,
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
+    fontWeight: '700',
     marginBottom: 25,
   },
   formView: {

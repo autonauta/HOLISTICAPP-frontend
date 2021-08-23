@@ -11,12 +11,18 @@ import {
 import {Button, Card} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //---------------------------------IMPORTS-----------------------------
-import {API_URL, mainColor, secondaryColor} from '../config';
+import {
+  API_URL,
+  mainColor,
+  secondaryColor,
+  textColor1,
+  textColor2,
+} from '../config';
 import PasswordChange from './PasswordChange';
 import ImageChange from './ImageChange';
 import UserTypeChange from './UserTypeChange';
 
-const defaultImage = require('../assets/user.png');
+const defaultImage = require('../assets/avatar.png');
 
 function Profile({navigation, route}) {
   const {userLogged} = route.params;
@@ -32,22 +38,31 @@ function Profile({navigation, route}) {
       navigation.navigate('Login');
     });
   };
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
+  const getImage = image => {
+    console.log('From getImage: ', image);
+    if (
+      typeof image === 'undefined' ||
+      image === null ||
+      typeof image === 'string' ||
+      isEmpty(image) == true ||
+      image.uri == null
+    ) {
+      return defaultImage;
+    } else {
+      return image;
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.top}></View>
       <View style={styles.imageContainer}>
-        <View style={styles.top}>
-          <Button
-            style={styles.buttonLogout}
-            mode="contained"
-            onPress={() => {
-              logOut();
-            }}>
-            LOGOUT
-          </Button>
-        </View>
-        <Image
-          style={styles.image}
-          source={userLogged.image ? userLogged.image : defaultImage}></Image>
+        <Image style={styles.image} source={getImage(userLogged.image)}></Image>
         <Text
           style={styles.imageButton}
           onPress={() => {
@@ -63,53 +78,49 @@ function Profile({navigation, route}) {
             alignItems: 'center',
             marginBottom: 20,
           }}>
-          <Card style={styles.myCard}>
-            <Text style={styles.text}>{userLogged.name}</Text>
-          </Card>
-          <Card style={styles.myCard}>
-            <Text style={styles.text}>{userLogged.email}</Text>
-          </Card>
+          <Text style={styles.textName}>{userLogged.name}</Text>
+          <Text style={styles.textData}>{userLogged.email}</Text>
         </View>
-        <View style={styles.buttons}>
-          <Button
-            style={styles.buttonPassword}
-            mode="contained"
-            onPress={() => {
-              setModalVisible(true);
-            }}>
-            CAMBIAR PASSWORD
-          </Button>
-          <Button
-            style={styles.buttonPassword}
-            mode="contained"
-            onPress={() => {
-              setModalTerapeutaVisible(true);
-            }}>
-            SOY TERAPEUTA!
-          </Button>
-        </View>
-        <PasswordChange
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          token={token}
-          userLogged={userLogged}
-          navigation={navigation}
-        />
-        <ImageChange
-          imageModalVisible={imageModalVisible}
-          setImageModalVisible={setImageModalVisible}
-          token={token}
-          userLogged={userLogged}
-          navigation={navigation}
-        />
-        <UserTypeChange
-          modalTerapeutaVisible={modalTerapeutaVisible}
-          setModalTerapeutaVisible={setModalTerapeutaVisible}
-          token={token}
-          userLogged={userLogged}
-          navigation={navigation}
-        />
       </View>
+      <View style={styles.buttons}>
+        <Button
+          style={styles.buttonPassword}
+          mode="contained"
+          onPress={() => {
+            setModalVisible(true);
+          }}>
+          CAMBIAR PASSWORD
+        </Button>
+        <Button
+          style={styles.buttonPassword}
+          mode="contained"
+          onPress={() => {
+            setModalTerapeutaVisible(true);
+          }}>
+          SOY TERAPEUTA!
+        </Button>
+      </View>
+      <PasswordChange
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        token={token}
+        userLogged={userLogged}
+        navigation={navigation}
+      />
+      <ImageChange
+        imageModalVisible={imageModalVisible}
+        setImageModalVisible={setImageModalVisible}
+        token={token}
+        userLogged={userLogged}
+        navigation={navigation}
+      />
+      <UserTypeChange
+        modalTerapeutaVisible={modalTerapeutaVisible}
+        setModalTerapeutaVisible={setModalTerapeutaVisible}
+        token={token}
+        userLogged={userLogged}
+        navigation={navigation}
+      />
     </SafeAreaView>
   );
 }
@@ -119,12 +130,11 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'black',
+    backgroundColor: secondaryColor,
   },
   imageContainer: {
     alignItems: 'center',
     width: '100%',
-    marginBottom: 20,
   },
   image: {
     height: 200,
@@ -135,55 +145,54 @@ const styles = StyleSheet.create({
   top: {
     width: '100%',
     height: 150,
-    backgroundColor: '#2a1d7d',
+    backgroundColor: mainColor,
   },
   profile: {
     width: '100%',
-    paddingTop: 30,
+    paddingTop: 20,
     paddingLeft: 20,
     paddingRight: 20,
+    justifyContent: 'space-between',
   },
-  myCard: {
-    width: '100%',
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: 'white',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 5,
+  textName: {
+    color: mainColor,
+    fontSize: 40,
+    fontWeight: '700',
+    alignSelf: 'flex-start',
   },
-  text: {
-    color: 'white',
+  textData: {
+    color: textColor1,
     fontSize: 20,
-    margin: 8,
+    alignSelf: 'flex-start',
+    fontWeight: '600',
   },
   buttons: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    position: 'absolute',
+    bottom: 0,
+    width: '90%',
     marginBottom: 30,
-    flexWrap: 'wrap',
   },
   buttonPassword: {
     width: '100%',
     marginBottom: 20,
+    backgroundColor: mainColor,
+    height: 40,
   },
+
   buttonLogout: {
-    marginTop: 1,
     padding: 5,
     backgroundColor: 'orangered',
   },
   imageButton: {
-    borderRadius: 15,
-    color: 'white',
-    fontSize: 20,
+    borderRadius: 8,
+    color: textColor2,
+    fontWeight: '700',
+    fontSize: 15,
+    backgroundColor: mainColor,
+    padding: 10,
+    paddingRight: 20,
+    paddingLeft: 20,
     marginTop: -30,
-    textShadowColor: secondaryColor,
-    textShadowOffset: {
-      width: 0,
-      height: 2,
-    },
   },
 });
 

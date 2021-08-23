@@ -8,13 +8,11 @@ import {
   Dimensions,
   TextInput,
   Alert,
-  FlatList,
-  ActivityIndicator,
   ScrollView,
   Pressable,
   PixelRatio,
   TouchableOpacity,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import {Card, Button} from 'react-native-paper';
@@ -23,8 +21,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserTypeChange from './UserTypeChange';
 import ImageChange from './ImageChange';
 
-import {API_URL, mainColor, secondaryColor} from '../config';
-const defaultImage = require('../assets/user.png');
+import {
+  API_URL,
+  mainColor,
+  secondaryColor,
+  tertiaryColor,
+  textColor1,
+  textColor2,
+} from '../config';
+const defaultImage = require('../assets/avatar.png');
 const categories = [
   'biomagnetismo',
   'aromaterapia',
@@ -116,7 +121,7 @@ function TherapistProfile({navigation, route}) {
   );
   //-------------------------------Week day variables ---------------------------------------
   const [sunday, setSunday] = useState(
-    userCalendar ? userCalendar.days[0] : false,
+    (userCalendar = !undefined ? false : userCalendar.days[0]),
   );
   const [monday, setMonday] = useState(
     userCalendar ? userCalendar.days[1] : false,
@@ -198,7 +203,7 @@ function TherapistProfile({navigation, route}) {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', JSON.parse(token));
+    myHeaders.append('xAuthToken', token);
     return fetch(`${API_URL}/profile/edit`, {
       method: 'post',
       headers: myHeaders,
@@ -206,7 +211,6 @@ function TherapistProfile({navigation, route}) {
         description: text,
       }),
     })
-      .then(res => res.json())
       .then(data => {
         setText(text);
         userLogged = {...userLogged, description: text};
@@ -242,7 +246,7 @@ function TherapistProfile({navigation, route}) {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', JSON.parse(token));
+    myHeaders.append('xAuthToken', token);
     let days = {
       0: sunday,
       1: monday,
@@ -259,7 +263,6 @@ function TherapistProfile({navigation, route}) {
       headers: myHeaders,
       body: JSON.stringify(array),
     })
-      .then(res => res.json())
       .then(data => {
         let days = {
           0: sunday,
@@ -308,7 +311,7 @@ function TherapistProfile({navigation, route}) {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', JSON.parse(token));
+    myHeaders.append('xAuthToken', token);
     console.log(
       `From changecategory: ${JSON.stringify({specialization: category})}`,
     );
@@ -362,7 +365,7 @@ function TherapistProfile({navigation, route}) {
 
   const checkbox = {
     style: {
-      true: dayEditing ? 'purple' : 'grey',
+      true: dayEditing ? tertiaryColor : 'grey',
       false: dayEditing ? 'white' : 'grey',
     },
   };
@@ -421,7 +424,8 @@ function TherapistProfile({navigation, route}) {
       if (
         typeof image === 'undefined' ||
         image === null ||
-        typeof image === 'string'
+        typeof image === 'string' ||
+        image.uri == null
       ) {
         return defaultImage;
       } else {
@@ -442,14 +446,33 @@ function TherapistProfile({navigation, route}) {
       </Card>
     );
   };
-
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
+  const getImage = image => {
+    if (
+      typeof image === 'undefined' ||
+      image === null ||
+      typeof image === 'string' ||
+      isEmpty(image) == true ||
+      image.uri == null
+    ) {
+      return defaultImage;
+    } else {
+      return image;
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
         animated={true}
-        backgroundColor={secondaryColor}
-        barStyle={"default"}
-        showHideTransition={"fade"} />
+        backgroundColor={mainColor}
+        barStyle={'default'}
+        showHideTransition={'fade'}
+      />
       <View style={styles.header}>
         <Pressable
           onLongPress={() => {
@@ -457,7 +480,7 @@ function TherapistProfile({navigation, route}) {
           }}>
           <Image
             style={styles.image}
-            source={userLogged.image ? userLogged.image : defaultImage}></Image>
+            source={getImage(userLogged.image)}></Image>
         </Pressable>
 
         <View style={styles.userBox}>
@@ -501,14 +524,14 @@ function TherapistProfile({navigation, route}) {
               borderRadius: 8,
               marginBottom: 20,
             }}
-            buttonTextStyle={{color: categoryEditing ? 'grey' : 'orange'}}
+            buttonTextStyle={{color: categoryEditing ? 'grey' : textColor2}}
             dropdownStyle={{
-              backgroundColor: 'black',
+              backgroundColor: secondaryColor,
               borderWidth: 1,
-              borderColor: 'white',
+              borderColor: 'transparent',
               borderRadius: 8,
             }}
-            rowTextStyle={{color: 'white'}}
+            rowTextStyle={{color: textColor1, fontWeight: '700'}}
             defaultButtonText={
               userLogged.specialization
                 ? userLogged.specialization
@@ -538,12 +561,12 @@ function TherapistProfile({navigation, route}) {
           </View>
           <TextInput
             style={{
-              backgroundColor: 'black',
+              backgroundColor: descriptionEditing ? secondaryColor : 'grey',
               minHeight: 200,
               textAlignVertical: 'top',
               borderWidth: 1,
-              borderColor: descriptionEditing ? 'white' : 'grey',
-              color: descriptionEditing ? 'white' : 'grey',
+              borderColor: descriptionEditing ? secondaryColor : 'grey',
+              color: descriptionEditing ? secondaryColor : 'grey',
               fontSize: 18,
               borderRadius: 5,
               justifyContent: 'flex-start',
@@ -555,7 +578,7 @@ function TherapistProfile({navigation, route}) {
             maxLength={750}
           />
         </View>
-        <View style={styles.description}>
+        {/* <View style={styles.description}>
           <View
             style={{
               width: '100%',
@@ -579,7 +602,7 @@ function TherapistProfile({navigation, route}) {
                 keyExtractor={item => `${item._id}`}></FlatList>
             )}
           </View>
-        </View>
+        </View> */}
 
         <View style={styles.description2}>
           <View
@@ -672,23 +695,23 @@ function TherapistProfile({navigation, route}) {
                 disabled={!startHourEditing}
                 buttonStyle={{
                   width: '60%',
-                  backgroundColor: 'black',
+                  backgroundColor: 'transparent',
                   borderWidth: 1,
-                  borderColor: startHourEditing ? 'white' : 'grey',
+                  borderColor: startHourEditing ? secondaryColor : 'grey',
                   borderRadius: 8,
                   marginBottom: 20,
                 }}
                 buttonTextStyle={{
-                  color: !startHourEditing ? 'grey' : 'orange',
+                  color: !startHourEditing ? 'grey' : tertiaryColor,
                   fontSize: 25,
                 }}
                 dropdownStyle={{
-                  backgroundColor: 'black',
+                  backgroundColor: secondaryColor,
                   borderWidth: 1,
-                  borderColor: 'white',
+                  borderColor: secondaryColor,
                   borderRadius: 8,
                 }}
-                rowTextStyle={{color: 'orange'}}
+                rowTextStyle={{color: tertiaryColor}}
                 defaultButtonText={startHour}
                 data={HourDropdown}
                 onSelect={(selectedItem, index) => {
@@ -708,23 +731,23 @@ function TherapistProfile({navigation, route}) {
                 disabled={!startHourEditing}
                 buttonStyle={{
                   width: '60%',
-                  backgroundColor: 'black',
+                  backgroundColor: 'transparent',
                   borderWidth: 1,
-                  borderColor: startHourEditing ? 'white' : 'grey',
+                  borderColor: startHourEditing ? secondaryColor : 'grey',
                   borderRadius: 8,
                   marginBottom: 20,
                 }}
                 buttonTextStyle={{
-                  color: !startHourEditing ? 'grey' : 'orange',
+                  color: !startHourEditing ? 'grey' : tertiaryColor,
                   fontSize: 25,
                 }}
                 dropdownStyle={{
-                  backgroundColor: 'black',
+                  backgroundColor: secondaryColor,
                   borderWidth: 1,
-                  borderColor: 'white',
+                  borderColor: secondaryColor,
                   borderRadius: 8,
                 }}
-                rowTextStyle={{color: 'orange'}}
+                rowTextStyle={{color: tertiaryColor}}
                 defaultButtonText={endHour}
                 data={HourDropdown}
                 onSelect={(selectedItem, index) => {
@@ -745,23 +768,23 @@ function TherapistProfile({navigation, route}) {
               disabled={!startHourEditing}
               buttonStyle={{
                 width: '30%',
-                backgroundColor: 'black',
+                backgroundColor: 'transparent',
                 borderWidth: 1,
-                borderColor: startHourEditing ? 'white' : 'grey',
+                borderColor: startHourEditing ? secondaryColor : 'grey',
                 borderRadius: 8,
                 marginBottom: 20,
               }}
               buttonTextStyle={{
-                color: !startHourEditing ? 'grey' : 'orange',
+                color: !startHourEditing ? 'grey' : tertiaryColor,
                 fontSize: 25,
               }}
               dropdownStyle={{
-                backgroundColor: 'black',
+                backgroundColor: secondaryColor,
                 borderWidth: 1,
-                borderColor: 'white',
+                borderColor: secondaryColor,
                 borderRadius: 8,
               }}
-              rowTextStyle={{color: 'orange'}}
+              rowTextStyle={{color: tertiaryColor}}
               defaultButtonText={sessionDuration}
               data={durationDropdown}
               onSelect={(selectedItem, index) => {
@@ -784,7 +807,12 @@ function TherapistProfile({navigation, route}) {
           }}>
           DEJAR DE SERVIR AL MUNDO!
         </Button>
-        <View style={{height: 48, width: "100%", backgroundColor: secondaryColor}}></View>
+        <View
+          style={{
+            height: 48,
+            width: '100%',
+            backgroundColor: mainColor,
+          }}></View>
       </ScrollView>
       <UserTypeChange
         modalTerapeutaVisible={modalTerapeutaVisible}
@@ -834,13 +862,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 10,
-    backgroundColor: secondaryColor,
+    backgroundColor: mainColor,
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
   dropdown: {
     width: '100%',
-    backgroundColor: 'red',
   },
   header: {
     width: '100%',
@@ -857,12 +884,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: 'white',
+    color: textColor2,
     fontSize: TITLE_FONT_SIZE,
     marginLeft: 10,
   },
   subtitle: {
-    color: 'orange',
+    color: tertiaryColor,
     fontSize: SUBTITLE_FONT_SIZE,
   },
   subtitles: {
@@ -895,7 +922,7 @@ const styles = StyleSheet.create({
   },
   textbutton: {
     fontSize: SUBTITLES_FONT_SIZE,
-    color: 'orange',
+    color: tertiaryColor,
   },
   input: {},
   flatList: {
@@ -943,7 +970,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   diasText: {
-    color: 'white',
+    color: textColor2,
     fontWeight: '700',
     fontSize: DIAS_FONT_SIZE,
   },
@@ -960,12 +987,12 @@ const styles = StyleSheet.create({
   },
   limitsText: {
     marginBottom: 8,
-    color: 'white',
+    color: secondaryColor,
     fontSize: LIMITS_FONT_SIZE,
   },
   numerosHorario: {
     marginBottom: 8,
-    color: 'orange',
+    color: secondaryColor,
     fontSize: 30,
     fontWeight: '700',
   },
@@ -982,6 +1009,7 @@ const styles = StyleSheet.create({
   },
   buttonPassword: {
     width: '100%',
+    backgroundColor: tertiaryColor,
     padding: 8,
     marginBottom: 20,
   },

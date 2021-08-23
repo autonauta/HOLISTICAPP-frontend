@@ -9,11 +9,18 @@ import {
   ScrollView,
   FlatList,
   ActivityIndicator,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import {Card} from 'react-native-paper';
 import {Calendar} from 'react-native-calendars';
-import {API_URL, mainColor, secondaryColor} from '../config';
+import {
+  API_URL,
+  mainColor,
+  secondaryColor,
+  tertiaryColor,
+  textColor1,
+  textColor2,
+} from '../config';
 
 import {LocaleConfig} from 'react-native-calendars';
 
@@ -60,7 +67,7 @@ LocaleConfig.locales['es'] = {
 };
 LocaleConfig.defaultLocale = 'es';
 
-const defaultImage = require('../assets/user.png');
+const defaultImage = require('../assets/avatar.png');
 
 function Calendars({route}) {
   const {name, image, specialization} = route.params;
@@ -90,29 +97,39 @@ function Calendars({route}) {
   const [day, setDay] = useState(getCurrentDate());
 
   const theme = {
-    calendarBackground: secondaryColor,
-    textSectionTitleColor: 'orange',
-    selectedDayBackgroundColor: mainColor,
-    selectedDayTextColor: 'white',
-    todayTextColor: 'orange',
-    dayTextColor: 'grey',
-    textDisabledColor: 'grey',
-    dotColor: '#00adf5',
-    arrowColor: mainColor,
-    selectedDotColor: '#ffffff',
-    monthTextColor: 'white',
-    textDayFontWeight: '300',
+    calendarBackground: mainColor,
+    textSectionTitleColor: tertiaryColor,
+    selectedDayBackgroundColor: secondaryColor,
+    selectedDayTextColor: mainColor,
+    todayTextColor: tertiaryColor,
+    dayTextColor: '#a4a5a7',
+    textDisabledColor: '#a4a5a7',
+    arrowColor: secondaryColor,
+    monthTextColor: secondaryColor,
+    textDayFontWeight: '700',
     textMonthFontWeight: 'bold',
-    textDayHeaderFontWeight: '300',
+    textDayHeaderFontWeight: '700',
     textDayFontSize: 16,
     textMonthFontSize: 24,
-    textDayHeaderFontSize: 20,
+    textDayHeaderFontSize: 18,
+  };
+  const getImage = image => {
+    if (
+      typeof image === 'undefined' ||
+      image === null ||
+      typeof image === 'string' ||
+      image.uri == null
+    ) {
+      return defaultImage;
+    } else {
+      return image;
+    }
   };
   const renderList = item => {
     return (
       <Card style={styles.myCard}>
         <View style={styles.cardView}>
-          <Text style={styles.title}>{item.hour}</Text>
+          <Text style={styles.cardTitle}>{item.hour}</Text>
         </View>
       </Card>
     );
@@ -121,9 +138,10 @@ function Calendars({route}) {
     <SafeAreaView style={styles.container}>
       <StatusBar
         animated={true}
-        backgroundColor={secondaryColor}
-        barStyle={"default"}
-        showHideTransition={"fade"} />
+        backgroundColor={mainColor}
+        barStyle={'default'}
+        showHideTransition={'fade'}
+      />
       <View
         style={{
           width: '100%',
@@ -131,12 +149,11 @@ function Calendars({route}) {
           justifyContent: 'flex-start',
           alignItems: 'center',
           padding: 5,
+          paddingLeft: 10,
           paddingBottom: 10,
           marginBottom: 20,
         }}>
-        <Image
-          style={styles.image}
-          source={image ? image : defaultImage}></Image>
+        <Image style={styles.image} source={getImage(image)}></Image>
         <View>
           <Text style={styles.titleName}>{name}</Text>
           <Text style={styles.subtitle}>{specialization}</Text>
@@ -166,7 +183,7 @@ function Calendars({route}) {
         // Enable the option to swipe between months. Default = false
         enableSwipeMonths={true}
       />
-      <Text style={styles.title}>HORARIO</Text>
+      <Text style={styles.title}>Horario</Text>
       <View style={styles.flatListContainer}>
         <FlatList
           style={styles.flatList}
@@ -176,7 +193,12 @@ function Calendars({route}) {
           }}
           keyExtractor={item => `${item.id}`}></FlatList>
       </View>
-      <View style={{height: 48, width: "100%", backgroundColor: secondaryColor}}></View>
+      <View
+        style={{
+          height: 48,
+          width: '100%',
+          backgroundColor: mainColor,
+        }}></View>
     </SafeAreaView>
   );
 }
@@ -184,15 +206,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: Dimensions.get('screen').width,
-    paddingTop: 10,
-    backgroundColor: secondaryColor,
+    backgroundColor: mainColor,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   title: {
     color: 'white',
-    fontSize: 25,
-    marginLeft: 10,
+    fontSize: 20,
+    fontWeight: '700',
+    alignSelf: 'flex-start',
   },
   titleName: {
     color: 'white',
@@ -205,7 +229,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   calendar: {
-    width: Dimensions.get("screen").width,
+    width: Dimensions.get('screen').width,
     alignSelf: 'center',
   },
   image: {
@@ -232,8 +256,10 @@ const styles = StyleSheet.create({
   cardView: {
     paddingLeft: 10,
     paddingRight: 8,
+    paddingTop: 4,
+    paddingBottom: 4,
     flexDirection: 'row',
-    backgroundColor: mainColor,
+    backgroundColor: tertiaryColor,
     borderRadius: 8,
   },
   cardText: {
@@ -242,8 +268,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   cardTitle: {
-    color: 'white',
-    fontSize: 20,
+    color: textColor2,
+    fontSize: 18,
+    fontWeight: '400',
     justifyContent: 'center',
   },
   cardSubtitle: {color: 'white', fontSize: 15},
