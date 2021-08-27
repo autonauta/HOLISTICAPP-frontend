@@ -16,6 +16,8 @@ import {
   textColor2,
 } from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useSafeArea} from 'react-native-safe-area-context';
+import {useState} from 'react';
 
 function UserTypeChange({
   modalTerapeutaVisible,
@@ -24,6 +26,10 @@ function UserTypeChange({
   userLogged,
   navigation,
 }) {
+  const [therapistStatus, setTherapistStatus] = useState(
+    userLogged.isTherapist,
+  );
+
   const logOut = () => {
     const keys = ['xauthtoken', 'user'];
     AsyncStorage.multiRemove(keys).then(res => {
@@ -36,16 +42,16 @@ function UserTypeChange({
 
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('xAuthToken', JSON.parse(token));
-    const therapistIsTrue = !userLogged.isTherapist;
+    const newIsTherapistValue = !userLogged.isTherapist;
     fetch(`${API_URL}/profile/edit`, {
       method: 'post',
       headers: myHeaders,
       body: JSON.stringify({
-        isTherapist: therapistIsTrue,
+        isTherapist: newIsTherapistValue,
       }),
     })
-      .then(res => res.json())
       .then(data => {
+        setTherapistStatus(newIsTherapistValue);
         Alert.alert(
           `Perfecto ${userLogged.name}!`,
           `Hemos actualizado tu perfil. Por favor inicia sesión de nuevo.`,
@@ -76,11 +82,40 @@ function UserTypeChange({
           setModalTerapeutaVisible(!modalTerapeutaVisible);
         }}>
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Ser terapeuta!</Text>
+          <View
+            style={{
+              width: Dimensions.get('window').width,
+              paddingTop: 20,
+              borderTopRightRadius: 80,
+              alignItems: 'center',
+              shadowColor: secondaryColor,
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+              elevation: 5,
+              backgroundColor:
+                userLogged.isTherapist == true ? secondaryColor : mainColor,
+            }}>
+            <Text
+              style={{
+                width: '100%',
+                textAlign: 'center',
+                color:
+                  userLogged.isTherapist == true ? mainColor : secondaryColor,
+                fontSize: 30,
+                fontWeight: '700',
+                marginBottom: 25,
+              }}>
+              {therapistStatus == true
+                ? 'Dejar de ser terapeuta!'
+                : 'Ser terapeuta!'}
+            </Text>
             <View style={styles.formView}>
               <Text style={styles.modalQuestion}>
-                {userLogged.isTherapist === true
+                {therapistStatus === true
                   ? 'Seguro que quieres dejar de servir al mundo?'
                   : 'Seguro que quieres ponerte al servicio del mundo?'}
               </Text>
@@ -108,27 +143,13 @@ function UserTypeChange({
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
     elevation: 1,
-  },
-  modalView: {
-    width: Dimensions.get('window').width,
-    paddingTop: 20,
-    backgroundColor: mainColor,
-    borderTopRightRadius: 80,
-    alignItems: 'center',
-    shadowColor: secondaryColor,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
   buttons: {
     width: Dimensions.get('window').width,
@@ -154,14 +175,6 @@ const styles = StyleSheet.create({
     color: textColor2,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  modalText: {
-    width: '100%',
-    textAlign: 'center',
-    color: textColor2,
-    fontSize: 30,
-    fontWeight: '700',
-    marginBottom: 25,
   },
   modalQuestion: {
     width: '50%',

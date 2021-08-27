@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   StyleSheet,
   View,
@@ -32,6 +33,17 @@ function Login({navigation}) {
       console.log(error);
     }
   };
+  useFocusEffect(
+    React.useCallback(() => {
+      // Do something when the screen is focused
+      console.log('Login screen focused');
+      return () => {
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+        console.log('Login screen unfucused');
+      };
+    }, []),
+  );
   //------------------------Codigo para tamaños de letra responsivos-------------------------------
 
   const submitData = () => {
@@ -56,9 +68,10 @@ function Login({navigation}) {
           _storeData('user', JSON.stringify(userLogged));
           console.log('User correctly logged in');
           console.log(JSON.stringify(userLogged));
+          console.log(JSON.stringify(userCalendar));
           setPassword('');
           setEmail('');
-          navigation.navigate('Home');
+          navigation.navigate('Home', {token, userLogged, userCalendar});
         }
       })
       .catch(err => {

@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  PixelRatio,
-} from 'react-native';
+import {StyleSheet, View, Text, PixelRatio} from 'react-native';
 import {Button} from 'react-native-paper';
 import {mainColor, secondaryColor} from '../config';
 
@@ -58,7 +53,6 @@ function Navbar({
         icon="account"
         style={styles.buttons}
         onPress={profileNavigation}></Button>
-
     </View>
   );
 }
@@ -70,7 +64,7 @@ if (PixelRatio.get() <= 2) {
 }
 const styles = StyleSheet.create({
   navbar: {
-    width: "100%",
+    width: '100%',
     height: NAV_HEIGHT,
     marginTop: 20,
     backgroundColor: mainColor,

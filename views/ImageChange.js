@@ -12,8 +12,6 @@ import {
 import {
   API_URL,
   mainColor,
-  secondaryColor,
-  textColor1,
   textColor2,
   CLOUDINARY_URL,
   UPLOAD_PRESET,
@@ -22,7 +20,6 @@ import {
 import {Button} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 function ImageChange({
   navigation,
@@ -52,7 +49,7 @@ function ImageChange({
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', token);
+    myHeaders.append('xAuthToken', JSON.parse(token));
     console.log(
       `From submit data object to send to API: ${JSON.stringify(imageUrl)}`,
     );
@@ -108,14 +105,12 @@ function ImageChange({
       fetch(CLOUDINARY_URL, {
         method: 'post',
         body: data,
-      })
-        .then(res => res.json())
-        .then(receivedImage => {
-          console.log(
-            `From response of uploading to cloudinary: ${receivedImage.url}`,
-          );
-          submitData(receivedImage.url);
-        });
+      }).then(receivedImage => {
+        console.log(
+          `From response of uploading to cloudinary: ${receivedImage}`,
+        );
+        //submitData(receivedImage.url);
+      });
     } catch (error) {
       console.log(`Error: ${error}`);
     }

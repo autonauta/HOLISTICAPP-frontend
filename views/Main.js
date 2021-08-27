@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+
 import {
   StyleSheet,
   Text,
@@ -19,7 +21,7 @@ import Filters from '../views/Filters';
 import {API_URL, mainColor, secondaryColor, textColor1} from '../config';
 const defaultImage = require('../assets/avatar.png');
 //--------------------------MAIN EXPORT FUNCTION------------------------------------------
-function Main({navigation}) {
+function Main({navigation, route}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,8 +39,10 @@ function Main({navigation}) {
         console.log(`Token found, user Logedin: ${token}`);
         let user = await AsyncStorage.getItem('user');
         let calendar = await AsyncStorage.getItem('userCalendar');
-        setUserLogged(JSON.parse(user));
-        setUserCalendar(JSON.parse(calendar));
+        user = JSON.parse(user);
+        calendar = JSON.parse(calendar);
+        setUserLogged(user);
+        setUserCalendar(calendar);
       } else {
         console.log('No token found, no user logged in');
         navigation.navigate('Login');
@@ -47,10 +51,22 @@ function Main({navigation}) {
       console.log(`Error in Async Storage from isAuth: ${error}`);
     }
   };
-  useEffect(() => {
+  /* useEffect(() => {
     isAuth();
     getTherapistsData();
-  }, []);
+  }, []); */
+  useFocusEffect(
+    React.useCallback(() => {
+      // Do something when the screen is focused
+      isAuth();
+      getTherapistsData();
+      return () => {
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+      };
+    }, []),
+  );
+
   //------------------------------Function for Querying the therapists available..............
   const getTherapistsData = () => {
     setLoading(true);
@@ -60,6 +76,7 @@ function Main({navigation}) {
         .then(results => {
           const therapists = results;
           setData(therapists);
+          console.log(therapists);
           setLoading(false);
         });
     } catch (error) {
@@ -75,22 +92,16 @@ function Main({navigation}) {
       }
       return starString;
     };
-    function isEmpty(obj) {
-      for (var key in obj) {
-        if (obj.hasOwnProperty(key)) return false;
-      }
-      return true;
-    }
     const getImage = image => {
       if (
         typeof image === 'undefined' ||
         image === null ||
         typeof image === 'string' ||
-        isEmpty(image) == true
+        image.uri == null
       ) {
         return defaultImage;
       } else {
-        return defaultImage;
+        return image;
       }
     };
 
@@ -125,8 +136,10 @@ function Main({navigation}) {
       <Navbar
         navigation={navigation}
         userLogged={userLogged}
+        setUserLogged={setUserLogged}
         token={token}
         userCalendar={userCalendar}
+        setUserCalendar={setUserCalendar}
         setModalVisible={setModalVisible}
       />
       {loading ? (
@@ -142,12 +155,6 @@ function Main({navigation}) {
           onRefresh={() => getTherapistsData()}
           refreshing={loading}></FlatList>
       )}
-      <View
-        style={{
-          height: 48,
-          width: '100%',
-          backgroundColor: mainColor,
-        }}></View>
       <Filters
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
@@ -240,7 +247,7 @@ const styles = StyleSheet.create({
     fontSize: CARD_TITLE,
     justifyContent: 'center',
   },
-  cardSubtitle: {color: textColor1, fontSize: CARD_SUBTITLE},
+  cardSubtitle: {color: 'black', fontSize: CARD_SUBTITLE},
   cardStars: {
     fontSize: STARS_SIZE,
     color: 'orange',

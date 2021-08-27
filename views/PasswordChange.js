@@ -48,7 +48,7 @@ function PasswordChange({
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', token);
+    myHeaders.append('xAuthToken', JSON.parse(token));
     return fetch(`${API_URL}/profile/edit`, {
       method: 'post',
       headers: myHeaders,

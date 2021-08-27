@@ -95,9 +95,8 @@ const durationDropdown = [
 ];
 
 function TherapistProfile({navigation, route}) {
-  let {userLogged} = route.params;
-  let {userCalendar} = route.params;
-  const token = route.params.token;
+  //--------------------------Variables for user and calendar------------------
+  let {userCalendar, userLogged, token} = route.params;
   //--------------------- for state variables for editing profile -------------
   const [descriptionEditing, setDescriptionEditing] = useState(false);
   const [dayEditing, setDayEditing] = useState(false);
@@ -106,42 +105,33 @@ function TherapistProfile({navigation, route}) {
   const [durationEditing, setDurationEditing] = useState(false);
   const [categoryEditing, setCategoryEditing] = useState(true);
 
-  const [text, setText] = useState(userLogged.description);
-  const [category, setCategory] = useState(
-    userLogged.category ? userLogged.category : 'categoría',
-  );
-  const [startHour, setStartHour] = useState(
-    userCalendar ? userCalendar.startHour : '09:00',
-  );
-  const [endHour, setEndHour] = useState(
-    userCalendar ? userCalendar.endHour : '20:00',
-  );
-  const [sessionDuration, setSessionDuration] = useState(
-    userCalendar.duration ? userCalendar.duration : '02:00',
-  );
+  const [description, setDescription] = useState(userLogged.description);
+  const [category, setCategory] = useState(userLogged.specialization);
+  const [startHour, setStartHour] = useState(userCalendar.startHour);
+  const [endHour, setEndHour] = useState(userCalendar.endHour);
+  const [sessionDuration, setSessionDuration] = useState(userCalendar.duration);
   //-------------------------------Week day variables ---------------------------------------
   const [sunday, setSunday] = useState(
-    (userCalendar = !undefined ? false : userCalendar.days[0]),
+    userCalendar.days ? userCalendar.days[0] : false,
   );
   const [monday, setMonday] = useState(
-    userCalendar ? userCalendar.days[1] : false,
+    userCalendar.days ? userCalendar.days[1] : false,
   );
   const [tuesday, setTuesday] = useState(
-    userCalendar ? userCalendar.days[2] : false,
+    userCalendar.days ? userCalendar.days[2] : false,
   );
   const [wednesday, setWednesday] = useState(
-    userCalendar ? userCalendar.days[3] : false,
+    userCalendar.days ? userCalendar.days[3] : false,
   );
   const [thursday, setThursday] = useState(
-    userCalendar ? userCalendar.days[4] : false,
+    userCalendar.days ? userCalendar.days[4] : false,
   );
   const [friday, setFriday] = useState(
-    userCalendar ? userCalendar.days[5] : false,
+    userCalendar.days ? userCalendar.days[5] : false,
   );
   const [saturday, setSaturday] = useState(
-    userCalendar ? userCalendar.days[6] : false,
+    userCalendar.days ? userCalendar.days[6] : false,
   );
-
   //-------------------------------flatlist loading variable --------------------------------
   const [loading, setLoading] = useState(false);
   //-----------------------------modalTerapeuta--------------------------------------------
@@ -185,13 +175,12 @@ function TherapistProfile({navigation, route}) {
   ]);
 
   const logOut = () => {
-    const keys = ['xauthtoken', 'user'];
+    const keys = ['xauthtoken', 'user', 'userCalendar'];
     AsyncStorage.multiRemove(keys).then(res => {
       console.log('Items removed from storage');
-      navigation.navigate('Login');
     });
+    navigation.navigate('Login');
   };
-
   const _storeData = async (keyName, value) => {
     try {
       await AsyncStorage.setItem(keyName, value);
@@ -203,20 +192,18 @@ function TherapistProfile({navigation, route}) {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', token);
+    myHeaders.append('xAuthToken', JSON.parse(token));
     return fetch(`${API_URL}/profile/edit`, {
       method: 'post',
       headers: myHeaders,
       body: JSON.stringify({
-        description: text,
+        description,
       }),
     })
       .then(data => {
-        setText(text);
-        userLogged = {...userLogged, description: text};
-        console.log(JSON.stringify(userLogged));
+        setDescription(description);
+        userLogged = {...userLogged, description};
         _storeData('user', JSON.stringify(userLogged));
-        console.log(JSON.stringify(data));
         Alert.alert(
           `Perfecto ${userLogged.name}!`,
           `Hemos actualizado tu descripción.`,
@@ -246,7 +233,7 @@ function TherapistProfile({navigation, route}) {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', token);
+    myHeaders.append('xAuthToken', JSON.parse(token));
     let days = {
       0: sunday,
       1: monday,
@@ -256,15 +243,22 @@ function TherapistProfile({navigation, route}) {
       5: friday,
       6: saturday,
     };
-    const array = [{days}, {startHour}, {endHour}, {duration: sessionDuration}];
-    console.log(`From change schedule before fetch: ${JSON.stringify(array)}`);
+    const scheduleSettings = [
+      {days},
+      {startHour},
+      {endHour},
+      {duration: sessionDuration},
+    ];
+    console.log(
+      `From change schedule before fetch: ${JSON.stringify(scheduleSettings)}`,
+    );
     return fetch(`${API_URL}/profile/calendar`, {
       method: 'post',
       headers: myHeaders,
-      body: JSON.stringify(array),
+      body: JSON.stringify(scheduleSettings),
     })
       .then(data => {
-        let days = {
+        const days = {
           0: sunday,
           1: monday,
           2: tuesday,
@@ -273,11 +267,8 @@ function TherapistProfile({navigation, route}) {
           5: friday,
           6: saturday,
         };
-        userLogged = {...userLogged, days};
-        _storeData('user', JSON.stringify(userLogged));
-        console.log(
-          `From received changeschedule fetch: ${JSON.stringify(data)}`,
-        );
+        userCalendar = {...userCalendar, days};
+        _storeData('userCalendar', JSON.stringify(userCalendar));
         Alert.alert(
           `Perfecto ${userLogged.name}!`,
           `Hemos actualizado tu horario.`,
@@ -311,7 +302,7 @@ function TherapistProfile({navigation, route}) {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', token);
+    myHeaders.append('xAuthToken', JSON.parse(token));
     console.log(
       `From changecategory: ${JSON.stringify({specialization: category})}`,
     );
@@ -323,14 +314,6 @@ function TherapistProfile({navigation, route}) {
       }),
     })
       .then(data => {
-        setMonday(monday);
-        setTuesday(tuesday);
-        setWednesday(wednesday);
-        setThursday(thursday);
-        setFriday(friday);
-        setSaturday(saturday);
-        setSunday(sunday);
-        console.log(data);
         userLogged = {...userLogged, specialization: category};
         _storeData('user', JSON.stringify(userLogged));
         Alert.alert(
@@ -561,18 +544,20 @@ function TherapistProfile({navigation, route}) {
           </View>
           <TextInput
             style={{
-              backgroundColor: descriptionEditing ? secondaryColor : 'grey',
+              backgroundColor: descriptionEditing
+                ? secondaryColor
+                : 'transparent',
               minHeight: 200,
               textAlignVertical: 'top',
               borderWidth: 1,
               borderColor: descriptionEditing ? secondaryColor : 'grey',
-              color: descriptionEditing ? secondaryColor : 'grey',
+              color: descriptionEditing ? 'black' : 'grey',
               fontSize: 18,
               borderRadius: 5,
               justifyContent: 'flex-start',
             }}
-            onChangeText={text => setText(text)}
-            value={text}
+            onChangeText={text => setDescription(text)}
+            value={description}
             editable={descriptionEditing}
             multiline
             maxLength={750}
@@ -807,12 +792,6 @@ function TherapistProfile({navigation, route}) {
           }}>
           DEJAR DE SERVIR AL MUNDO!
         </Button>
-        <View
-          style={{
-            height: 48,
-            width: '100%',
-            backgroundColor: mainColor,
-          }}></View>
       </ScrollView>
       <UserTypeChange
         modalTerapeutaVisible={modalTerapeutaVisible}

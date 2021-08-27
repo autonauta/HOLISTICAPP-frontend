@@ -6,23 +6,12 @@ import {
   Text,
   Image,
   View,
-  ScrollView,
   FlatList,
-  ActivityIndicator,
   StatusBar,
 } from 'react-native';
 import {Card} from 'react-native-paper';
-import {Calendar} from 'react-native-calendars';
-import {
-  API_URL,
-  mainColor,
-  secondaryColor,
-  tertiaryColor,
-  textColor1,
-  textColor2,
-} from '../config';
-
-import {LocaleConfig} from 'react-native-calendars';
+import {Calendar, LocaleConfig} from 'react-native-calendars';
+import {mainColor, secondaryColor, tertiaryColor, textColor2} from '../config';
 
 LocaleConfig.locales['es'] = {
   monthNames: [
@@ -89,7 +78,11 @@ function Calendars({route}) {
   };
   const getHoursOfDaySelected = day => {
     setLoading(true);
-    setHours(userCalendar.availableDays[day].hour);
+    setHours(
+      userCalendar.availableDays[day]
+        ? userCalendar.availableDays[day].hour
+        : [],
+    );
     setDay(day);
     setLoading(false);
   };
@@ -193,12 +186,6 @@ function Calendars({route}) {
           }}
           keyExtractor={item => `${item.id}`}></FlatList>
       </View>
-      <View
-        style={{
-          height: 48,
-          width: '100%',
-          backgroundColor: mainColor,
-        }}></View>
     </SafeAreaView>
   );
 }

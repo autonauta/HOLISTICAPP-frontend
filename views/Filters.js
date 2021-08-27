@@ -23,6 +23,7 @@ function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
   const [psicologia, setPsicologia] = useState(false);
   const [transgeneracional, setTransgeneracional] = useState(false);
   const [veterinaria, setVeterinaria] = useState(false);
+  const [allCheckboxes, setAllCheckboxes] = useState(false);
 
   const filters = {
     biomagnetismo,
@@ -77,6 +78,42 @@ function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
           <View style={styles.modalView}>
             <Text style={styles.title}>Filtros</Text>
             <View style={styles.formView}>
+              <View style={styles.checkboxViewTodos}>
+                <CheckBox
+                  tintColors={checkBoxTheme}
+                  value={allCheckboxes}
+                  onValueChange={value => {
+                    setAllCheckboxes(value);
+                    if (value == true) {
+                      setBiomagnetismo(true);
+                      setAromaterapia(true);
+                      setAcupunctura(true);
+                      setMasajes(true);
+                      setTarot(true);
+                      setMusicoterapia(true);
+                      setNutricion(true);
+                      setPsicologia(true);
+                      setTransgeneracional(true);
+                      setVeterinaria(true);
+                    } else if (value == false) {
+                      setBiomagnetismo(false);
+                      setAromaterapia(false);
+                      setAcupunctura(false);
+                      setMasajes(false);
+                      setTarot(false);
+                      setMusicoterapia(false);
+                      setNutricion(false);
+                      setPsicologia(false);
+                      setTransgeneracional(false);
+                      setVeterinaria(false);
+                    }
+                  }}
+                  style={styles.checkbox}
+                />
+                <Text style={styles.checkboxLabel}>
+                  {allCheckboxes == true ? 'Quitar todos' : 'Seleccionar todos'}
+                </Text>
+              </View>
               <View style={styles.checkboxView}>
                 <CheckBox
                   tintColors={checkBoxTheme}
@@ -236,6 +273,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
+  },
+  checkboxViewTodos: {
+    width: Dimensions.get('window').width,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: 'grey',
   },
   checkbox: {
     transform: [{scaleX: 1}, {scaleY: 1}],
