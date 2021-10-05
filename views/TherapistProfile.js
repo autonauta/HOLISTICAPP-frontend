@@ -192,7 +192,7 @@ function TherapistProfile({navigation, route}) {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', JSON.parse(token));
+    myHeaders.append('xAuthToken', token);
     return fetch(`${API_URL}/profile/edit`, {
       method: 'post',
       headers: myHeaders,
@@ -233,7 +233,7 @@ function TherapistProfile({navigation, route}) {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', JSON.parse(token));
+    myHeaders.append('xAuthToken', token);
     let days = {
       0: sunday,
       1: monday,
@@ -675,7 +675,7 @@ function TherapistProfile({navigation, route}) {
           </View>
           <View style={styles.horario}>
             <View style={styles.limits}>
-              <Text style={styles.limitsText}>Inicio del día</Text>
+              <Text style={styles.limitsText}>Primera sesión</Text>
               <SelectDropdown
                 disabled={!startHourEditing}
                 buttonStyle={{
@@ -711,7 +711,7 @@ function TherapistProfile({navigation, route}) {
               />
             </View>
             <View style={styles.limits}>
-              <Text style={styles.limitsText}>Fin del día</Text>
+              <Text style={styles.limitsText}>Última sesión</Text>
               <SelectDropdown
                 disabled={!startHourEditing}
                 buttonStyle={{

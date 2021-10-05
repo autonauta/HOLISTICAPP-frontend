@@ -32,9 +32,10 @@ function Main({navigation, route}) {
   //------------------------------Function for checking if the user is logged..............---
   const isAuth = async () => {
     try {
-      const token = await AsyncStorage.getItem('xauthtoken');
+      let token = await AsyncStorage.getItem('xauthtoken');
 
       if (token !== null) {
+        token = JSON.parse(token);
         setToken(token);
         console.log(`Token found, user Logedin: ${token}`);
         let user = await AsyncStorage.getItem('user');
@@ -76,7 +77,6 @@ function Main({navigation, route}) {
         .then(results => {
           const therapists = results;
           setData(therapists);
-          console.log(therapists);
           setLoading(false);
         });
     } catch (error) {
@@ -108,7 +108,9 @@ function Main({navigation, route}) {
     return (
       <Card
         style={styles.myCard}
-        onPress={() => navigation.navigate('Therapist', {item})}>
+        onPress={() =>
+          navigation.navigate('Therapist', {item, token, userLogged})
+        }>
         <View style={styles.cardView}>
           <Image style={styles.image} source={getImage(item.image)}></Image>
           <View style={styles.cardText}>
@@ -166,6 +168,7 @@ function Main({navigation, route}) {
   );
 }
 var TITLE_FONT_SIZE = 30;
+var TITLE_HEIGHT = 40;
 var PROMOS_HEIGHT = 140;
 var CARD_HEIGHT = 90;
 var IMAGE_HEIGHT = 70;
@@ -207,7 +210,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     alignSelf: 'flex-start',
     marginLeft: 10,
-    height: 40,
+    height: TITLE_HEIGHT,
     marginTop: 10,
   },
   flatList: {

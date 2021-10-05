@@ -58,6 +58,7 @@ function Login({navigation}) {
       .then(data => {
         if (data.token) {
           const token = data.token;
+          console.log('token:', token);
           const userLogged = data.user;
           let userCalendar = {};
           if (data.calendar) {

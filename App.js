@@ -10,6 +10,7 @@ import Calendar from './views/Calendar';
 import TherapistProfile from './views/TherapistProfile';
 import TherapistDocument from './views/TherapistDocument';
 import PasswordRecovery from './views/PasswordRecovery';
+import CheckoutTest from './views/CheckoutTest';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 
@@ -30,6 +31,7 @@ function App() {
         <Stack.Screen name="TherapistProfile" component={TherapistProfile} />
         <Stack.Screen name="TherapistDocument" component={TherapistDocument} />
         <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />
+        <Stack.Screen name="CheckoutTest" component={CheckoutTest} />
       </Stack.Navigator>
     </NavigationContainer>
   );

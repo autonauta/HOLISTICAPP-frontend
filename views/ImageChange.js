@@ -49,10 +49,8 @@ function ImageChange({
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', JSON.parse(token));
-    console.log(
-      `From submit data object to send to API: ${JSON.stringify(imageUrl)}`,
-    );
+    myHeaders.append('xAuthToken', token);
+    console.log(`From submit data object to send to API: ${imageUrl}`);
     fetch(`${API_URL}/profile/edit`, {
       method: 'post',
       headers: myHeaders,
@@ -105,12 +103,12 @@ function ImageChange({
       fetch(CLOUDINARY_URL, {
         method: 'post',
         body: data,
-      }).then(receivedImage => {
-        console.log(
-          `From response of uploading to cloudinary: ${receivedImage}`,
-        );
-        //submitData(receivedImage.url);
-      });
+      })
+        .then(res => res.json())
+        .then(receivedImage => {
+          console.log(receivedImage.url);
+          submitData(receivedImage.url);
+        });
     } catch (error) {
       console.log(`Error: ${error}`);
     }

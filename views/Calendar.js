@@ -8,10 +8,11 @@ import {
   View,
   FlatList,
   StatusBar,
+  PixelRatio,
 } from 'react-native';
 import {Card} from 'react-native-paper';
 import {Calendar, LocaleConfig} from 'react-native-calendars';
-import {mainColor, secondaryColor, tertiaryColor, textColor2} from '../config';
+import {mainColor, secondaryColor, tertiaryColor} from '../config';
 
 LocaleConfig.locales['es'] = {
   monthNames: [
@@ -58,9 +59,12 @@ LocaleConfig.defaultLocale = 'es';
 
 const defaultImage = require('../assets/avatar.png');
 
-function Calendars({route}) {
-  const {name, image, specialization} = route.params;
+function Calendars({route, navigation}) {
+  const {name, image, specialization, token, _id} = route.params;
+  const userLogged = route.params.userLogged;
   const userCalendar = route.params.calendar[0];
+  const [hours, setHours] = useState([]);
+
   const [markedDates] = useState(
     userCalendar ? userCalendar.availableDays : {},
   );
@@ -76,36 +80,38 @@ function Calendars({route}) {
 
     return year + '-' + month + '-' + date;
   };
+  const [day, setDay] = useState(getCurrentDate());
+  let yearStyle = {
+    display: hours.length > 0 ? 'flex' : 'none',
+    color: tertiaryColor,
+    fontSize: 43,
+    fontWeight: '700',
+  };
+  let dayStyle = {
+    marginRight: 20,
+    display: hours.length > 0 ? 'flex' : 'none',
+    color: tertiaryColor,
+    fontSize: 50,
+    fontWeight: '700',
+  };
+  let monthStyle = {
+    marginRight: 20,
+    display: hours.length > 0 ? 'flex' : 'none',
+    color: secondaryColor,
+    fontSize: 30,
+    fontWeight: '700',
+  };
   const getHoursOfDaySelected = day => {
     setLoading(true);
+    setDay(day);
     setHours(
       userCalendar.availableDays[day]
         ? userCalendar.availableDays[day].hour
         : [],
     );
-    setDay(day);
     setLoading(false);
   };
-  const [hours, setHours] = useState([]);
-  const [day, setDay] = useState(getCurrentDate());
 
-  const theme = {
-    calendarBackground: mainColor,
-    textSectionTitleColor: tertiaryColor,
-    selectedDayBackgroundColor: secondaryColor,
-    selectedDayTextColor: mainColor,
-    todayTextColor: tertiaryColor,
-    dayTextColor: '#a4a5a7',
-    textDisabledColor: '#a4a5a7',
-    arrowColor: secondaryColor,
-    monthTextColor: secondaryColor,
-    textDayFontWeight: '700',
-    textMonthFontWeight: 'bold',
-    textDayHeaderFontWeight: '700',
-    textDayFontSize: 16,
-    textMonthFontSize: 24,
-    textDayHeaderFontSize: 18,
-  };
   const getImage = image => {
     if (
       typeof image === 'undefined' ||
@@ -118,14 +124,44 @@ function Calendars({route}) {
       return image;
     }
   };
+  const paySession = hour => {
+    navigation.navigate('CheckoutTest', {
+      hour,
+      day,
+      token,
+      name,
+      userLogged,
+      _id,
+      image,
+      specialization,
+    });
+  };
   const renderList = item => {
     return (
-      <Card style={styles.myCard}>
+      <Card
+        style={styles.myCard}
+        onPress={() => {
+          paySession(item.hour);
+        }}>
         <View style={styles.cardView}>
           <Text style={styles.cardTitle}>{item.hour}</Text>
         </View>
       </Card>
     );
+  };
+  const selectMonth = m => {
+    if (m == '01') return 'ENERO';
+    else if (m == '02') return 'FEBRERO';
+    else if (m == '03') return 'MARZO';
+    else if (m == '04') return 'ABRIL';
+    else if (m == '05') return 'MAYO';
+    else if (m == '06') return 'JUNIO';
+    else if (m == '07') return 'JULIO';
+    else if (m == '08') return 'AGOSTO';
+    else if (m == '09') return 'SEPTIEMBRE';
+    else if (m == '10') return 'OCTUBRE';
+    else if (m == '11') return 'NOVIEMBRE';
+    else if (m == '12') return 'DICIEMBRE';
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -152,7 +188,19 @@ function Calendars({route}) {
           <Text style={styles.subtitle}>{specialization}</Text>
         </View>
       </View>
-
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <View style={styles.tick}>
+          <Text style={styles.tickText}>X</Text>
+        </View>
+        <Text style={{color: secondaryColor, fontSize: 20}}>
+          Días disponibles
+        </Text>
+      </View>
       <Calendar
         style={styles.calendar}
         theme={theme}
@@ -176,7 +224,17 @@ function Calendars({route}) {
         // Enable the option to swipe between months. Default = false
         enableSwipeMonths={true}
       />
-      <Text style={styles.title}>Horario</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          width: '100%',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+        <Text style={dayStyle}>{day.split('-')[2]}</Text>
+        <Text style={monthStyle}>{selectMonth(day.split('-')[1])}</Text>
+        <Text style={yearStyle}>{day.split('-')[0]}</Text>
+      </View>
       <View style={styles.flatListContainer}>
         <FlatList
           style={styles.flatList}
@@ -189,6 +247,41 @@ function Calendars({route}) {
     </SafeAreaView>
   );
 }
+var IMAGE_SIZE = 80;
+var TITLE_FONT_SIZE = 40;
+var SUBTITLE_FONT_SIZE = 30;
+var TICK_SIZE = 30;
+var TICK_TEXT_SIZE = 18;
+var DAY_FONT_SIZE = 18;
+var MONTH_FONT_SIZE = 24;
+var HEADER_FONT_SIZE = 16;
+if (PixelRatio.get() <= 2) {
+  IMAGE_SIZE = 60;
+  TITLE_FONT_SIZE = 28;
+  SUBTITLE_FONT_SIZE = 20;
+  TICK_SIZE = 20;
+  TICK_TEXT_SIZE = 14;
+  DAY_FONT_SIZE = 14;
+  HEADER_FONT_SIZE = 12;
+  MONTH_FONT_SIZE = 20;
+}
+const theme = {
+  calendarBackground: mainColor,
+  textSectionTitleColor: tertiaryColor,
+  selectedDayBackgroundColor: secondaryColor,
+  selectedDayTextColor: mainColor,
+  todayTextColor: tertiaryColor,
+  dayTextColor: '#a4a5a7',
+  textDisabledColor: '#a4a5a7',
+  arrowColor: secondaryColor,
+  monthTextColor: secondaryColor,
+  textDayFontWeight: '700',
+  textMonthFontWeight: 'bold',
+  textDayHeaderFontWeight: '700',
+  textDayFontSize: DAY_FONT_SIZE,
+  textMonthFontSize: MONTH_FONT_SIZE,
+  textDayHeaderFontSize: HEADER_FONT_SIZE,
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -199,29 +292,33 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
-  title: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: '700',
-    alignSelf: 'flex-start',
-  },
   titleName: {
     color: 'white',
-    fontSize: 40,
+    fontSize: TITLE_FONT_SIZE,
     marginLeft: 10,
   },
   subtitle: {
     color: 'white',
-    fontSize: 30,
+    fontSize: SUBTITLE_FONT_SIZE,
     marginLeft: 10,
   },
+  tick: {
+    width: TICK_SIZE,
+    height: TICK_SIZE,
+    borderRadius: TICK_SIZE / 2,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  tickText: {fontSize: TICK_TEXT_SIZE, fontWeight: '700', color: mainColor},
   calendar: {
     width: Dimensions.get('screen').width,
     alignSelf: 'center',
   },
   image: {
-    height: 80,
-    width: 80,
+    height: IMAGE_SIZE,
+    width: IMAGE_SIZE,
     borderRadius: 40,
   },
   flatListContainer: {
@@ -237,16 +334,17 @@ const styles = StyleSheet.create({
   },
   myCard: {
     width: '100%',
-    marginBottom: 8,
+    marginBottom: 1,
     borderRadius: 8,
   },
   cardView: {
+    height: 80,
     paddingLeft: 10,
     paddingRight: 8,
     paddingTop: 4,
     paddingBottom: 4,
     flexDirection: 'row',
-    backgroundColor: tertiaryColor,
+    backgroundColor: secondaryColor,
     borderRadius: 8,
   },
   cardText: {
@@ -255,8 +353,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   cardTitle: {
-    color: textColor2,
-    fontSize: 18,
+    color: tertiaryColor,
+    fontSize: 25,
     fontWeight: '400',
     justifyContent: 'center',
   },

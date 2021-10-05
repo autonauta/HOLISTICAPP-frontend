@@ -58,15 +58,17 @@ function Navbar({
 }
 var NAV_HEIGHT = 50;
 var ICON_SIZE = 30;
+var NAV_MARGIN_TOP = 20;
 if (PixelRatio.get() <= 2) {
   NAV_HEIGHT = 60;
+  NAV_MARGIN_TOP = 0;
   ICON_SIZE = 24;
 }
 const styles = StyleSheet.create({
   navbar: {
     width: '100%',
     height: NAV_HEIGHT,
-    marginTop: 20,
+    marginTop: NAV_MARGIN_TOP,
     backgroundColor: mainColor,
     flexDirection: 'row',
   },
