@@ -69,7 +69,7 @@ function Therapist({navigation, route}) {
                 _id,
               });
             }}>
-            CALENDAR
+            PROGRAMA UNA CITA
           </Button>
         </View>
       </ScrollView>

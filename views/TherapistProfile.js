@@ -457,13 +457,16 @@ function TherapistProfile({navigation, route}) {
         showHideTransition={'fade'}
       />
       <View style={styles.header}>
-        <Pressable
-          onLongPress={() => {
-            setImageModalVisible(true);
-          }}>
+        <Pressable>
           <Image
             style={styles.image}
             source={getImage(userLogged.image)}></Image>
+          <Pressable
+            onPress={() => {
+              setImageModalVisible(true);
+            }}>
+            <Text style={styles.imageChangeText}>cambiar imagen</Text>
+          </Pressable>
         </Pressable>
 
         <View style={styles.userBox}>
@@ -810,7 +813,7 @@ function TherapistProfile({navigation, route}) {
     </SafeAreaView>
   );
 }
-var IMAGE_SIZE = 80;
+var IMAGE_SIZE = 90;
 var TITLE_FONT_SIZE = 30;
 var SUBTITLE_FONT_SIZE = 28;
 var LOGOUT_BUTTON_PADDING = 10;
@@ -886,6 +889,10 @@ const styles = StyleSheet.create({
     height: IMAGE_SIZE,
     width: IMAGE_SIZE,
     borderRadius: 40,
+  },
+  imageChangeText: {
+    color: 'white',
+    fontSize: 16,
   },
   description: {
     width: Dimensions.get('window').width,

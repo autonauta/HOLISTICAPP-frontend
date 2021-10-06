@@ -12,6 +12,7 @@ import {
 import {
   API_URL,
   mainColor,
+  secondaryColor,
   textColor2,
   CLOUDINARY_URL,
   UPLOAD_PRESET,
@@ -218,7 +219,7 @@ const styles = StyleSheet.create({
   modalView: {
     width: Dimensions.get('window').width,
     paddingTop: 10,
-    backgroundColor: mainColor,
+    backgroundColor: secondaryColor,
     borderTopRightRadius: 50,
     alignItems: 'center',
     shadowColor: 'black',
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
   modalText: {
     width: '100%',
     textAlign: 'center',
-    color: textColor2,
+    color: mainColor,
     fontSize: 30,
     fontWeight: '700',
     marginBottom: 25,

@@ -10,7 +10,6 @@ import {
   FlatList,
   ActivityIndicator,
   PixelRatio,
-  SafeAreaView,
   StatusBar,
 } from 'react-native';
 import {Card} from 'react-native-paper';

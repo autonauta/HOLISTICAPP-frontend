@@ -8,17 +8,14 @@ import {
   Pressable,
   Alert,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
-import {
-  API_URL,
-  mainColor,
-  secondaryColor,
-  textColor1,
-  textColor2,
-} from '../config';
+import {API_URL, mainColor, secondaryColor, textColor2} from '../config';
 import openpay from 'react-native-openpay';
 import {useState} from 'react';
+
 openpay.setup('mld1bopn3wpit9sejucx', 'pk_425ef633b7ea415da285c4909781424c');
+
 function PayModal({
   payModalVisible,
   setPayModalVisible,
@@ -28,10 +25,8 @@ function PayModal({
   _id,
   day,
   hour,
+  navigation,
 }) {
-  const [therapistStatus, setTherapistStatus] = useState(
-    userLogged.isTherapist,
-  );
   const [deviceSessionId, setDeviceSessionId] = useState('');
   const [cardToken, setCardToken] = useState('');
   const [cardNumber, setCardNumber] = useState('4111111111111111');
@@ -39,32 +34,13 @@ function PayModal({
   const [monthExp, setMonthExp] = useState('02');
   const [yearExp, setYearExp] = useState('25');
   const [CVV, setCVV] = useState('432');
+  const [loading, setLoading] = useState(false);
 
   const submitData = () => {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('xAuthToken', token);
-    console.log(
-      JSON.stringify({
-        cardToken,
-        method: 'card',
-        amount: 500,
-        currency: 'MXN',
-        description: `Pago de sesión con ${name}`,
-        order_id: 'oid-000666',
-        sessiondId: deviceSessionId,
-        customer: {
-          name: cardHolder.split(' ')[0],
-          last_name: cardHolder.split(' ')[1],
-          email: userLogged.email,
-        },
-        cardHolder: cardHolder,
-        therapist_id: _id,
-        day: day.split('-')[2],
-        hour,
-      }),
-    );
     fetch(`${API_URL}/payment/charge`, {
       method: 'post',
       headers: myHeaders,
@@ -90,14 +66,17 @@ function PayModal({
       .then(res => res.json())
       .then(data => {
         console.log(`Data received on fetch: ${JSON.stringify(data)}`);
-        if (data) {
+        if (data.authorization) {
+          setLoading(false);
           Alert.alert(
             `Perfecto ${userLogged.name}!`,
-            `pago relizado con exito!`,
+            `Pago relizado con exito!`,
             [
               {
                 text: 'OK',
                 onPress: () => {
+                  setPayModalVisible(false);
+                  navigation.navigate('Home');
                   console.log('OK pressed');
                 },
               },
@@ -106,10 +85,25 @@ function PayModal({
         }
       })
       .catch(err => {
+        setLoading(false);
         console.error(`Error del fetch al server: ${JSON.stringify(err)}`);
+        Alert.alert(
+          `Upss ${userLogged.name}!`,
+          `Error al comunicarse con el servidor!`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                setPayModalVisible(false);
+                console.log('OK pressed');
+              },
+            },
+          ],
+        );
       });
   };
   const generatePayRequest = () => {
+    setLoading(true);
     openpay.getDeviceSessionId().then(sessionId => {
       setDeviceSessionId(sessionId);
       console.log(`Device session Id: ${sessionId}`);
@@ -238,22 +232,28 @@ function PayModal({
                   onChangeText={text => setCVV(text)}></TextInput>
               </View>
             </View>
-            <View style={styles.buttons}>
-              <Pressable
-                style={[styles.button, styles.buttonAplicar]}
-                onPress={() => {
-                  generatePayRequest();
-                }}>
-                <Text style={styles.textStyle}>ACEPTAR</Text>
-              </Pressable>
-              <Pressable
-                style={[styles.button, styles.buttonCancel]}
-                onPress={() => {
-                  setPayModalVisible(!payModalVisible);
-                }}>
-                <Text style={styles.textStyle}>CANCELAR</Text>
-              </Pressable>
-            </View>
+            {loading ? (
+              <View style={styles.buttons}>
+                <ActivityIndicator size="large" color={secondaryColor} />
+              </View>
+            ) : (
+              <View style={styles.buttons}>
+                <Pressable
+                  style={[styles.button, styles.buttonAplicar]}
+                  onPress={() => {
+                    generatePayRequest();
+                  }}>
+                  <Text style={styles.textStyle}>ACEPTAR</Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.button, styles.buttonCancel]}
+                  onPress={() => {
+                    setPayModalVisible(!payModalVisible);
+                  }}>
+                  <Text style={styles.textStyle}>CANCELAR</Text>
+                </Pressable>
+              </View>
+            )}
           </View>
         </View>
       </Modal>

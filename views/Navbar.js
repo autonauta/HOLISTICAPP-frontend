@@ -26,22 +26,27 @@ function Navbar({
       <Button
         labelStyle={styles.buttonIcon}
         icon="menu"
+        color="black"
+        color="transparent"
         style={styles.buttons}></Button>
       <Button
         labelStyle={styles.buttonIcon}
         icon="view-dashboard"
+        color="black"
         style={styles.buttons}>
         <Text style={styles.icons}></Text>
       </Button>
       <Button
         labelStyle={styles.buttonIcon}
         icon="store"
+        color="black"
         style={styles.buttons}>
         <Text style={styles.icons}></Text>
       </Button>
       <Button
         labelStyle={styles.buttonIcon}
         icon="filter"
+        color="black"
         style={styles.buttons}
         onPress={() => {
           setModalVisible(true);
@@ -51,6 +56,7 @@ function Navbar({
       <Button
         labelStyle={styles.buttonIcon}
         icon="account"
+        color="black"
         style={styles.buttons}
         onPress={profileNavigation}></Button>
     </View>
