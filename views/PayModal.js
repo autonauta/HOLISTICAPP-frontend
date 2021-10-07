@@ -28,30 +28,50 @@ function PayModal({
   navigation,
 }) {
   const [deviceSessionId, setDeviceSessionId] = useState('');
-  const [cardToken, setCardToken] = useState('');
+  const [cToken, setCToken] = useState('');
   const [cardNumber, setCardNumber] = useState('4111111111111111');
   const [cardHolder, setCardHolder] = useState('CESAR ALANIS NUNEZ');
   const [monthExp, setMonthExp] = useState('02');
   const [yearExp, setYearExp] = useState('25');
   const [CVV, setCVV] = useState('432');
   const [loading, setLoading] = useState(false);
+  let cardToken = '';
+  let deviceSId = '';
 
   const submitData = () => {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('xAuthToken', token);
-    fetch(`${API_URL}/payment/charge`, {
-      method: 'post',
-      headers: myHeaders,
-      body: JSON.stringify({
-        cardToken,
+    console.log(
+      JSON.stringify({
+        cardToken: cardToken,
         method: 'card',
         amount: 500,
         currency: 'MXN',
         description: `Pago de sesión con ${name}`,
-        order_id: 'oid-000666',
-        sessiondId: deviceSessionId,
+        sessiondId: deviceSId,
+        customer: {
+          name: cardHolder.split(' ')[0],
+          last_name: cardHolder.split(' ')[1],
+          email: userLogged.email,
+        },
+        cardHolder: cardHolder,
+        therapist_id: _id,
+        day: day.split('-')[2],
+        hour,
+      }),
+    );
+    fetch('http://highdatamx.com:3000/api/payment/charge', {
+      method: 'post',
+      headers: myHeaders,
+      body: JSON.stringify({
+        cardToken: cardToken,
+        method: 'card',
+        amount: 500,
+        currency: 'MXN',
+        description: `Pago de sesión con ${name}`,
+        sessiondId: deviceSId,
         customer: {
           name: cardHolder.split(' ')[0],
           last_name: cardHolder.split(' ')[1],
@@ -66,7 +86,7 @@ function PayModal({
       .then(res => res.json())
       .then(data => {
         console.log(`Data received on fetch: ${JSON.stringify(data)}`);
-        if (data.authorization) {
+        if (data._id) {
           setLoading(false);
           Alert.alert(
             `Perfecto ${userLogged.name}!`,
@@ -105,31 +125,23 @@ function PayModal({
   const generatePayRequest = () => {
     setLoading(true);
     openpay.getDeviceSessionId().then(sessionId => {
-      setDeviceSessionId(sessionId);
-      console.log(`Device session Id: ${sessionId}`);
-      generateCardToken();
+      deviceSId = sessionId;
+      console.log(`Device session Id: ${deviceSId}`);
     });
-  };
-  const generateCardToken = () => {
-    try {
-      openpay
-        .createCardToken({
-          holder_name: cardHolder,
-          card_number: cardNumber,
-          expiration_month: monthExp,
-          expiration_year: yearExp,
-          cvv2: CVV,
-        })
-        .then(cardToken => {
-          if (cardToken) {
-            setCardToken(cardToken);
-            console.log(`Card token: ${cardToken}`);
-            submitData();
-          }
-        });
-    } catch (error) {
-      console.error(`Error al crear token de tarjeta: ${error}`);
-    }
+    openpay
+      .createCardToken({
+        holder_name: cardHolder,
+        card_number: cardNumber,
+        expiration_month: monthExp,
+        expiration_year: yearExp,
+        cvv2: CVV,
+      })
+      .then(receivedToken => {
+        console.log(receivedToken);
+        cardToken = receivedToken;
+        console.log(`Card token: ${cardToken}`);
+        submitData();
+      });
   };
 
   return (
