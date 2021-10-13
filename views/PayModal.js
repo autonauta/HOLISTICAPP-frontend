@@ -27,8 +27,6 @@ function PayModal({
   hour,
   navigation,
 }) {
-  const [deviceSessionId, setDeviceSessionId] = useState('');
-  const [cToken, setCToken] = useState('');
   const [cardNumber, setCardNumber] = useState('4111111111111111');
   const [cardHolder, setCardHolder] = useState('CESAR ALANIS NUNEZ');
   const [monthExp, setMonthExp] = useState('02');
@@ -45,7 +43,7 @@ function PayModal({
     myHeaders.append('xAuthToken', token);
     console.log(
       JSON.stringify({
-        cardToken: cardToken,
+        cardToken,
         method: 'card',
         amount: 500,
         currency: 'MXN',
@@ -58,15 +56,15 @@ function PayModal({
         },
         cardHolder: cardHolder,
         therapist_id: _id,
-        day: day.split('-')[2],
+        day,
         hour,
       }),
     );
-    fetch('http://highdatamx.com:3000/api/payment/charge', {
+    fetch(`${API_URL}/payment/charge`, {
       method: 'post',
       headers: myHeaders,
       body: JSON.stringify({
-        cardToken: cardToken,
+        cardToken,
         method: 'card',
         amount: 500,
         currency: 'MXN',
@@ -79,7 +77,7 @@ function PayModal({
         },
         cardHolder: cardHolder,
         therapist_id: _id,
-        day: day.split('-')[2],
+        day,
         hour,
       }),
     })

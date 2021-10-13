@@ -9,6 +9,7 @@ import {
   FlatList,
   StatusBar,
   PixelRatio,
+  ScrollView,
 } from 'react-native';
 import {Card} from 'react-native-paper';
 import {Calendar, LocaleConfig} from 'react-native-calendars';
@@ -58,6 +59,9 @@ LocaleConfig.locales['es'] = {
 LocaleConfig.defaultLocale = 'es';
 
 const defaultImage = require('../assets/avatar.png');
+let smallPhone = false;
+if (PixelRatio.get() <= 2) smallPhone = true;
+else smallPhone = false;
 
 function Calendars({route, navigation}) {
   const {name, image, specialization, token, _id} = route.params;
@@ -81,24 +85,32 @@ function Calendars({route, navigation}) {
     return year + '-' + month + '-' + date;
   };
   const [day, setDay] = useState(getCurrentDate());
+  let yearFontSize = 43;
+  let monthFontSize = 30;
+  let dayFontSize = 50;
+  if (PixelRatio.get() <= 2) {
+    yearFontSize = 30;
+    monthFontSize = 28;
+    dayFontSize = 40;
+  }
   let yearStyle = {
     display: hours.length > 0 ? 'flex' : 'none',
     color: tertiaryColor,
-    fontSize: 43,
+    fontSize: yearFontSize,
     fontWeight: '700',
   };
   let dayStyle = {
     marginRight: 20,
     display: hours.length > 0 ? 'flex' : 'none',
     color: tertiaryColor,
-    fontSize: 50,
+    fontSize: dayFontSize,
     fontWeight: '700',
   };
   let monthStyle = {
     marginRight: 20,
     display: hours.length > 0 ? 'flex' : 'none',
     color: secondaryColor,
-    fontSize: 30,
+    fontSize: monthFontSize,
     fontWeight: '700',
   };
   const getHoursOfDaySelected = day => {
@@ -143,8 +155,10 @@ function Calendars({route, navigation}) {
         onPress={() => {
           paySession(item.hour);
         }}>
-        <View style={styles.cardView}>
-          <Text style={styles.cardTitle}>{item.hour}</Text>
+        <View style={smallPhone ? styles.cardViewSmall : styles.cardView}>
+          <Text style={smallPhone ? styles.cardTitleSmall : styles.cardTitle}>
+            {item.hour}
+          </Text>
         </View>
       </Card>
     );
@@ -188,62 +202,127 @@ function Calendars({route, navigation}) {
           <Text style={styles.subtitle}>{specialization}</Text>
         </View>
       </View>
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        <View style={styles.tick}>
-          <Text style={styles.tickText}>X</Text>
+
+      {smallPhone ? (
+        <ScrollView style={{width: '100%'}}>
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <View style={styles.tick}>
+              <Text style={styles.tickText}>X</Text>
+            </View>
+            <Text style={{color: secondaryColor, fontSize: 20}}>
+              Días disponibles
+            </Text>
+          </View>
+          <Calendar
+            style={styles.calendar}
+            theme={theme}
+            monthFormat={'MMMM'}
+            markedDates={markedDates}
+            // Handler which gets executed on day press. Default = undefined
+            onDayPress={day => {
+              getHoursOfDaySelected(day.dateString);
+            }}
+            onDayLongPress={day => {
+              getHoursOfDaySelected(day.dateString);
+            }}
+            onMonthChange={month => {
+              setHours([]);
+            }}
+            hideExtraDays={true}
+            // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
+            monthFormat={'MMMM yyyy'}
+            // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday
+            firstDay={1}
+            // Enable the option to swipe between months. Default = false
+            enableSwipeMonths={true}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={dayStyle}>{day.split('-')[2]}</Text>
+            <Text style={monthStyle}>{selectMonth(day.split('-')[1])}</Text>
+            <Text style={yearStyle}>{day.split('-')[0]}</Text>
+          </View>
+          <View>
+            <FlatList
+              style={styles.flatList}
+              data={hours}
+              renderItem={({item}) => {
+                return renderList(item);
+              }}
+              keyExtractor={item => `${item.id}`}
+              scrollEnabled={false}></FlatList>
+          </View>
+        </ScrollView>
+      ) : (
+        <View style={{width: '100%'}}>
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <View style={styles.tick}>
+              <Text style={styles.tickText}>X</Text>
+            </View>
+            <Text style={{color: secondaryColor, fontSize: 20}}>
+              Días disponibles
+            </Text>
+          </View>
+          <Calendar
+            style={styles.calendar}
+            theme={theme}
+            monthFormat={'MMMM'}
+            markedDates={markedDates}
+            // Handler which gets executed on day press. Default = undefined
+            onDayPress={day => {
+              getHoursOfDaySelected(day.dateString);
+            }}
+            onDayLongPress={day => {
+              getHoursOfDaySelected(day.dateString);
+            }}
+            onMonthChange={month => {
+              setHours([]);
+            }}
+            hideExtraDays={true}
+            // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
+            monthFormat={'MMMM yyyy'}
+            // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday
+            firstDay={1}
+            // Enable the option to swipe between months. Default = false
+            enableSwipeMonths={true}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={dayStyle}>{day.split('-')[2]}</Text>
+            <Text style={monthStyle}>{selectMonth(day.split('-')[1])}</Text>
+            <Text style={yearStyle}>{day.split('-')[0]}</Text>
+          </View>
+          <View style={styles.flatListContainer}>
+            <FlatList
+              style={styles.flatList}
+              data={hours}
+              renderItem={({item}) => {
+                return renderList(item);
+              }}
+              keyExtractor={item => `${item.id}`}></FlatList>
+          </View>
         </View>
-        <Text style={{color: secondaryColor, fontSize: 20}}>
-          Días disponibles
-        </Text>
-      </View>
-      <Calendar
-        style={styles.calendar}
-        theme={theme}
-        monthFormat={'MMMM'}
-        markedDates={markedDates}
-        // Handler which gets executed on day press. Default = undefined
-        onDayPress={day => {
-          getHoursOfDaySelected(day.dateString);
-        }}
-        onDayLongPress={day => {
-          getHoursOfDaySelected(day.dateString);
-        }}
-        onMonthChange={month => {
-          setHours([]);
-        }}
-        hideExtraDays={true}
-        // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
-        monthFormat={'MMMM yyyy'}
-        // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday
-        firstDay={1}
-        // Enable the option to swipe between months. Default = false
-        enableSwipeMonths={true}
-      />
-      <View
-        style={{
-          flexDirection: 'row',
-          width: '100%',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-        <Text style={dayStyle}>{day.split('-')[2]}</Text>
-        <Text style={monthStyle}>{selectMonth(day.split('-')[1])}</Text>
-        <Text style={yearStyle}>{day.split('-')[0]}</Text>
-      </View>
-      <View style={styles.flatListContainer}>
-        <FlatList
-          style={styles.flatList}
-          data={hours}
-          renderItem={({item}) => {
-            return renderList(item);
-          }}
-          keyExtractor={item => `${item.id}`}></FlatList>
-      </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -255,7 +334,8 @@ var TICK_TEXT_SIZE = 18;
 var DAY_FONT_SIZE = 18;
 var MONTH_FONT_SIZE = 24;
 var HEADER_FONT_SIZE = 16;
-if (PixelRatio.get() <= 2) {
+PixelRatio.get();
+if (smallPhone <= 2) {
   IMAGE_SIZE = 60;
   TITLE_FONT_SIZE = 28;
   SUBTITLE_FONT_SIZE = 20;
@@ -347,6 +427,16 @@ const styles = StyleSheet.create({
     backgroundColor: secondaryColor,
     borderRadius: 8,
   },
+  cardViewSmall: {
+    height: 60,
+    paddingLeft: 10,
+    paddingRight: 8,
+    paddingTop: 4,
+    paddingBottom: 4,
+    flexDirection: 'row',
+    backgroundColor: secondaryColor,
+    borderRadius: 8,
+  },
   cardText: {
     flex: 1,
     height: '80%',
@@ -358,16 +448,11 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     justifyContent: 'center',
   },
-  cardSubtitle: {color: 'white', fontSize: 15},
-  cardStars: {
-    fontSize: 25,
-    color: 'orange',
-    marginTop: 10,
-  },
-  button: {
-    width: '60%',
-    marginTop: 40,
-    backgroundColor: secondaryColor,
+  cardTitleSmall: {
+    color: tertiaryColor,
+    fontSize: 20,
+    fontWeight: '400',
+    justifyContent: 'center',
   },
 });
 
