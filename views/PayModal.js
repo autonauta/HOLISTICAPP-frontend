@@ -36,30 +36,21 @@ function PayModal({
   let cardToken = '';
   let deviceSId = '';
 
+  const dashboardNavigation = () => {
+    if (userLogged.isTherapist === false) {
+      navigation.navigate('Dashboard', {userLogged, token});
+    } else {
+      navigation.navigate('TherapistDashboard', {
+        userLogged,
+        token,
+      });
+    }
+  };
   const submitData = () => {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('xAuthToken', token);
-    console.log(
-      JSON.stringify({
-        cardToken,
-        method: 'card',
-        amount: 500,
-        currency: 'MXN',
-        description: `Pago de sesión con ${name}`,
-        sessiondId: deviceSId,
-        customer: {
-          name: cardHolder.split(' ')[0],
-          last_name: cardHolder.split(' ')[1],
-          email: userLogged.email,
-        },
-        cardHolder: cardHolder,
-        therapist_id: _id,
-        day,
-        hour,
-      }),
-    );
     fetch(`${API_URL}/payment/charge`, {
       method: 'post',
       headers: myHeaders,
@@ -94,7 +85,7 @@ function PayModal({
                 text: 'OK',
                 onPress: () => {
                   setPayModalVisible(false);
-                  navigation.navigate('Home');
+                  dashboardNavigation();
                   console.log('OK pressed');
                 },
               },

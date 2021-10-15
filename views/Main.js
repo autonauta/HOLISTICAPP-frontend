@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   PixelRatio,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import {Card} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -51,10 +52,6 @@ function Main({navigation, route}) {
       console.log(`Error in Async Storage from isAuth: ${error}`);
     }
   };
-  /* useEffect(() => {
-    isAuth();
-    getTherapistsData();
-  }, []); */
   useFocusEffect(
     React.useCallback(() => {
       // Do something when the screen is focused
@@ -103,29 +100,30 @@ function Main({navigation, route}) {
         return image;
       }
     };
-
-    return (
-      <Card
-        style={styles.myCard}
-        onPress={() =>
-          navigation.navigate('Therapist', {item, token, userLogged})
-        }>
-        <View style={styles.cardView}>
-          <Image style={styles.image} source={getImage(item.image)}></Image>
-          <View style={styles.cardText}>
-            <Text style={styles.cardTitle}>{item.name}</Text>
-            <Text style={styles.cardSubtitle}>{item.specialization}</Text>
+    if (userLogged.name != item.name) {
+      return (
+        <Card
+          style={styles.myCard}
+          onPress={() =>
+            navigation.navigate('Therapist', {item, token, userLogged})
+          }>
+          <View style={styles.cardView}>
+            <Image style={styles.image} source={getImage(item.image)}></Image>
+            <View style={styles.cardText}>
+              <Text style={styles.cardTitle}>{item.name}</Text>
+              <Text style={styles.cardSubtitle}>{item.specialization}</Text>
+            </View>
+            <View style={styles.typeOf}>
+              <Text style={styles.cardSubtitle}></Text>
+              <Text style={styles.cardStars}>{getStars(item.rating)}</Text>
+            </View>
           </View>
-          <View style={styles.typeOf}>
-            <Text style={styles.cardSubtitle}></Text>
-            <Text style={styles.cardStars}>{getStars(item.rating)}</Text>
-          </View>
-        </View>
-      </Card>
-    );
+        </Card>
+      );
+    }
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar
         animated={true}
         backgroundColor={mainColor}
@@ -163,14 +161,14 @@ function Main({navigation, route}) {
         setData={setData}
         setLoading={setLoading}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 var TITLE_FONT_SIZE = 30;
 var TITLE_HEIGHT = 40;
 var PROMOS_HEIGHT = 140;
-var CARD_HEIGHT = 90;
-var IMAGE_HEIGHT = 70;
+var CARD_HEIGHT = 120;
+var IMAGE_HEIGHT = 80;
 var CARD_TITLE = 20;
 var CARD_SUBTITLE = 15;
 var STARS_SIZE = 25;
@@ -204,19 +202,20 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
-    color: 'white',
+    color: secondaryColor,
     fontSize: TITLE_FONT_SIZE,
     fontWeight: '600',
     alignSelf: 'flex-start',
     marginLeft: 10,
     height: TITLE_HEIGHT,
-    marginTop: 10,
   },
   flatList: {
     width: '100%',
   },
   myCard: {
     height: CARD_HEIGHT,
+    borderRadius: 10,
+    marginBottom: 5,
   },
   cardView: {
     height: '100%',
@@ -224,20 +223,19 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: 'grey',
+    borderRadius: 20,
     backgroundColor: secondaryColor,
   },
   image: {
     height: IMAGE_HEIGHT,
     width: IMAGE_HEIGHT,
     marginRight: 25,
-    borderRadius: 35,
+    borderRadius: 20,
   },
   cardText: {
     flex: 1,
     height: '80%',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
   },
   typeOf: {
     flex: 0.5,

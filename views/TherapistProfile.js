@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -11,7 +11,6 @@ import {
   ScrollView,
   Pressable,
   PixelRatio,
-  TouchableOpacity,
   StatusBar,
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
@@ -302,7 +301,7 @@ function TherapistProfile({navigation, route}) {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', JSON.parse(token));
+    myHeaders.append('xAuthToken', token);
     console.log(
       `From changecategory: ${JSON.stringify({specialization: category})}`,
     );
@@ -457,7 +456,7 @@ function TherapistProfile({navigation, route}) {
         showHideTransition={'fade'}
       />
       <View style={styles.header}>
-        <Pressable>
+        <View style={styles.imageBox}>
           <Image
             style={styles.image}
             source={getImage(userLogged.image)}></Image>
@@ -465,9 +464,9 @@ function TherapistProfile({navigation, route}) {
             onPress={() => {
               setImageModalVisible(true);
             }}>
-            <Text style={styles.imageChangeText}>cambiar imagen</Text>
+            <Text style={styles.imageChangeText}>cambiar</Text>
           </Pressable>
-        </Pressable>
+        </View>
 
         <View style={styles.userBox}>
           <Text style={styles.title}>{userLogged.name}</Text>
@@ -477,16 +476,8 @@ function TherapistProfile({navigation, route}) {
               : 'Specialization'}
           </Text>
         </View>
-        <TouchableOpacity
-          style={styles.buttonLogout}
-          mode="contained"
-          onPress={() => {
-            logOut();
-          }}>
-          <Text style={styles.logoutButtonText}>LOGOUT</Text>
-        </TouchableOpacity>
       </View>
-      <ScrollView>
+      <ScrollView style={{width: '100%'}}>
         <View style={styles.description}>
           <View
             style={{
@@ -795,6 +786,14 @@ function TherapistProfile({navigation, route}) {
           }}>
           DEJAR DE SERVIR AL MUNDO!
         </Button>
+        <Button
+          style={styles.buttonLogout}
+          mode="contained"
+          onPress={() => {
+            logOut();
+          }}>
+          LOGOUT
+        </Button>
       </ScrollView>
       <UserTypeChange
         modalTerapeutaVisible={modalTerapeutaVisible}
@@ -814,7 +813,7 @@ function TherapistProfile({navigation, route}) {
   );
 }
 var IMAGE_SIZE = 90;
-var TITLE_FONT_SIZE = 30;
+var TITLE_FONT_SIZE = 35;
 var SUBTITLE_FONT_SIZE = 28;
 var LOGOUT_BUTTON_PADDING = 10;
 var LOGOUT_BUTTON_FONT_SIZE = 16;
@@ -843,10 +842,11 @@ if (PixelRatio.get() <= 2) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 10,
     backgroundColor: mainColor,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    paddingLeft: 15,
+    paddingRight: 15,
   },
   dropdown: {
     width: '100%',
@@ -854,28 +854,35 @@ const styles = StyleSheet.create({
   header: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 15,
     paddingBottom: 10,
     marginBottom: 20,
+    backgroundColor: secondaryColor,
+    borderRadius: 20,
   },
   userBox: {
     flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    marginLeft: 15,
   },
   title: {
-    color: textColor2,
+    color: mainColor,
     fontSize: TITLE_FONT_SIZE,
-    marginLeft: 10,
+    fontWeight: '700',
   },
   subtitle: {
     color: tertiaryColor,
     fontSize: SUBTITLE_FONT_SIZE,
+    fontWeight: '700',
   },
   subtitles: {
-    color: 'white',
+    color: tertiaryColor,
+    fontWeight: '700',
     fontSize: SUBTITLES_FONT_SIZE,
   },
   calendar: {
@@ -885,30 +892,40 @@ const styles = StyleSheet.create({
   agenda: {
     width: Dimensions.get('window').width,
   },
+  imageBox: {
+    alignItems: 'center',
+  },
   image: {
     height: IMAGE_SIZE,
     width: IMAGE_SIZE,
-    borderRadius: 40,
+    borderRadius: 20,
   },
   imageChangeText: {
-    color: 'white',
+    color: tertiaryColor,
     fontSize: 16,
   },
   description: {
-    width: Dimensions.get('window').width,
-    paddingLeft: 20,
-    paddingRight: 20,
+    width: '100%',
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 15,
+    paddingBottom: 15,
     marginBottom: 10,
+    backgroundColor: secondaryColor,
+    borderRadius: 20,
   },
   description2: {
-    width: Dimensions.get('window').width,
-    paddingLeft: 20,
-    paddingRight: 20,
-    marginBottom: 30,
+    width: '100%',
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 15,
+    marginBottom: 10,
+    backgroundColor: secondaryColor,
+    borderRadius: 20,
   },
   textbutton: {
     fontSize: SUBTITLES_FONT_SIZE,
-    color: tertiaryColor,
+    color: mainColor,
   },
   input: {},
   flatList: {
@@ -956,7 +973,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   diasText: {
-    color: textColor2,
+    color: tertiaryColor,
     fontWeight: '700',
     fontSize: DIAS_FONT_SIZE,
   },
@@ -983,7 +1000,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   buttonLogout: {
-    padding: LOGOUT_BUTTON_PADDING,
     fontSize: 10,
     backgroundColor: 'orange',
     borderRadius: 5,
@@ -996,6 +1012,12 @@ const styles = StyleSheet.create({
   buttonPassword: {
     width: '100%',
     backgroundColor: tertiaryColor,
+    padding: 8,
+    marginBottom: 20,
+  },
+  buttonLogout: {
+    width: '100%',
+    backgroundColor: 'red',
     padding: 8,
     marginBottom: 20,
   },

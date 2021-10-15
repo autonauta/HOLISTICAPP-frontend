@@ -252,16 +252,14 @@ function Calendars({route, navigation}) {
             <Text style={monthStyle}>{selectMonth(day.split('-')[1])}</Text>
             <Text style={yearStyle}>{day.split('-')[0]}</Text>
           </View>
-          <View>
-            <FlatList
-              style={styles.flatList}
-              data={hours}
-              renderItem={({item}) => {
-                return renderList(item);
-              }}
-              keyExtractor={item => `${item.id}`}
-              scrollEnabled={false}></FlatList>
-          </View>
+          <FlatList
+            style={styles.flatList}
+            data={hours}
+            renderItem={({item}) => {
+              return renderList(item);
+            }}
+            keyExtractor={item => `${item.id}`}
+            scrollEnabled={false}></FlatList>
         </ScrollView>
       ) : (
         <View style={{width: '100%'}}>
@@ -312,15 +310,14 @@ function Calendars({route, navigation}) {
             <Text style={monthStyle}>{selectMonth(day.split('-')[1])}</Text>
             <Text style={yearStyle}>{day.split('-')[0]}</Text>
           </View>
-          <View style={styles.flatListContainer}>
-            <FlatList
-              style={styles.flatList}
-              data={hours}
-              renderItem={({item}) => {
-                return renderList(item);
-              }}
-              keyExtractor={item => `${item.id}`}></FlatList>
-          </View>
+          <FlatList
+            style={styles.flatList}
+            data={hours}
+            renderItem={({item}) => {
+              return renderList(item);
+            }}
+            keyExtractor={item => `${item.id}`}
+            scrollEnabled={true}></FlatList>
         </View>
       )}
     </SafeAreaView>
@@ -399,7 +396,7 @@ const styles = StyleSheet.create({
   image: {
     height: IMAGE_SIZE,
     width: IMAGE_SIZE,
-    borderRadius: 40,
+    borderRadius: 20,
   },
   flatListContainer: {
     width: Dimensions.get('window').width,
@@ -408,6 +405,7 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     alignItems: 'center',
     marginTop: 10,
+    backgroundColor: 'red',
   },
   flatList: {
     width: '100%',

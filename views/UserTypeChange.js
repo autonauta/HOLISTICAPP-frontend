@@ -41,7 +41,7 @@ function UserTypeChange({
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', JSON.parse(token));
+    myHeaders.append('xAuthToken', token);
     const newIsTherapistValue = !userLogged.isTherapist;
     fetch(`${API_URL}/profile/edit`, {
       method: 'post',

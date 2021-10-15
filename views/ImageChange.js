@@ -65,12 +65,12 @@ function ImageChange({
         _storeData('user', JSON.stringify(userLogged));
         Alert.alert(
           `Perfecto ${userLogged.name}!`,
-          `Hemos actualizado tu imagen. Por favor inicia sesión de nuevo.`,
+          `Hemos actualizado tu imagen.`,
           [
             {
               text: 'OK',
               onPress: () => {
-                logOut();
+                console.log('OK pressed');
               },
             },
           ],

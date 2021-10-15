@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, PixelRatio} from 'react-native';
+import {StyleSheet, View, Text, PixelRatio, Dimensions} from 'react-native';
 import {Button} from 'react-native-paper';
 import {mainColor, secondaryColor} from '../config';
 
@@ -21,6 +21,16 @@ function Navbar({
       });
     }
   };
+  const dashboardNavigation = () => {
+    if (userLogged.isTherapist === false) {
+      navigation.navigate('Dashboard', {userLogged, token});
+    } else {
+      navigation.navigate('TherapistDashboard', {
+        userLogged,
+        token,
+      });
+    }
+  };
   return (
     <View style={styles.navbar}>
       <Button
@@ -33,7 +43,8 @@ function Navbar({
         labelStyle={styles.buttonIcon}
         icon="view-dashboard"
         color="black"
-        style={styles.buttons}>
+        style={styles.buttons}
+        onPress={dashboardNavigation}>
         <Text style={styles.icons}></Text>
       </Button>
       <Button
@@ -77,12 +88,13 @@ const styles = StyleSheet.create({
     marginTop: NAV_MARGIN_TOP,
     backgroundColor: mainColor,
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
   },
   buttons: {
-    flex: 1,
+    width: Dimensions.get('window').width / 5,
+    alignItems: 'flex-end',
     height: '100%',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
   },
   buttonIcon: {
     fontSize: ICON_SIZE,

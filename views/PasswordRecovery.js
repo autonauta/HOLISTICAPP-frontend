@@ -20,7 +20,7 @@ function passwordRecovery() {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    return fetch(`${API_URL}/profile/passwordRecovery`, {
+    return fetch(`${API_URL}/auth/reset`, {
       method: 'post',
       headers: myHeaders,
       body: JSON.stringify({
