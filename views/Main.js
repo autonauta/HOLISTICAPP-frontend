@@ -37,7 +37,7 @@ function Main({navigation, route}) {
       if (token !== null) {
         token = JSON.parse(token);
         setToken(token);
-        console.log(`Token found, user Logedin: ${token}`);
+        console.log(`Token found, user Logedin`);
         let user = await AsyncStorage.getItem('user');
         let calendar = await AsyncStorage.getItem('userCalendar');
         user = JSON.parse(user);

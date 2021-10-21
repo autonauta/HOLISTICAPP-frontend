@@ -7,6 +7,8 @@ import {
   Image,
   Alert,
   TextInput,
+  ScrollView,
+  PixelRatio,
 } from 'react-native';
 import {Button} from 'react-native-paper';
 import {
@@ -66,62 +68,67 @@ function Register({navigation}) {
     <SafeAreaView style={styles.container}>
       <Image source={iconImage} style={styles.image}></Image>
       <Text style={styles.title}>Registrate!</Text>
-      <View style={styles.textInputView}>
-        <Text style={styles.label}>nombre</Text>
-        <TextInput
-          style={styles.textInput}
-          theme={theme}
-          textContentType="emailAddress"
-          label="Nombre"
-          value={name}
-          onChangeText={text => setName(text)}></TextInput>
-      </View>
-      <View style={styles.textInputView}>
-        <Text style={styles.label}>correo</Text>
-        <TextInput
-          style={styles.textInput}
-          label="e-mail"
-          value={email}
-          keyboardType="email-address"
-          textContentType="emailAddress"
-          autoCompleteType="email"
-          onChangeText={text => setEmail(text)}></TextInput>
-      </View>
-      <View style={styles.textInputView}>
-        <Text style={styles.label}>contraseña</Text>
-        <TextInput
-          style={styles.textInput}
-          label="contraseña"
-          value={password}
-          textContentType="password"
-          secureTextEntry
-          onChangeText={text => setPassword(text)}></TextInput>
-      </View>
-      <View style={styles.textInputView}>
-        <Text style={styles.label}>confirmar contraseña</Text>
-        <TextInput
-          style={styles.textInput}
-          label="repite contraseña"
-          value={passConfirm}
-          textContentType="password"
-          secureTextEntry
-          onChangeText={text => setPassConfirm(text)}></TextInput>
-      </View>
-      <Button
-        style={styles.button}
-        mode="contained"
-        onPress={() => {
-          submitData();
-        }}>
-        Enviar
-      </Button>
-      <Text
-        style={styles.textButton}
-        onPress={() => {
-          navigation.navigate('Login');
-        }}>
-        Ya tienes una cuenta?
-      </Text>
+      <ScrollView
+        style={styles.inputsView}
+        contentContainerStyle={{alignItems: 'center'}}>
+        <View style={styles.textInputView}>
+          <Text style={styles.label}>nombre</Text>
+          <TextInput
+            style={styles.textInput}
+            theme={theme}
+            textContentType="emailAddress"
+            label="Nombre"
+            value={name}
+            onChangeText={text => setName(text)}></TextInput>
+        </View>
+        <View style={styles.textInputView}>
+          <Text style={styles.label}>correo</Text>
+          <TextInput
+            style={styles.textInput}
+            label="e-mail"
+            value={email}
+            keyboardType="email-address"
+            textContentType="emailAddress"
+            autoCompleteType="email"
+            onChangeText={text => setEmail(text)}></TextInput>
+        </View>
+        <View style={styles.textInputView}>
+          <Text style={styles.label}>contraseña</Text>
+          <TextInput
+            style={styles.textInput}
+            label="contraseña"
+            value={password}
+            textContentType="password"
+            secureTextEntry
+            onChangeText={text => setPassword(text)}></TextInput>
+        </View>
+        <View style={styles.textInputView}>
+          <Text style={styles.label}>confirmar contraseña</Text>
+          <TextInput
+            style={styles.textInput}
+            label="repite contraseña"
+            value={passConfirm}
+            textContentType="password"
+            secureTextEntry
+            onChangeText={text => setPassConfirm(text)}></TextInput>
+        </View>
+
+        <Button
+          style={styles.button}
+          mode="contained"
+          onPress={() => {
+            submitData();
+          }}>
+          Enviar
+        </Button>
+        <Text
+          style={styles.textButton}
+          onPress={() => {
+            navigation.navigate('Login');
+          }}>
+          Ya tienes una cuenta?
+        </Text>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -134,6 +141,7 @@ const theme = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: mainColor,
     paddingTop: 20,
@@ -158,6 +166,9 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
   },
+  inputsView: {
+    width: '100%',
+  },
   label: {
     color: 'white',
     fontSize: 20,
@@ -170,13 +181,13 @@ const styles = StyleSheet.create({
   },
   textButton: {
     marginTop: 30,
+    marginBottom: 10,
     color: 'white',
     fontSize: 16,
   },
   image: {
     width: 80,
     height: 80,
-    marginBottom: '20%',
   },
 });
 

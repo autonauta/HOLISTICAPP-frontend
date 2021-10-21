@@ -13,7 +13,7 @@ import {
 import {API_URL, mainColor, secondaryColor, textColor2} from '../config';
 import openpay from 'react-native-openpay';
 import {useState} from 'react';
-
+import {NavigationActions, StackActions} from 'react-navigation';
 openpay.setup('mld1bopn3wpit9sejucx', 'pk_425ef633b7ea415da285c4909781424c');
 
 function PayModal({
@@ -35,17 +35,12 @@ function PayModal({
   const [loading, setLoading] = useState(false);
   let cardToken = '';
   let deviceSId = '';
+  const goToHome = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'Home'})],
+    key: null,
+  });
 
-  const dashboardNavigation = () => {
-    if (userLogged.isTherapist === false) {
-      navigation.navigate('Dashboard', {userLogged, token});
-    } else {
-      navigation.navigate('TherapistDashboard', {
-        userLogged,
-        token,
-      });
-    }
-  };
   const submitData = () => {
     const myHeaders = new Headers();
 
@@ -85,7 +80,7 @@ function PayModal({
                 text: 'OK',
                 onPress: () => {
                   setPayModalVisible(false);
-                  dashboardNavigation();
+                  navigation.dispatch(goToHome);
                   console.log('OK pressed');
                 },
               },

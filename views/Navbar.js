@@ -31,6 +31,9 @@ function Navbar({
       });
     }
   };
+  const storeNavigation = () => {
+    navigation.navigate('StoreHome', {userLogged, token});
+  };
   return (
     <View style={styles.navbar}>
       <Button
@@ -44,16 +47,13 @@ function Navbar({
         icon="view-dashboard"
         color="black"
         style={styles.buttons}
-        onPress={dashboardNavigation}>
-        <Text style={styles.icons}></Text>
-      </Button>
+        onPress={dashboardNavigation}></Button>
       <Button
         labelStyle={styles.buttonIcon}
         icon="store"
         color="black"
-        style={styles.buttons}>
-        <Text style={styles.icons}></Text>
-      </Button>
+        style={styles.buttons}
+        onPress={storeNavigation}></Button>
       <Button
         labelStyle={styles.buttonIcon}
         icon="filter"
@@ -61,9 +61,7 @@ function Navbar({
         style={styles.buttons}
         onPress={() => {
           setModalVisible(true);
-        }}>
-        <Text style={styles.icons}></Text>
-      </Button>
+        }}></Button>
       <Button
         labelStyle={styles.buttonIcon}
         icon="account"
