@@ -6,16 +6,18 @@ import {mainColor, secondaryColor} from '../config';
 function Navbar({
   navigation,
   userLogged,
+  setUserLogged,
   userCalendar,
   token,
   setModalVisible,
 }) {
   const profileNavigation = () => {
     if (userLogged.isTherapist === false) {
-      navigation.navigate('Profile', {userLogged, token});
+      navigation.navigate('Profile', {userLogged, setUserLogged, token});
     } else {
       navigation.navigate('TherapistProfile', {
         userLogged,
+        setUserLogged,
         userCalendar,
         token,
       });

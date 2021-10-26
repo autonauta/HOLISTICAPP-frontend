@@ -179,10 +179,10 @@ var CONTAINER_HEIGHT =
   Dimensions.get('screen').height - StatusBar.currentHeight;
 
 if (PixelRatio.get() <= 2) {
-  TITLE_FONT_SIZE = 20;
+  TITLE_FONT_SIZE = 22;
   PROMOS_HEIGHT = 110;
-  CARD_HEIGHT = 60;
-  IMAGE_HEIGHT = 45;
+  CARD_HEIGHT = 85;
+  IMAGE_HEIGHT = 60;
   CARD_TITLE = 16;
   CARD_SUBTITLE = 12;
   STARS_SIZE = 20;

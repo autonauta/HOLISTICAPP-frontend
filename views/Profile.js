@@ -4,18 +4,20 @@ import {
   View,
   Text,
   Image,
-  ScrollView,
+  PixelRatio,
   Dimensions,
   SafeAreaView,
+  StatusBar,
+  Pressable,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import {Button, Card} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //---------------------------------IMPORTS-----------------------------
 import {
   API_URL,
   mainColor,
   secondaryColor,
+  tertiaryColor,
   textColor1,
   textColor2,
 } from '../config';
@@ -84,30 +86,30 @@ function Profile({navigation, route}) {
         </View>
       </View>
       <View style={styles.buttons}>
-        <Button
+        <Pressable
           style={styles.buttonPassword}
           mode="contained"
           onPress={() => {
             setModalVisible(true);
           }}>
-          CAMBIAR PASSWORD
-        </Button>
-        <Button
+          <Text style={styles.buttonText}>CAMBIAR PASSWORD</Text>
+        </Pressable>
+        <Pressable
           style={styles.buttonPassword}
           mode="contained"
           onPress={() => {
             setModalTerapeutaVisible(true);
           }}>
-          SOY TERAPEUTA!
-        </Button>
-        <Button
+          <Text style={styles.buttonText}>SOY TERAPEUTA!</Text>
+        </Pressable>
+        <Pressable
           style={styles.buttonLogout}
           mode="contained"
           onPress={() => {
             logOut();
           }}>
-          LOGOUT
-        </Button>
+          <Text style={styles.buttonText}>LOGOUT</Text>
+        </Pressable>
       </View>
       <PasswordChange
         modalVisible={modalVisible}
@@ -133,6 +135,24 @@ function Profile({navigation, route}) {
     </SafeAreaView>
   );
 }
+var TEXT_NAME_SIZE = 40;
+var TOP_HEIGHT = 140;
+var IMAGE_HEIGHT = 200;
+var BUTTON_HEIGHT = 40;
+var BUTTON_FONT_SIZE = 16;
+var BUTTON_MARGIN_BOTTOM = 20;
+
+var STATUS_BAR_HEIGHT = StatusBar.currentHeight;
+var CONTAINER_HEIGHT =
+  Dimensions.get('screen').height - StatusBar.currentHeight;
+if (PixelRatio.get() <= 2) {
+  BUTTON_HEIGHT = 25;
+  BUTTON_FONT_SIZE = 11;
+  BUTTON_MARGIN_BOTTOM = 10;
+  TEXT_NAME_SIZE = 30;
+  TOP_HEIGHT = 80;
+  IMAGE_HEIGHT = 100;
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -146,14 +166,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   image: {
-    height: 200,
-    width: 200,
+    height: IMAGE_HEIGHT,
+    width: IMAGE_HEIGHT,
     borderRadius: 40,
-    marginTop: -100,
+    marginTop: -IMAGE_HEIGHT / 2,
   },
   top: {
     width: '100%',
-    height: 150,
+    height: TOP_HEIGHT,
     backgroundColor: mainColor,
   },
   profile: {
@@ -165,7 +185,7 @@ const styles = StyleSheet.create({
   },
   textName: {
     color: mainColor,
-    fontSize: 40,
+    fontSize: TEXT_NAME_SIZE,
     fontWeight: '700',
     alignSelf: 'flex-start',
   },
@@ -183,9 +203,12 @@ const styles = StyleSheet.create({
   },
   buttonPassword: {
     width: '100%',
-    marginBottom: 20,
+    marginBottom: BUTTON_MARGIN_BOTTOM,
     backgroundColor: mainColor,
-    height: 40,
+    height: BUTTON_HEIGHT,
+    borderRadius: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   buttonLogout: {
@@ -193,17 +216,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     padding: 8,
     marginBottom: 20,
+    borderRadius: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   imageButton: {
     borderRadius: 8,
-    color: textColor2,
+    color: tertiaryColor,
     fontWeight: '700',
     fontSize: 15,
-    backgroundColor: mainColor,
-    padding: 10,
+    padding: 5,
     paddingRight: 20,
     paddingLeft: 20,
-    marginTop: -30,
+  },
+  buttonText: {
+    fontSize: BUTTON_FONT_SIZE,
+    color: secondaryColor,
   },
 });
 

@@ -9,6 +9,7 @@ import {
   Alert,
   TextInput,
   ActivityIndicator,
+  PixelRatio,
 } from 'react-native';
 import {API_URL, mainColor, secondaryColor, textColor2} from '../config';
 import openpay from 'react-native-openpay';
@@ -260,6 +261,11 @@ var INPUT_PADDING = 10;
 var TEXTINPUT_FONT_SIZE = 20;
 var INPUT_WIDTH = '100%';
 var INPUT_MARGIN_BOTTOM = 10;
+
+if (PixelRatio.get() <= 2) {
+  TEXTINPUT_FONT_SIZE = 10;
+}
+
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
@@ -294,19 +300,12 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: '100%',
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: 'white',
     borderRadius: 8,
     padding: INPUT_PADDING,
     color: 'white',
     fontSize: TEXTINPUT_FONT_SIZE,
-  },
-  modalQuestion: {
-    width: '50%',
-    textAlign: 'center',
-    color: 'orangered',
-    fontSize: 24,
-    marginBottom: 25,
   },
   formView: {
     width: '100%',

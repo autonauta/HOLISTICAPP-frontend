@@ -41,58 +41,66 @@ function Therapist({navigation, route}) {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.top}></View>
-      <Image style={styles.image} source={getImage(image)}></Image>
-      <View style={styles.card}>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.props}>{specialization}</Text>
-      </View>
-      <ScrollView style={styles.scroll}>
-        <Text style={styles.description}>{description ?? noDescription}</Text>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={{alignItems: 'center'}}>
+        <View style={styles.top}></View>
+        <Image style={styles.image} source={getImage(image)}></Image>
+        <View style={styles.card}>
+          <Text style={styles.name}>{name}</Text>
+          <Text style={styles.props}>{specialization}</Text>
+        </View>
+        <View style={styles.scroll}>
+          <Text style={styles.description}>{description ?? noDescription}</Text>
+        </View>
+        <View style={styles.buttons}>
+          <Button
+            style={styles.button}
+            mode="contained"
+            onPress={() => {
+              navigation.navigate('Calendar', {
+                name,
+                image,
+                calendar,
+                specialization,
+                token,
+                userLogged,
+                _id,
+              });
+            }}>
+            PROGRAMA UNA CITA
+          </Button>
+        </View>
       </ScrollView>
-      <View style={styles.buttons}>
-        <Button
-          style={styles.button}
-          mode="contained"
-          onPress={() => {
-            navigation.navigate('Calendar', {
-              name,
-              image,
-              calendar,
-              specialization,
-              token,
-              userLogged,
-              _id,
-            });
-          }}>
-          PROGRAMA UNA CITA
-        </Button>
-      </View>
     </SafeAreaView>
   );
 }
 var IMAGE_SIZE = 150;
-var IMAGE_MARGIN_TOP = IMAGE_SIZE / -2.3;
+var IMAGE_MARGIN_TOP = IMAGE_SIZE / -3;
 var NAME_SIZE = 30;
 var DESCRIPTION_SIZE = 18;
 var PROPS_SIZE = 26;
+var TOP_HEIGHT = 70;
 if (PixelRatio.get() <= 2) {
-  IMAGE_SIZE = 120;
+  IMAGE_SIZE = 100;
   NAME_SIZE = 24;
   DESCRIPTION_SIZE = 14;
   PROPS_SIZE = 16;
+  TOP_HEIGHT = 70;
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingLeft: 15,
-    paddingRight: 15,
+    backgroundColor: secondaryColor,
+  },
+  scrollView: {
+    flex: 1,
     backgroundColor: secondaryColor,
   },
   top: {
     width: Dimensions.get('window').width,
-    height: 70,
+    height: TOP_HEIGHT,
     backgroundColor: mainColor,
   },
   image: {
@@ -126,7 +134,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttons: {
-    width: '100%',
+    width: '90%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 30,

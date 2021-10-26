@@ -133,14 +133,21 @@ var CARD_TITLE = 20;
 var CARD_CATEGORY = 16;
 var CARD_SUBTITLE = 15;
 var ICON_SIZE = 30;
+var FILTER_BAR_HEIGHT = 100;
+var FILTER_FONT_SIZE = 25;
+
 var CONTAINER_HEIGHT =
   Dimensions.get('screen').height - StatusBar.currentHeight;
 if (PixelRatio.get() <= 2) {
-  TITLE_FONT_SIZE = 20;
-  CARD_HEIGHT = 60;
-  IMAGE_HEIGHT = 45;
-  CARD_TITLE = 16;
-  CARD_SUBTITLE = 12;
+  FILTER_BAR_HEIGHT = 60;
+  FILTER_FONT_SIZE = 20;
+  ICON_SIZE = 25;
+  TITLE_FONT_SIZE = 22;
+  CARD_HEIGHT = 85;
+  IMAGE_HEIGHT = 60;
+  CARD_TITLE = 13;
+  CARD_CATEGORY = 12;
+  CARD_SUBTITLE = 11;
 }
 const styles = StyleSheet.create({
   container: {
@@ -211,7 +218,7 @@ const styles = StyleSheet.create({
   cardSubtitle: {color: 'black', fontSize: CARD_SUBTITLE},
   filterBar: {
     width: '100%',
-    height: 100,
+    height: FILTER_BAR_HEIGHT,
     paddingLeft: 10,
     paddingRight: 10,
     flexDirection: 'row',
@@ -223,7 +230,7 @@ const styles = StyleSheet.create({
   },
   filterButtonText: {
     color: secondaryColor,
-    fontSize: 25,
+    fontSize: FILTER_FONT_SIZE,
   },
   button: {
     justifyContent: 'center',

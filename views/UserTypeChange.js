@@ -7,6 +7,7 @@ import {
   Modal,
   Pressable,
   Alert,
+  PixelRatio,
 } from 'react-native';
 import {
   API_URL,
@@ -96,16 +97,14 @@ function UserTypeChange({
               shadowOpacity: 0.25,
               shadowRadius: 4,
               elevation: 5,
-              backgroundColor:
-                userLogged.isTherapist == true ? secondaryColor : mainColor,
+              backgroundColor: mainColor,
             }}>
             <Text
               style={{
                 width: '100%',
                 textAlign: 'center',
-                color:
-                  userLogged.isTherapist == true ? mainColor : secondaryColor,
-                fontSize: 30,
+                color: secondaryColor,
+                fontSize: TITLE_FONT_SIZE,
                 fontWeight: '700',
                 marginBottom: 25,
               }}>
@@ -143,6 +142,14 @@ function UserTypeChange({
     </View>
   );
 }
+var QUESTION_SIZE = 25;
+var TITLE_FONT_SIZE = 25;
+var FORM_MARGIN_BOTTOM = 20;
+if (PixelRatio.get() <= 2) {
+  FORM_MARGIN_BOTTOM = 15;
+  TITLE_FONT_SIZE = 23;
+  QUESTION_SIZE = 18;
+}
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -174,36 +181,22 @@ const styles = StyleSheet.create({
   textStyle: {
     color: textColor2,
     fontWeight: 'bold',
+    fontSize: 11,
     textAlign: 'center',
   },
   modalQuestion: {
-    width: '50%',
+    width: '70%',
     textAlign: 'center',
-    color: 'orangered',
-    fontSize: 24,
+    color: secondaryColor,
+    fontSize: QUESTION_SIZE,
     marginBottom: 25,
   },
   formView: {
     width: '100%',
-    marginBottom: 20,
+    marginBottom: FORM_MARGIN_BOTTOM,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-  },
-  textInput: {
-    width: '100%',
-    marginBottom: 4,
-    borderWidth: 2,
-    borderColor: 'white',
-    borderRadius: 8,
-    padding: 10,
-    color: 'white',
-    fontSize: 20,
-  },
-  label: {
-    color: 'white',
-    fontSize: 20,
-    alignSelf: 'flex-start',
   },
 });
 

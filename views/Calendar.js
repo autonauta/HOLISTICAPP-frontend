@@ -90,8 +90,8 @@ function Calendars({route, navigation}) {
   let dayFontSize = 50;
   if (PixelRatio.get() <= 2) {
     yearFontSize = 30;
-    monthFontSize = 28;
-    dayFontSize = 40;
+    monthFontSize = 23;
+    dayFontSize = 30;
   }
   let yearStyle = {
     display: hours.length > 0 ? 'flex' : 'none',
@@ -113,6 +113,7 @@ function Calendars({route, navigation}) {
     fontSize: monthFontSize,
     fontWeight: '700',
   };
+
   const getHoursOfDaySelected = day => {
     setLoading(true);
     setDay(day);
