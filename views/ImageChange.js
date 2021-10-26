@@ -46,6 +46,7 @@ function ImageChange({
       navigation.navigate('Login');
     });
   };
+
   const submitData = imageUrl => {
     const myHeaders = new Headers();
 
@@ -70,6 +71,7 @@ function ImageChange({
             {
               text: 'OK',
               onPress: () => {
+                navigation.navigate('Home');
                 console.log('OK pressed');
               },
             },

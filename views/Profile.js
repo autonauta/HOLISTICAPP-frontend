@@ -8,6 +8,7 @@ import {
   Dimensions,
   SafeAreaView,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {Button, Card} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //---------------------------------IMPORTS-----------------------------
@@ -25,7 +26,7 @@ import UserTypeChange from './UserTypeChange';
 const defaultImage = require('../assets/avatar.png');
 
 function Profile({navigation, route}) {
-  const {userLogged} = route.params;
+  let {userLogged} = route.params;
   const token = route.params.token;
   const [modalVisible, setModalVisible] = useState(false);
   const [modalTerapeutaVisible, setModalTerapeutaVisible] = useState(false);
@@ -99,6 +100,14 @@ function Profile({navigation, route}) {
           }}>
           SOY TERAPEUTA!
         </Button>
+        <Button
+          style={styles.buttonLogout}
+          mode="contained"
+          onPress={() => {
+            logOut();
+          }}>
+          LOGOUT
+        </Button>
       </View>
       <PasswordChange
         modalVisible={modalVisible}
@@ -139,7 +148,7 @@ const styles = StyleSheet.create({
   image: {
     height: 200,
     width: 200,
-    borderRadius: 100,
+    borderRadius: 40,
     marginTop: -100,
   },
   top: {
@@ -180,8 +189,10 @@ const styles = StyleSheet.create({
   },
 
   buttonLogout: {
-    padding: 5,
-    backgroundColor: 'orangered',
+    width: '100%',
+    backgroundColor: 'red',
+    padding: 8,
+    marginBottom: 20,
   },
   imageButton: {
     borderRadius: 8,

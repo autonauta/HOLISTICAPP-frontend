@@ -14,7 +14,13 @@ import {
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {Card} from 'react-native-paper';
-import {API_URL, mainColor, secondaryColor, textColor1} from '../../config';
+import {
+  API_URL,
+  mainColor,
+  secondaryColor,
+  tertiaryColor,
+  textColor1,
+} from '../../config';
 import {Button} from 'react-native-paper';
 import {callExpression} from '@babel/types';
 const defaultImage = require('../../assets/avatar.png');
@@ -71,10 +77,11 @@ function StoreHome({navigation, route}) {
           <Image style={styles.image} source={getImage(item.image)}></Image>
           <View style={styles.cardText}>
             <Text style={styles.cardTitle}>{item.productName}</Text>
-            <Text style={styles.cardSubtitle}>{item.productCategory}</Text>
+            <Text style={styles.cardSubtitle}>{item.productDescription}</Text>
           </View>
           <View style={styles.typeOf}>
-            <Text style={styles.cardSubtitle}>${item.productPrice}MXN</Text>
+            <Text style={styles.cardCategory}>{item.productCategory}</Text>
+            <Text style={styles.cardPrice}>$ {item.productPrice} MXN</Text>
           </View>
         </View>
       </Card>
@@ -123,6 +130,7 @@ var TITLE_HEIGHT = 40;
 var CARD_HEIGHT = 120;
 var IMAGE_HEIGHT = 80;
 var CARD_TITLE = 20;
+var CARD_CATEGORY = 16;
 var CARD_SUBTITLE = 15;
 var ICON_SIZE = 30;
 var CONTAINER_HEIGHT =
@@ -173,17 +181,31 @@ const styles = StyleSheet.create({
   },
   cardText: {
     flex: 1,
-    height: '80%',
+    height: '90%',
     justifyContent: 'flex-start',
   },
   typeOf: {
     flex: 0.5,
-    height: '90%',
-    justifyContent: 'space-around',
+    height: '85%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   cardTitle: {
-    color: textColor1,
+    color: tertiaryColor,
     fontSize: CARD_TITLE,
+    fontWeight: '700',
+    justifyContent: 'center',
+  },
+  cardCategory: {
+    color: tertiaryColor,
+    fontSize: CARD_CATEGORY,
+    fontWeight: '700',
+    justifyContent: 'center',
+  },
+  cardPrice: {
+    color: textColor1,
+    fontSize: CARD_CATEGORY,
+    fontWeight: '700',
     justifyContent: 'center',
   },
   cardSubtitle: {color: 'black', fontSize: CARD_SUBTITLE},
