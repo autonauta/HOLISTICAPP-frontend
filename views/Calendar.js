@@ -113,7 +113,7 @@ function Calendars({route, navigation}) {
     fontSize: monthFontSize,
     fontWeight: '700',
   };
-
+  let diaLleno = false;
   const getHoursOfDaySelected = day => {
     setLoading(true);
     setDay(day);
@@ -349,8 +349,8 @@ const theme = {
   selectedDayBackgroundColor: secondaryColor,
   selectedDayTextColor: mainColor,
   todayTextColor: tertiaryColor,
-  dayTextColor: '#a4a5a7',
-  textDisabledColor: '#a4a5a7',
+  dayTextColor: '#dbdbdb',
+  textDisabledColor: '#dbdbdb',
   arrowColor: secondaryColor,
   monthTextColor: secondaryColor,
   textDayFontWeight: '700',

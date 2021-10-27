@@ -11,10 +11,10 @@ import {
   ActivityIndicator,
   PixelRatio,
 } from 'react-native';
+import {CommonActions} from '@react-navigation/native';
 import {API_URL, mainColor, secondaryColor, textColor2} from '../config';
 import openpay from 'react-native-openpay';
 import {useState} from 'react';
-import {NavigationActions, StackActions} from 'react-navigation';
 openpay.setup('mld1bopn3wpit9sejucx', 'pk_425ef633b7ea415da285c4909781424c');
 
 function PayModal({
@@ -36,9 +36,14 @@ function PayModal({
   const [loading, setLoading] = useState(false);
   let cardToken = '';
   let deviceSId = '';
-  const goToHome = StackActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({routeName: 'Home'})],
+  const goToHome = CommonActions.reset({
+    index: 1,
+    routes: [
+      {name: 'Home'},
+      userLogged.isTherapist
+        ? {name: 'TherapistDashboard', params: {userLogged, token}}
+        : {name: 'Dashboard', params: {userLogged, token}},
+    ],
     key: null,
   });
 
@@ -261,9 +266,12 @@ var INPUT_PADDING = 10;
 var TEXTINPUT_FONT_SIZE = 20;
 var INPUT_WIDTH = '100%';
 var INPUT_MARGIN_BOTTOM = 10;
+var LABEL_FONT_SIZE = 20;
 
 if (PixelRatio.get() <= 2) {
-  TEXTINPUT_FONT_SIZE = 10;
+  INPUT_PADDING = 5;
+  TEXTINPUT_FONT_SIZE = 15;
+  LABEL_FONT_SIZE = 15;
 }
 
 const styles = StyleSheet.create({
@@ -300,12 +308,19 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: '100%',
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: 'white',
     borderRadius: 8,
     padding: INPUT_PADDING,
     color: 'white',
     fontSize: TEXTINPUT_FONT_SIZE,
+  },
+  modalQuestion: {
+    width: '50%',
+    textAlign: 'center',
+    color: 'orangered',
+    fontSize: 24,
+    marginBottom: 25,
   },
   formView: {
     width: '100%',
@@ -325,19 +340,9 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     marginBottom: INPUT_MARGIN_BOTTOM,
   },
-  textInput: {
-    width: '100%',
-    marginBottom: 4,
-    borderWidth: 2,
-    borderColor: 'white',
-    borderRadius: 8,
-    padding: 10,
-    color: 'white',
-    fontSize: 20,
-  },
   label: {
     color: 'white',
-    fontSize: 20,
+    fontSize: LABEL_FONT_SIZE,
     alignSelf: 'flex-start',
   },
 });

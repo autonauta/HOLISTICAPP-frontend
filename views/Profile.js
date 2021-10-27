@@ -10,17 +10,9 @@ import {
   StatusBar,
   Pressable,
 } from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //---------------------------------IMPORTS-----------------------------
-import {
-  API_URL,
-  mainColor,
-  secondaryColor,
-  tertiaryColor,
-  textColor1,
-  textColor2,
-} from '../config';
+import {mainColor, secondaryColor, tertiaryColor, textColor1} from '../config';
 import PasswordChange from './PasswordChange';
 import ImageChange from './ImageChange';
 import UserTypeChange from './UserTypeChange';
