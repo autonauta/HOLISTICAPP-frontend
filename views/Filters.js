@@ -259,8 +259,6 @@ const styles = StyleSheet.create({
     color: mainColor,
     fontWeight: '700',
     fontSize: TITLE_FONT_SIZE,
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
     marginBottom: 10,
   },
   formView: {
@@ -279,7 +277,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     borderBottomColor: 'grey',
   },
   checkbox: {
@@ -288,7 +286,7 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontSize: LABEL_SIZE,
-    color: textColor1,
+    color: 'white',
   },
   buttons: {
     width: Dimensions.get('window').width,

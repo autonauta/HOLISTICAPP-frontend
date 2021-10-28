@@ -118,14 +118,12 @@ function TherapistDashboard({route}) {
 }
 var CONTAINER_HEIGHT =
   Dimensions.get('screen').height - StatusBar.currentHeight;
-var CARD_HEIGHT = 120;
+var TITLE_FONT_SIZE = 35;
+var CARD_HEIGHT = 140;
 var CARD_TITLE = 20;
 var CARD_SUBTITLE = 15;
-
-var CONTAINER_HEIGHT =
-  Dimensions.get('screen').height - StatusBar.currentHeight;
-
 if (PixelRatio.get() <= 2) {
+  TITLE_FONT_SIZE = 30;
   CARD_HEIGHT = 60;
   CARD_TITLE = 16;
   CARD_SUBTITLE = 12;
@@ -137,25 +135,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: secondaryColor,
-    fontSize: 35,
+    color: tertiaryColor,
+    fontSize: TITLE_FONT_SIZE,
     fontWeight: '600',
     padding: 10,
     alignSelf: 'flex-start',
     marginLeft: 10,
+    marginBottom: 20,
   },
   flatList: {
-    width: '100%',
+    width: '96%',
   },
   myCard: {
-    height: 100,
+    height: CARD_HEIGHT,
     borderRadius: 10,
     marginBottom: 5,
+    backgroundColor: 'transparent',
   },
   cardView: {
     height: '100%',
-    borderRadius: 20,
-    backgroundColor: secondaryColor,
+    borderRadius: 10,
+    backgroundColor: 'white',
   },
   cardText: {
     width: '100%',
@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
     backgroundColor: tertiaryColor,
     paddingLeft: 10,
     paddingRight: 10,
+    paddingTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -175,11 +176,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardTitle: {
-    color: secondaryColor,
+    color: textColor1,
     fontSize: 22,
     justifyContent: 'center',
   },
-  cardSubtitle: {color: secondaryColor, fontSize: 22},
+  cardSubtitle: {color: textColor1, fontSize: 22},
   cardApointeeName: {color: tertiaryColor, fontSize: 40, fontWeight: '700'},
 });
 

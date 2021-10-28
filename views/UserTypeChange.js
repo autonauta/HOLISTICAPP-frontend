@@ -143,7 +143,7 @@ function UserTypeChange({
   );
 }
 var QUESTION_SIZE = 25;
-var TITLE_FONT_SIZE = 25;
+var TITLE_FONT_SIZE = 28;
 var FORM_MARGIN_BOTTOM = 20;
 if (PixelRatio.get() <= 2) {
   FORM_MARGIN_BOTTOM = 15;

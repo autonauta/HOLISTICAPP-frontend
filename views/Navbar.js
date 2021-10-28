@@ -13,11 +13,10 @@ function Navbar({
 }) {
   const profileNavigation = () => {
     if (userLogged.isTherapist === false) {
-      navigation.navigate('Profile', {userLogged, setUserLogged, token});
+      navigation.navigate('Profile', {userLogged, token});
     } else {
       navigation.navigate('TherapistProfile', {
         userLogged,
-        setUserLogged,
         userCalendar,
         token,
       });
@@ -38,12 +37,12 @@ function Navbar({
   };
   return (
     <View style={styles.navbar}>
-      <Button
+      {/* <Button
         labelStyle={styles.buttonIcon}
         icon="menu"
         color="black"
         color="transparent"
-        style={styles.buttons}></Button>
+        style={styles.buttons}></Button> */}
       <Button
         labelStyle={styles.buttonIcon}
         icon="view-dashboard"

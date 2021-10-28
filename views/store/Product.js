@@ -4,27 +4,34 @@ import {
   Text,
   View,
   Image,
-  ScrollView,
   Dimensions,
+  FlatList,
+  ActivityIndicator,
   PixelRatio,
+  StatusBar,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import {Button} from 'react-native-paper';
+
 import {
+  API_URL,
   mainColor,
   secondaryColor,
   tertiaryColor,
   textColor1,
   textColor2,
-} from '../config';
-const defaultImage = require('../assets/avatar.png');
+} from '../../config';
 
-//--------------------------MAIN EXPORT FUNCTION--------------------------
-function Therapist({navigation, route}) {
-  const {name, calendar, image, description, specialization, _id} =
-    route.params.item;
-  const token = route.params.token;
-  const userLogged = route.params.userLogged;
+function Product({navigation, route}) {
+  const {userLogged, token} = route.params;
+  const {
+    productName,
+    image,
+    productDescription,
+    productCategory,
+    productPrice,
+  } = route.params.item;
   function isEmpty(obj) {
     for (var key in obj) {
       if (obj.hasOwnProperty(key)) return false;
@@ -52,11 +59,12 @@ function Therapist({navigation, route}) {
         <View style={styles.top}></View>
         <Image style={styles.image} source={getImage(image)}></Image>
         <View style={styles.card}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.props}>{specialization}</Text>
+          <Text style={styles.name}>{productName}</Text>
+          <Text style={styles.props}>{productCategory}</Text>
+          <Text style={styles.price}>$ {productPrice} MXN</Text>
         </View>
         <View style={styles.scroll}>
-          <Text style={styles.description}>{description}</Text>
+          <Text style={styles.description}>{productDescription}</Text>
         </View>
         <View style={styles.buttons}>
           <Button
@@ -73,13 +81,30 @@ function Therapist({navigation, route}) {
                 _id,
               });
             }}>
-            PROGRAMA UNA CITA
+            AGREGAR AL CARRITO
+          </Button>
+          <Button
+            style={styles.button}
+            mode="contained"
+            onPress={() => {
+              navigation.navigate('Calendar', {
+                name,
+                image,
+                calendar,
+                specialization,
+                token,
+                userLogged,
+                _id,
+              });
+            }}>
+            COMPRAR
           </Button>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
+
 var IMAGE_SIZE = 150;
 var IMAGE_MARGIN_TOP = IMAGE_SIZE / -2;
 var NAME_SIZE = 30;
@@ -93,6 +118,7 @@ if (PixelRatio.get() <= 2) {
   PROPS_SIZE = 16;
   TOP_HEIGHT = 70;
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -132,7 +158,11 @@ const styles = StyleSheet.create({
   },
   props: {
     fontSize: PROPS_SIZE,
-    color: tertiaryColor,
+    color: textColor2,
+  },
+  price: {
+    fontSize: PROPS_SIZE,
+    color: textColor1,
   },
   description: {
     width: '96%',
@@ -142,15 +172,15 @@ const styles = StyleSheet.create({
   },
   buttons: {
     width: '90%',
-    flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 30,
+    marginBottom: 10,
+    marginTop: 20,
   },
   button: {
     width: '100%',
-    marginTop: 40,
+    marginTop: 20,
     backgroundColor: mainColor,
   },
 });
 
-export default Therapist;
+export default Product;

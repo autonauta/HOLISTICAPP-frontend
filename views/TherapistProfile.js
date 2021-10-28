@@ -861,8 +861,6 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 10,
     marginBottom: 20,
-    backgroundColor: secondaryColor,
-    borderRadius: 20,
   },
   userBox: {
     flexDirection: 'column',
@@ -871,12 +869,12 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   title: {
-    color: mainColor,
+    color: tertiaryColor,
     fontSize: TITLE_FONT_SIZE,
     fontWeight: '700',
   },
   subtitle: {
-    color: tertiaryColor,
+    color: textColor1,
     fontSize: SUBTITLE_FONT_SIZE,
     fontWeight: '700',
   },
@@ -911,8 +909,6 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
     marginBottom: 10,
-    backgroundColor: secondaryColor,
-    borderRadius: 20,
   },
   description2: {
     width: '100%',
@@ -920,12 +916,10 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     paddingTop: 15,
     marginBottom: 10,
-    backgroundColor: secondaryColor,
-    borderRadius: 20,
   },
   textbutton: {
     fontSize: SUBTITLES_FONT_SIZE,
-    color: mainColor,
+    color: textColor1,
   },
   input: {},
   flatList: {
@@ -990,7 +984,7 @@ const styles = StyleSheet.create({
   },
   limitsText: {
     marginBottom: 8,
-    color: secondaryColor,
+    color: tertiaryColor,
     fontSize: LIMITS_FONT_SIZE,
   },
   numerosHorario: {

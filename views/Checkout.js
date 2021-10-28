@@ -13,11 +13,11 @@ import {
   View,
 } from 'react-native';
 
-import {secondaryColor, tertiaryColor} from '../config';
+import {mainColor, secondaryColor, tertiaryColor} from '../config';
 import PayModal from './PayModal';
 
 const defaultImage = require('../assets/avatar.png');
-function CheckoutTest({route, navigation}) {
+function Checkout({route, navigation}) {
   const userLogged = route.params.userLogged;
   const {day, hour, token, name, _id, image, specialization} = route.params;
 
@@ -39,7 +39,7 @@ function CheckoutTest({route, navigation}) {
     <SafeAreaView style={styles.container}>
       <StatusBar
         animated={true}
-        backgroundColor={tertiaryColor}
+        backgroundColor={mainColor}
         showHideTransition={'fade'}
       />
       <Text style={styles.title}>Comprar sesión</Text>
@@ -79,13 +79,13 @@ const styles = StyleSheet.create({
   container: {
     width: Dimensions.get('window').width,
     flex: 1,
-    backgroundColor: secondaryColor,
+    backgroundColor: mainColor,
     alignItems: 'center',
   },
   image: {
     height: 120,
     width: 120,
-    borderRadius: 60,
+    borderRadius: 20,
     marginBottom: 20,
   },
   title: {
@@ -127,4 +127,4 @@ const styles = StyleSheet.create({
     color: secondaryColor,
   },
 });
-export default CheckoutTest;
+export default Checkout;

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {Card} from 'react-native-paper';
 import {Calendar, LocaleConfig} from 'react-native-calendars';
-import {mainColor, secondaryColor, tertiaryColor} from '../config';
+import {mainColor, secondaryColor, tertiaryColor, textColor2} from '../config';
 
 LocaleConfig.locales['es'] = {
   monthNames: [
@@ -85,9 +85,9 @@ function Calendars({route, navigation}) {
     return year + '-' + month + '-' + date;
   };
   const [day, setDay] = useState(getCurrentDate());
-  let yearFontSize = 43;
-  let monthFontSize = 30;
-  let dayFontSize = 50;
+  let yearFontSize = 35;
+  let monthFontSize = 35;
+  let dayFontSize = 40;
   if (PixelRatio.get() <= 2) {
     yearFontSize = 30;
     monthFontSize = 23;
@@ -109,7 +109,7 @@ function Calendars({route, navigation}) {
   let monthStyle = {
     marginRight: 20,
     display: hours.length > 0 ? 'flex' : 'none',
-    color: secondaryColor,
+    color: textColor2,
     fontSize: monthFontSize,
     fontWeight: '700',
   };
@@ -138,7 +138,7 @@ function Calendars({route, navigation}) {
     }
   };
   const paySession = hour => {
-    navigation.navigate('CheckoutTest', {
+    navigation.navigate('Checkout', {
       hour,
       day,
       token,
@@ -196,6 +196,7 @@ function Calendars({route, navigation}) {
           paddingLeft: 10,
           paddingBottom: 10,
           marginBottom: 20,
+          marginTop: 10,
         }}>
         <Image style={styles.image} source={getImage(image)}></Image>
         <View>
@@ -260,10 +261,10 @@ function Calendars({route, navigation}) {
               return renderList(item);
             }}
             keyExtractor={item => `${item.id}`}
-            scrollEnabled={false}></FlatList>
+            scrollEnabled={true}></FlatList>
         </ScrollView>
       ) : (
-        <View style={{width: '100%'}}>
+        <ScrollView style={{width: '100%'}}>
           <View
             style={{
               width: '100%',
@@ -302,6 +303,23 @@ function Calendars({route, navigation}) {
           />
           <View
             style={{
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 10,
+            }}>
+            <View
+              style={{
+                width: '20%',
+                height: 4,
+                borderRadius: 5,
+                backgroundColor: secondaryColor,
+                alignContent: 'center',
+              }}></View>
+          </View>
+
+          <View
+            style={{
               flexDirection: 'row',
               width: '100%',
               alignItems: 'center',
@@ -319,12 +337,12 @@ function Calendars({route, navigation}) {
             }}
             keyExtractor={item => `${item.id}`}
             scrollEnabled={true}></FlatList>
-        </View>
+        </ScrollView>
       )}
     </SafeAreaView>
   );
 }
-var IMAGE_SIZE = 80;
+var IMAGE_SIZE = 90;
 var TITLE_FONT_SIZE = 40;
 var SUBTITLE_FONT_SIZE = 30;
 var TICK_SIZE = 30;
@@ -333,7 +351,7 @@ var DAY_FONT_SIZE = 18;
 var MONTH_FONT_SIZE = 24;
 var HEADER_FONT_SIZE = 16;
 PixelRatio.get();
-if (smallPhone <= 2) {
+if (PixelRatio.get() <= 2) {
   IMAGE_SIZE = 60;
   TITLE_FONT_SIZE = 28;
   SUBTITLE_FONT_SIZE = 20;
@@ -373,18 +391,18 @@ const styles = StyleSheet.create({
   titleName: {
     color: 'white',
     fontSize: TITLE_FONT_SIZE,
-    marginLeft: 10,
+    marginLeft: 20,
   },
   subtitle: {
     color: 'white',
     fontSize: SUBTITLE_FONT_SIZE,
-    marginLeft: 10,
+    marginLeft: 20,
   },
   tick: {
     width: TICK_SIZE,
     height: TICK_SIZE,
     borderRadius: TICK_SIZE / 2,
-    backgroundColor: 'white',
+    backgroundColor: secondaryColor,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,
@@ -397,16 +415,13 @@ const styles = StyleSheet.create({
   image: {
     height: IMAGE_SIZE,
     width: IMAGE_SIZE,
-    borderRadius: 20,
+    borderRadius: 10,
   },
   flatListContainer: {
-    width: Dimensions.get('window').width,
-    flex: 1,
+    width: '100%',
     paddingLeft: 8,
     paddingRight: 8,
-    alignItems: 'center',
     marginTop: 10,
-    backgroundColor: 'red',
   },
   flatList: {
     width: '100%',
@@ -415,6 +430,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 1,
     borderRadius: 8,
+    backgroundColor: 'transparent',
   },
   cardView: {
     height: 80,
@@ -423,7 +439,7 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingBottom: 4,
     flexDirection: 'row',
-    backgroundColor: secondaryColor,
+    backgroundColor: 'white',
     borderRadius: 8,
   },
   cardViewSmall: {
@@ -433,7 +449,7 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingBottom: 4,
     flexDirection: 'row',
-    backgroundColor: secondaryColor,
+    backgroundColor: 'white',
     borderRadius: 8,
   },
   cardText: {

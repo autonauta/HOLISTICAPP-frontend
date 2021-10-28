@@ -14,6 +14,7 @@ import {
   mainColor,
   secondaryColor,
   textColor2,
+  tertiaryColor,
   CLOUDINARY_URL,
   UPLOAD_PRESET,
   CLOUD_NAME,
@@ -177,17 +178,17 @@ function ImageChange({
             <Text style={styles.modalText}>Cambio de Imagen</Text>
             <View style={styles.formView}>
               <Button
-                mode="contained"
+                labelStyle={styles.buttonIcon}
                 style={styles.buttonAplicar}
-                onPress={pickPhotoFromGallery}>
-                <Text>Galería</Text>
-              </Button>
+                icon="folder-image"
+                color="black"
+                onPress={pickPhotoFromGallery}></Button>
               <Button
-                mode="contained"
+                labelStyle={styles.buttonIcon}
                 style={styles.buttonAplicar}
-                onPress={pickPhotoFromCamera}>
-                <Text>Cámara</Text>
-              </Button>
+                icon="camera-iris"
+                color="black"
+                onPress={pickPhotoFromCamera}></Button>
             </View>
             <View style={styles.buttons}>
               <Pressable
@@ -224,13 +225,6 @@ const styles = StyleSheet.create({
     backgroundColor: secondaryColor,
     borderTopRightRadius: 50,
     alignItems: 'center',
-    shadowColor: 'black',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
     elevation: 5,
   },
   buttons: {
@@ -239,23 +233,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     marginBottom: 48,
   },
-  buttonCancel: {
-    borderRadius: 10,
-    backgroundColor: '#f34950',
-    padding: 10,
-    elevation: 2,
-    width: '30%',
-    marginTop: 30,
-  },
   buttonAplicar: {
     borderRadius: 8,
-    backgroundColor: '#1fc362',
-    padding: 10,
-    elevation: 2,
-    width: '30%',
+    backgroundColor: tertiaryColor,
+    elevation: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 10,
+  },
+  buttonIcon: {
+    fontSize: 40,
+    color: 'white',
   },
   textStyle: {
-    color: textColor2,
+    fontSize: 15,
+    color: '#f34950',
     fontWeight: 'bold',
     textAlign: 'center',
   },

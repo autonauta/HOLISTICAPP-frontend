@@ -1,3 +1,4 @@
+import {NavigationContainer} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
@@ -10,12 +11,18 @@ import {
   PixelRatio,
 } from 'react-native';
 import {Button} from 'react-native-paper';
+import {CommonActions} from '@react-navigation/native';
 import {API_URL, mainColor, secondaryColor, textColor1} from '../config';
 
 const iconImage = require('../assets/icon.png');
 
-function passwordRecovery() {
+function passwordRecovery({navigation}) {
   const [email, setEmail] = useState('');
+  const goToLogin = CommonActions.reset({
+    index: 0,
+    routes: [{name: 'Login'}],
+    key: null,
+  });
   const submitData = () => {
     const myHeaders = new Headers();
 
@@ -37,6 +44,7 @@ function passwordRecovery() {
                 text: 'OK',
                 onPress: () => {
                   console.log('OK pressed');
+                  navigation.dispatch(goToLogin);
                 },
               },
             ],

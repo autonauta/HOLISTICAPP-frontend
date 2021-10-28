@@ -19,13 +19,13 @@ import {
   mainColor,
   secondaryColor,
   tertiaryColor,
-  textColor1,
+  textColor2,
 } from '../../config';
 import {Button} from 'react-native-paper';
 import {callExpression} from '@babel/types';
 const defaultImage = require('../../assets/avatar.png');
 function StoreHome({navigation, route}) {
-  const {token} = route.params;
+  const {token, userLogged} = route.params;
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState();
   const getProducts = () => {
@@ -71,7 +71,7 @@ function StoreHome({navigation, route}) {
       <Card
         style={styles.myCard}
         onPress={() =>
-          console.log(`Producto seleccionado: ${item.productName}`)
+          navigation.navigate('Product', {userLogged, token, item})
         }>
         <View style={styles.cardView}>
           <Image style={styles.image} source={getImage(item.image)}></Image>
@@ -125,10 +125,10 @@ function StoreHome({navigation, route}) {
     </SafeAreaView>
   );
 }
-var TITLE_FONT_SIZE = 30;
+var TITLE_FONT_SIZE = 35;
 var TITLE_HEIGHT = 40;
-var CARD_HEIGHT = 120;
-var IMAGE_HEIGHT = 80;
+var CARD_HEIGHT = 140;
+var IMAGE_HEIGHT = 100;
 var CARD_TITLE = 20;
 var CARD_CATEGORY = 16;
 var CARD_SUBTITLE = 15;
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: secondaryColor,
+    color: tertiaryColor,
     fontSize: TITLE_FONT_SIZE,
     fontWeight: '600',
     alignSelf: 'flex-start',
@@ -164,12 +164,13 @@ const styles = StyleSheet.create({
     height: TITLE_HEIGHT,
   },
   flatList: {
-    width: '100%',
+    width: '96%',
   },
   myCard: {
     height: CARD_HEIGHT,
     borderRadius: 10,
     marginBottom: 5,
+    backgroundColor: 'transparent',
   },
   cardView: {
     height: '100%',
@@ -177,8 +178,8 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 20,
-    backgroundColor: secondaryColor,
+    borderRadius: 10,
+    backgroundColor: 'white',
   },
   image: {
     height: IMAGE_HEIGHT,
@@ -192,25 +193,25 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   typeOf: {
-    flex: 0.5,
+    flex: 0.6,
     height: '85%',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   cardTitle: {
-    color: tertiaryColor,
+    color: mainColor,
     fontSize: CARD_TITLE,
     fontWeight: '700',
     justifyContent: 'center',
   },
   cardCategory: {
-    color: tertiaryColor,
+    color: textColor2,
     fontSize: CARD_CATEGORY,
     fontWeight: '700',
     justifyContent: 'center',
   },
   cardPrice: {
-    color: textColor1,
+    color: tertiaryColor,
     fontSize: CARD_CATEGORY,
     fontWeight: '700',
     justifyContent: 'center',
@@ -229,7 +230,7 @@ const styles = StyleSheet.create({
     width: 100,
   },
   filterButtonText: {
-    color: secondaryColor,
+    color: tertiaryColor,
     fontSize: FILTER_FONT_SIZE,
   },
   button: {
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
   },
   buttonIcon: {
     fontSize: ICON_SIZE,
-    color: 'white',
+    color: tertiaryColor,
   },
 });
 

@@ -18,7 +18,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Navbar from '../views/Navbar';
 import Filters from '../views/Filters';
-import {API_URL, mainColor, secondaryColor, textColor1} from '../config';
+import {
+  API_URL,
+  mainColor,
+  secondaryColor,
+  tertiaryColor,
+  textColor2,
+} from '../config';
 const defaultImage = require('../assets/avatar.png');
 //--------------------------MAIN EXPORT FUNCTION------------------------------------------
 function Main({navigation, route}) {
@@ -164,11 +170,11 @@ function Main({navigation, route}) {
     </SafeAreaView>
   );
 }
-var TITLE_FONT_SIZE = 30;
+var TITLE_FONT_SIZE = 35;
 var TITLE_HEIGHT = 40;
 var PROMOS_HEIGHT = 140;
-var CARD_HEIGHT = 120;
-var IMAGE_HEIGHT = 80;
+var CARD_HEIGHT = 140;
+var IMAGE_HEIGHT = 100;
 var CARD_TITLE = 20;
 var CARD_SUBTITLE = 15;
 var STARS_SIZE = 25;
@@ -202,7 +208,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
-    color: secondaryColor,
+    color: tertiaryColor,
     fontSize: TITLE_FONT_SIZE,
     fontWeight: '600',
     alignSelf: 'flex-start',
@@ -210,12 +216,12 @@ const styles = StyleSheet.create({
     height: TITLE_HEIGHT,
   },
   flatList: {
-    width: '100%',
+    width: '96%',
   },
   myCard: {
     height: CARD_HEIGHT,
-    borderRadius: 10,
     marginBottom: 5,
+    backgroundColor: 'transparent',
   },
   cardView: {
     height: '100%',
@@ -223,8 +229,8 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 20,
-    backgroundColor: secondaryColor,
+    borderRadius: 10,
+    backgroundColor: 'white',
   },
   image: {
     height: IMAGE_HEIGHT,
@@ -243,11 +249,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   cardTitle: {
-    color: textColor1,
+    color: mainColor,
+    fontWeight: '700',
     fontSize: CARD_TITLE,
     justifyContent: 'center',
   },
-  cardSubtitle: {color: 'black', fontSize: CARD_SUBTITLE},
+  cardSubtitle: {color: tertiaryColor, fontSize: CARD_SUBTITLE},
   cardStars: {
     fontSize: STARS_SIZE,
     color: 'orange',
