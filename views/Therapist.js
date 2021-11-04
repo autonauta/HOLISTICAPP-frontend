@@ -8,6 +8,7 @@ import {
   Dimensions,
   PixelRatio,
   SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import {Button} from 'react-native-paper';
 import {
@@ -46,6 +47,12 @@ function Therapist({navigation, route}) {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar
+        animated={true}
+        backgroundColor={mainColor}
+        barStyle={'default'}
+        showHideTransition={'none'}
+      />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={{alignItems: 'center'}}>

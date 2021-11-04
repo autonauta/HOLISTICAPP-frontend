@@ -12,10 +12,17 @@ target 'holisticapp' do
     :hermes_enabled => false
   )
 
-  pod 'RNCCheckbox', :path => '../node_modules/@react-native-community/checkbox'
+  #Enables the permissions needed for the app
+  
+    permissions_path = '../node_modules/react-native-permissions/ios'
+    pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+    pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
+    pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
+    pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
+    pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary"
+    pod 'Permission-PhotoLibraryAddOnly', :path => "#{permissions_path}/PhotoLibraryAddOnly"
+  
 
-
-  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
   target 'holisticappTests' do
     inherit! :complete

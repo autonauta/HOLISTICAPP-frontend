@@ -8,6 +8,7 @@ import {
   Dimensions,
   Alert,
   PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import {
   API_URL,
@@ -119,8 +120,8 @@ function ImageChange({
   };
   const pickPhotoFromGallery = () => {
     ImagePicker.openPicker({
-      width: 400,
-      height: 400,
+      width: 600,
+      height: 600,
       cropping: true,
     }).then(res => {
       if (res) {
@@ -134,7 +135,13 @@ function ImageChange({
     });
   };
   const pickPhotoFromCamera = async () => {
-    const granted = await PermissionsAndroid.request(
+    var granted = "";
+    if (Platform.OS === 'ios') {
+      granted = "ios";
+      console.log(`From pick camera: ${Platform.OS}`)
+    }
+    else {
+    granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.CAMERA,
       {
         title: 'HolisticApp Camera Permission',
@@ -145,8 +152,9 @@ function ImageChange({
         buttonPositive: 'PERMITIR',
       },
     );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      ImagePicker.openCamera({
+    }
+    if (granted === PermissionsAndroid.RESULTS.GRANTED || granted === "ios") {
+      ImagePicker.openCamera({  
         width: 600,
         height: 600,
         cropping: true,
@@ -163,6 +171,7 @@ function ImageChange({
     } else {
       console.log('Camera permission denied');
     }
+  
   };
   return (
     <View style={styles.centeredView}>
