@@ -69,7 +69,7 @@ function Dashboard({route}) {
   };
   const TransformDate = date => {
     const month = selectMonth(date.split('-')[1]);
-    const day = date.split('-').pop();
+    const day = date.split('T')[0].split('-').pop();
     return month + ' ' + day;
   };
   const renderList = item => {
@@ -120,14 +120,16 @@ var CONTAINER_HEIGHT =
 var CARD_HEIGHT = 120;
 var CARD_TITLE = 20;
 var CARD_SUBTITLE = 15;
+var NAME_SIZE = 40;
 
 var CONTAINER_HEIGHT =
   Dimensions.get('screen').height - StatusBar.currentHeight;
 
 if (PixelRatio.get() <= 2) {
-  CARD_HEIGHT = 60;
+  CARD_HEIGHT = 80;
   CARD_TITLE = 16;
-  CARD_SUBTITLE = 12;
+  CARD_SUBTITLE = 15;
+  NAME_SIZE = 30;
 }
 const styles = StyleSheet.create({
   container: {
@@ -147,14 +149,17 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   myCard: {
-    height: 100,
+    height: CARD_HEIGHT,
     borderRadius: 10,
     marginBottom: 5,
+    backgroundColor: 'transparent',
   },
   cardView: {
     height: '100%',
     borderRadius: 20,
     backgroundColor: secondaryColor,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cardText: {
     width: '100%',
@@ -168,17 +173,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   typeOf: {
-    width: '100%',
+    width: '90%',
     height: '70%',
-    justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   cardTitle: {
     color: secondaryColor,
-    fontSize: 22,
+    fontSize: CARD_TITLE,
     justifyContent: 'center',
   },
-  cardSubtitle: {color: secondaryColor, fontSize: 22},
-  cardApointeeName: {color: tertiaryColor, fontSize: 40, fontWeight: '700'},
+  cardSubtitle: {color: secondaryColor, fontSize: CARD_SUBTITLE},
+  cardApointeeName: {
+    color: tertiaryColor,
+    fontSize: NAME_SIZE,
+    fontWeight: '700',
+  },
 });
 export default Dashboard;
