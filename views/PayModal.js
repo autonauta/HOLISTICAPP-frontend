@@ -13,9 +13,9 @@ import {
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import {API_URL, mainColor, secondaryColor, textColor2} from '../config';
-import openpay from 'react-native-openpay';
+//import openpay from 'react-native-openpay';
 import {useState} from 'react';
-openpay.setup('mld1bopn3wpit9sejucx', 'pk_425ef633b7ea415da285c4909781424c');
+//openpay.setup('mld1bopn3wpit9sejucx', 'pk_425ef633b7ea415da285c4909781424c');
 
 function PayModal({
   payModalVisible,
@@ -114,7 +114,7 @@ function PayModal({
   };
   const generatePayRequest = () => {
     setLoading(true);
-    openpay.getDeviceSessionId().then(sessionId => {
+    /* openpay.getDeviceSessionId().then(sessionId => {
       deviceSId = sessionId;
       console.log(`Device session Id: ${deviceSId}`);
     });
@@ -131,7 +131,7 @@ function PayModal({
         cardToken = receivedToken;
         console.log(`Card token: ${cardToken}`);
         submitData();
-      });
+      }); */
   };
 
   return (
