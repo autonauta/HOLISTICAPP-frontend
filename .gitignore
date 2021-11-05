@@ -60,3 +60,7 @@ buck-out/
 
 #LOCAL USE
 env.js
+
+java_pid*
+
+yarn.lock

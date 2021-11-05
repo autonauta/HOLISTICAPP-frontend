@@ -70,7 +70,7 @@ function TherapistDashboard({route}) {
   };
   const TransformDate = date => {
     const month = selectMonth(date.split('-')[1]);
-    const day = date.split('-').pop();
+    const day = date.split('T')[0].split('-').pop();
     return month + ' ' + day;
   };
   const renderList = item => {
