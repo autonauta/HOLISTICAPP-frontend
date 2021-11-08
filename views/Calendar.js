@@ -13,7 +13,13 @@ import {
 } from 'react-native';
 import {Card} from 'react-native-paper';
 import {Calendar, LocaleConfig} from 'react-native-calendars';
-import {mainColor, secondaryColor, tertiaryColor, textColor2} from '../config';
+import {
+  mainColor,
+  secondaryColor,
+  tertiaryColor,
+  textColor1,
+  textColor2,
+} from '../config';
 
 LocaleConfig.locales['es'] = {
   monthNames: [
@@ -366,7 +372,7 @@ const theme = {
   textSectionTitleColor: tertiaryColor,
   selectedDayBackgroundColor: secondaryColor,
   selectedDayTextColor: mainColor,
-  todayTextColor: tertiaryColor,
+  todayTextColor: textColor1,
   dayTextColor: '#dbdbdb',
   textDisabledColor: '#dbdbdb',
   arrowColor: secondaryColor,

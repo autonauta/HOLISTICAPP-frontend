@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text, PixelRatio, Dimensions} from 'react-native';
 import {Button} from 'react-native-paper';
+import {red100} from 'react-native-paper/lib/typescript/styles/colors';
 import {mainColor, secondaryColor} from '../config';
 
 function Navbar({
@@ -46,28 +47,28 @@ function Navbar({
       <Button
         labelStyle={styles.buttonIcon}
         icon="view-dashboard"
-        color="black"
-        style={styles.buttons}
+        color={secondaryColor}
+        style={styles.button}
         onPress={dashboardNavigation}></Button>
       <Button
         labelStyle={styles.buttonIcon}
         icon="store"
-        color="black"
-        style={styles.buttons}
+        color={secondaryColor}
+        style={styles.button}
         onPress={storeNavigation}></Button>
       <Button
         labelStyle={styles.buttonIcon}
         icon="filter"
-        color="black"
-        style={styles.buttons}
+        color={secondaryColor}
+        style={styles.button}
         onPress={() => {
           setModalVisible(true);
         }}></Button>
       <Button
         labelStyle={styles.buttonIcon}
         icon="account"
-        color="black"
-        style={styles.buttons}
+        color={secondaryColor}
+        style={styles.button}
         onPress={profileNavigation}></Button>
     </View>
   );
@@ -82,7 +83,7 @@ if (PixelRatio.get() <= 2) {
 }
 const styles = StyleSheet.create({
   navbar: {
-    width: '100%',
+    width: Dimensions.get('window').width,
     height: NAV_HEIGHT,
     marginTop: NAV_MARGIN_TOP,
     backgroundColor: mainColor,
@@ -90,14 +91,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 10,
   },
-  buttons: {
-    width: Dimensions.get('window').width / 5,
+  button: {
+    width: Dimensions.get('window').width / 4,
     alignItems: 'flex-end',
     height: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonIcon: {
     fontSize: ICON_SIZE,
     color: 'white',
+    marginLeft: 3,
   },
 });
 

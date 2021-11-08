@@ -14,8 +14,13 @@ import {
 import {Card} from 'react-native-paper';
 import {useFocusEffect} from '@react-navigation/native';
 
-import {API_URL, tertiaryColor} from '../config';
-import {mainColor, secondaryColor, textColor1} from '../config';
+import {
+  API_URL,
+  mainColor,
+  secondaryColor,
+  tertiaryColor,
+  textColor1,
+} from '../config';
 
 function Dashboard({route}) {
   let {token} = route.params;
@@ -100,7 +105,7 @@ function Dashboard({route}) {
       <Text style={styles.title}>dashboard</Text>
       {loading ? (
         <ActivityIndicator size="large" color={secondaryColor} />
-      ) : (
+      ) : appointments.length != 0 ? (
         <FlatList
           style={styles.flatList}
           data={appointments}
@@ -110,6 +115,10 @@ function Dashboard({route}) {
           keyExtractor={item => `${item._id}`}
           onRefresh={() => getAppointments()}
           refreshing={loading}></FlatList>
+      ) : (
+        <Text style={styles.noAppointmentsText}>
+          NO TIENES CITAS PROGRAMADAS
+        </Text>
       )}
     </SafeAreaView>
   );
@@ -138,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: secondaryColor,
+    color: tertiaryColor,
     fontSize: 35,
     fontWeight: '600',
     padding: 10,
@@ -156,10 +165,8 @@ const styles = StyleSheet.create({
   },
   cardView: {
     height: '100%',
-    borderRadius: 20,
-    backgroundColor: secondaryColor,
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'white',
   },
   cardText: {
     width: '100%',
@@ -169,26 +176,26 @@ const styles = StyleSheet.create({
     backgroundColor: tertiaryColor,
     paddingLeft: 10,
     paddingRight: 10,
+    paddingTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   typeOf: {
-    width: '90%',
+    width: '100%',
     height: '70%',
-    alignItems: 'center',
-    flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   cardTitle: {
-    color: secondaryColor,
-    fontSize: CARD_TITLE,
+    color: textColor1,
+    fontSize: 22,
     justifyContent: 'center',
   },
-  cardSubtitle: {color: secondaryColor, fontSize: CARD_SUBTITLE},
-  cardApointeeName: {
-    color: tertiaryColor,
-    fontSize: NAME_SIZE,
-    fontWeight: '700',
+  cardSubtitle: {color: textColor1, fontSize: 22},
+  cardApointeeName: {color: tertiaryColor, fontSize: 40, fontWeight: '700'},
+  noAppointmentsText: {
+    marginTop: 30,
+    color: textColor1,
   },
 });
 export default Dashboard;

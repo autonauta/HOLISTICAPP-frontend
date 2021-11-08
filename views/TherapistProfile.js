@@ -347,8 +347,8 @@ function TherapistProfile({navigation, route}) {
 
   const checkbox = {
     style: {
-      true: dayEditing ? tertiaryColor : 'grey',
-      false: dayEditing ? 'white' : 'grey',
+      true: dayEditing ? textColor1 : 'grey',
+      false: dayEditing ? secondaryColor : 'grey',
     },
   };
   const numerosHorarioInicio = {
@@ -497,18 +497,20 @@ function TherapistProfile({navigation, route}) {
               height: 40,
               backgroundColor: 'transparent',
               borderWidth: 1,
-              borderColor: categoryEditing ? 'grey' : 'white',
+              borderColor: categoryEditing ? textColor2 : textColor1,
               borderRadius: 8,
               marginBottom: 20,
             }}
-            buttonTextStyle={{color: categoryEditing ? 'grey' : textColor2}}
+            buttonTextStyle={{
+              color: categoryEditing ? textColor2 : 'white',
+            }}
             dropdownStyle={{
               backgroundColor: secondaryColor,
               borderWidth: 1,
               borderColor: 'transparent',
               borderRadius: 8,
             }}
-            rowTextStyle={{color: textColor1, fontWeight: '700'}}
+            rowTextStyle={{color: 'white', fontWeight: '700'}}
             defaultButtonText={
               userLogged.specialization
                 ? userLogged.specialization
@@ -521,7 +523,7 @@ function TherapistProfile({navigation, route}) {
             buttonTextAfterSelection={selectedItem => {
               return selectedItem;
             }}
-            rowTextForSelection={(item, index) => {
+            rowTextForSelection={item => {
               return item;
             }}
           />
@@ -538,14 +540,11 @@ function TherapistProfile({navigation, route}) {
           </View>
           <TextInput
             style={{
-              backgroundColor: descriptionEditing
-                ? secondaryColor
-                : 'transparent',
               minHeight: 200,
               textAlignVertical: 'top',
               borderWidth: 1,
-              borderColor: descriptionEditing ? secondaryColor : 'grey',
-              color: descriptionEditing ? 'black' : 'grey',
+              borderColor: descriptionEditing ? textColor1 : textColor2,
+              color: descriptionEditing ? 'white' : 'grey',
               fontSize: 18,
               borderRadius: 5,
               justifyContent: 'flex-start',
@@ -931,31 +930,6 @@ const styles = StyleSheet.create({
     height: CARD_HEIGHT,
     borderRadius: 5,
   },
-  cardView: {
-    height: '100%',
-    paddingLeft: 10,
-    paddingRight: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: 5,
-  },
-  cardimage: {
-    height: CARDIMAGE_SIZE,
-    width: CARDIMAGE_SIZE,
-    marginRight: 25,
-  },
-  cardText: {
-    flex: 1,
-    height: '80%',
-    justifyContent: 'space-around',
-  },
-  cardTitle: {
-    color: 'black',
-    fontSize: CARD_TITLE_FONT_SIZE,
-    justifyContent: 'center',
-  },
-  cardSubtitle: {color: 'black', fontSize: CARD_SUBTITLE_FONT_SIZE},
   diasSemana: {
     height: 100,
     width: '100%',

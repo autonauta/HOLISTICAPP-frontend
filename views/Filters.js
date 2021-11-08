@@ -300,17 +300,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonCancel: {
-    borderRadius: 10,
+    borderRadius: 8,
     backgroundColor: 'red',
     padding: 10,
-    elevation: 2,
+    elevation: 3,
     width: '30%',
   },
   buttonAplicar: {
-    borderRadius: 10,
+    borderRadius: 8,
     backgroundColor: mainColor,
     padding: 10,
-    elevation: 2,
+    elevation: 3,
     width: '30%',
   },
 });

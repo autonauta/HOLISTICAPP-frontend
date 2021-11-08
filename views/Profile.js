@@ -129,7 +129,7 @@ function Profile({navigation, route}) {
 }
 var TEXT_NAME_SIZE = 40;
 var TOP_HEIGHT = 140;
-var IMAGE_HEIGHT = 200;
+var IMAGE_HEIGHT = 160;
 var BUTTON_HEIGHT = 40;
 var BUTTON_FONT_SIZE = 16;
 var BUTTON_MARGIN_BOTTOM = 20;
@@ -201,16 +201,18 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 3,
   },
 
   buttonLogout: {
     width: '100%',
-    backgroundColor: 'red',
+    backgroundColor: textColor1,
     padding: 8,
     marginBottom: 20,
     borderRadius: 3,
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 3,
   },
   imageButton: {
     borderRadius: 8,
@@ -223,7 +225,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: BUTTON_FONT_SIZE,
-    color: secondaryColor,
+    color: 'white',
   },
 });
 

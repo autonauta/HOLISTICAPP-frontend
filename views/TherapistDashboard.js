@@ -102,7 +102,7 @@ function TherapistDashboard({route}) {
       <Text style={styles.title}>dashboard</Text>
       {loading ? (
         <ActivityIndicator size="large" color={secondaryColor} />
-      ) : (
+      ) : appointments.length != 0 ? (
         <FlatList
           style={styles.flatList}
           data={appointments}
@@ -112,6 +112,10 @@ function TherapistDashboard({route}) {
           keyExtractor={item => `${item._id}`}
           onRefresh={() => getAppointments()}
           refreshing={loading}></FlatList>
+      ) : (
+        <Text style={styles.noAppointmentsText}>
+          NO TIENES CITAS PROGRAMADAS
+        </Text>
       )}
     </SafeAreaView>
   );
@@ -182,6 +186,10 @@ const styles = StyleSheet.create({
   },
   cardSubtitle: {color: textColor1, fontSize: 22},
   cardApointeeName: {color: tertiaryColor, fontSize: 40, fontWeight: '700'},
+  noAppointmentsText: {
+    marginTop: 30,
+    color: textColor1,
+  },
 });
 
 export default TherapistDashboard;

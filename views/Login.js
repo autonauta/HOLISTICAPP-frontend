@@ -9,6 +9,7 @@ import {
   Image,
   TextInput,
   PixelRatio,
+  ActivityIndicator,
 } from 'react-native';
 import {Button} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,6 +26,7 @@ const iconImage = require('../assets/icon.png');
 function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loggingIn, setLoggingIn] = useState(false);
 
   const _storeData = async (keyName, value) => {
     try {
@@ -47,6 +49,7 @@ function Login({navigation}) {
   //------------------------Codigo para tamaños de letra responsivos-------------------------------
 
   const submitData = () => {
+    setLoggingIn(true);
     fetch(`${API_URL}/auth`, {
       method: 'post',
       headers: {
@@ -72,11 +75,13 @@ function Login({navigation}) {
           console.log(JSON.stringify(userCalendar));
           setPassword('');
           setEmail('');
+          setLoggingIn(false);
           navigation.navigate('Home', {token, userLogged, userCalendar});
         }
       })
       .catch(err => {
         console.log(err);
+        setLoggingIn(false);
         Alert.alert('Ups!!', `Algo malo hasucedido! \n Error: ${err}`, [
           {text: 'NIMODO', onPress: () => console.log('OK Pressed')},
         ]);
@@ -116,7 +121,7 @@ function Login({navigation}) {
         onPress={() => {
           submitData();
         }}>
-        Login
+        {loggingIn ? <ActivityIndicator size="small" color="white" /> : 'Login'}
       </Button>
       <View style={styles.textButtonsContainer}>
         <Text

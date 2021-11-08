@@ -23,7 +23,7 @@ import {
   mainColor,
   secondaryColor,
   tertiaryColor,
-  textColor2,
+  textColor1,
 } from '../config';
 const defaultImage = require('../assets/avatar.png');
 //--------------------------MAIN EXPORT FUNCTION------------------------------------------
@@ -87,10 +87,10 @@ function Main({navigation, route}) {
   };
   //------------------------------Function for Rendering the Therapists cards..............
   const renderList = item => {
-    const getStars = (rating, image) => {
+    const getStars = rating => {
       var starString = '';
       for (let i = 0; i < rating; i++) {
-        starString += '* ';
+        starString += '\u272A';
       }
       return starString;
     };
@@ -106,27 +106,24 @@ function Main({navigation, route}) {
         return image;
       }
     };
-    if (userLogged.name != item.name) {
-      return (
-        <Card
-          style={styles.myCard}
-          onPress={() =>
-            navigation.navigate('Therapist', {item, token, userLogged})
-          }>
-          <View style={styles.cardView}>
-            <Image style={styles.image} source={getImage(item.image)}></Image>
-            <View style={styles.cardText}>
-              <Text style={styles.cardTitle}>{item.name}</Text>
-              <Text style={styles.cardSubtitle}>{item.specialization}</Text>
-            </View>
-            <View style={styles.typeOf}>
-              <Text style={styles.cardSubtitle}></Text>
-              <Text style={styles.cardStars}>{getStars(item.rating)}</Text>
-            </View>
+    return (
+      <Card
+        style={styles.myCard}
+        onPress={() =>
+          navigation.navigate('Therapist', {item, token, userLogged})
+        }>
+        <View style={styles.cardView}>
+          <Image style={styles.image} source={getImage(item.image)}></Image>
+          <View style={styles.cardText}>
+            <Text style={styles.cardTitle}>{item.name}</Text>
+            <Text style={styles.cardSubtitle}>{item.specialization}</Text>
           </View>
-        </Card>
-      );
-    }
+          <View style={styles.typeOf}>
+            <Text style={styles.cardStars}>{getStars(item.rating)}</Text>
+          </View>
+        </View>
+      </Card>
+    );
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -177,7 +174,7 @@ var CARD_HEIGHT = 140;
 var IMAGE_HEIGHT = 100;
 var CARD_TITLE = 20;
 var CARD_SUBTITLE = 15;
-var STARS_SIZE = 25;
+var STARS_SIZE = 20;
 var NAV_HEIGHT = 60;
 
 var STATUS_BAR_HEIGHT = StatusBar.currentHeight;
@@ -244,9 +241,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   typeOf: {
-    flex: 0.5,
-    height: '90%',
-    justifyContent: 'space-around',
+    flex: 0.7,
+    height: '80%',
+    marginRight: 3,
+    justifyContent: 'flex-end',
   },
   cardTitle: {
     color: mainColor,
@@ -257,8 +255,10 @@ const styles = StyleSheet.create({
   cardSubtitle: {color: tertiaryColor, fontSize: CARD_SUBTITLE},
   cardStars: {
     fontSize: STARS_SIZE,
-    color: 'orange',
-    marginTop: 10,
+    fontWeight: '700',
+    color: tertiaryColor,
+    marginTop: 0,
+    textAlign: 'right',
   },
   button: {
     width: '60%',
