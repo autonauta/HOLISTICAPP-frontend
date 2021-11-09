@@ -10,10 +10,10 @@ export const UPLOAD_PRESET = ENV_UPLOAD_PRESET;
 export const CLOUD_NAME = ENV_CLOUD_NAME;
 export const CLOUDINARY_URL = ENV_CLOUDINARY_URL;
 
-export const mainColor = '#0F044C';
-export const secondaryColor = '#3D56B2';
-export const tertiaryColor = '#5C7AEA';
-export const textColor1 = '#FF5151';
+export const mainColor = '#056676';
+export const secondaryColor = '#5EAAA8';
+export const tertiaryColor = '#8DB596';
+export const textColor1 = '#E8DED2';
 export const textColor2 = '#787A91';
 export const textColor3 = 'black';
 

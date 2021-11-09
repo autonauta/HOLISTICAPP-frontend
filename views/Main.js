@@ -193,6 +193,7 @@ if (PixelRatio.get() <= 2) {
 }
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: mainColor,
     height: CONTAINER_HEIGHT,
     alignItems: 'center',
