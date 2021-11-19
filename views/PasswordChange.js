@@ -48,7 +48,7 @@ function PasswordChange({
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('xAuthToken', JSON.parse(token));
+    myHeaders.append('xAuthToken', token);
     return fetch(`${API_URL}/profile/edit`, {
       method: 'post',
       headers: myHeaders,
@@ -57,7 +57,6 @@ function PasswordChange({
         passConfirm,
       }),
     })
-      .then(res => res.json())
       .then(data => {
         _storeData('xauthtoken', JSON.stringify(data.confirmationCode));
         setModalVisible(!modalVisible);

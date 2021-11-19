@@ -14,6 +14,7 @@ import Checkout from './views/Checkout';
 import Dashboard from './views/Dashboard';
 import StoreHome from './views/store/StoreHome';
 import Product from './views/store/Product';
+import Chat from './views/Chat';
 import TherapistDashboard from './views/TherapistDashboard';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
@@ -42,6 +43,7 @@ function App() {
         />
         <Stack.Screen name="StoreHome" component={StoreHome} />
         <Stack.Screen name="Product" component={Product} />
+        <Stack.Screen name="Chat" component={Chat} />
       </Stack.Navigator>
     </NavigationContainer>
   );

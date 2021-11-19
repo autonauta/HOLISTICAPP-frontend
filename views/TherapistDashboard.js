@@ -18,8 +18,8 @@ import {API_URL, tertiaryColor} from '../config';
 import {mainColor, secondaryColor, textColor1} from '../config';
 import Navbar from '../views/Navbar';
 
-function TherapistDashboard({route}) {
-  let {token} = route.params;
+function TherapistDashboard({route, navigation}) {
+  let {token, userLogged} = route.params;
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -75,7 +75,9 @@ function TherapistDashboard({route}) {
   };
   const renderList = item => {
     return (
-      <Card style={styles.myCard}>
+      <Card
+        style={styles.myCard}
+        onPress={() => navigation.navigate('Chat', {item, token, userLogged})}>
         <View style={styles.cardView}>
           <View style={styles.cardText}>
             <Text style={styles.cardTitle}>

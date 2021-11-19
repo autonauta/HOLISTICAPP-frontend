@@ -22,8 +22,8 @@ import {
   textColor1,
 } from '../config';
 
-function Dashboard({route}) {
-  let {token} = route.params;
+function Dashboard({route, navigation}) {
+  let {token, userLogged} = route.params;
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -79,7 +79,9 @@ function Dashboard({route}) {
   };
   const renderList = item => {
     return (
-      <Card style={styles.myCard}>
+      <Card
+        style={styles.myCard}
+        onPress={() => navigation.navigate('Chat', {item, token, userLogged})}>
         <View style={styles.cardView}>
           <View style={styles.cardText}>
             <Text style={styles.cardTitle}>

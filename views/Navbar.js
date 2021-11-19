@@ -7,7 +7,6 @@ import {mainColor, secondaryColor} from '../config';
 function Navbar({
   navigation,
   userLogged,
-  setUserLogged,
   userCalendar,
   token,
   setModalVisible,
