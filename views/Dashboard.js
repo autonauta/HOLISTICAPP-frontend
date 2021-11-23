@@ -40,7 +40,6 @@ function Dashboard({route, navigation}) {
       .then(response => response.json())
       .then(res => {
         const data = res;
-        console.log(data);
         setAppointments(data);
         setLoading(false);
       })

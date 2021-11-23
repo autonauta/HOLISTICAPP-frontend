@@ -106,7 +106,7 @@ function Main({navigation, route}) {
         return image;
       }
     };
-    return (
+    return userLogged.name != item.name ? (
       <Card
         style={styles.myCard}
         onPress={() =>
@@ -123,6 +123,8 @@ function Main({navigation, route}) {
           </View>
         </View>
       </Card>
+    ) : (
+      <View></View>
     );
   };
   return (

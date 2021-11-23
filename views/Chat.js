@@ -6,25 +6,37 @@ import {
   Text,
   StyleSheet,
   FlatList,
+  Dimensions,
+  ActivityIndicator,
 } from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
 import {Button} from 'react-native-paper';
-import io from 'socket.io-client';
-import {mainColor, secondaryColor} from '../config';
-import {white} from 'react-native-paper/lib/typescript/styles/colors';
+import {AutoScrollFlatList} from 'react-native-autoscroll-flatlist';
+import {
+  API_URL,
+  SOCKET_IO,
+  mainColor,
+  secondaryColor,
+  tertiaryColor,
+  textColor1,
+  textColor2,
+} from '../config';
 
-const socket = io.connect('http://highdatamx.com:3000');
+import io from 'socket.io-client';
+const socket = io.connect(SOCKET_IO);
 
 function Chat({route}) {
   const {token, userLogged, item} = route.params;
   const [currentMessage, setCurrentMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+
   const makeId = () => {
     var result = '';
     var characters =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 16; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
@@ -34,6 +46,25 @@ function Chat({route}) {
     if (minutes < 10) {
       return '0' + minutes;
     } else return minutes;
+  };
+  //------------------------------Function for Querying the messages available..............
+  const getMessages = () => {
+    setLoading(true);
+    try {
+      fetch(`${API_URL}/messages/${item._id}`)
+        .then(res => res.json())
+        .then(response => {
+          if (response.error) {
+            console.error(`${response.error}`);
+            setLoading(false);
+          } else if (response) {
+            setMessageList(response);
+            setLoading(false);
+          }
+        });
+    } catch (error) {
+      console.error(error);
+    }
   };
   const sendMessage = async () => {
     if (currentMessage !== '') {
@@ -46,31 +77,30 @@ function Chat({route}) {
       };
 
       await socket.emit('send_message', messageData);
-      setMessageList(list => [...list, messageData]);
       setCurrentMessage('');
     }
   };
+
+  const joinRoom = () => {
+    const roomInfo = {
+      room: item._id,
+      TherapistId: item.userIdTherapist,
+      ClientId: item.userIdApointee,
+    };
+    socket.emit('join_room', roomInfo);
+  };
+
   useEffect(() => {
     socket.on('receive_message', data => {
-      console.log(`Received message from the server: ${data.message}`);
       setMessageList(list => [...list, data]);
     });
   }, [socket]);
 
-  const joinRoom = () => {
-    socket.emit('join_room', item._id);
-  };
+  useEffect(() => {
+    joinRoom();
+    getMessages();
+  }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // Do something when the screen is focused
-      joinRoom();
-      return () => {
-        // Do something when the screen is unfocused
-        // Useful for cleanup functions
-      };
-    }, []),
-  );
   const renderList = item => {
     return (
       <View style={styles.messageContainer}>
@@ -80,7 +110,6 @@ function Chat({route}) {
               ? styles.messageBubbleMe
               : styles.messageBubbleYou
           }>
-          <Text style={styles.messageAuthor}>{item.author}</Text>
           <Text style={styles.messageText}>{item.message}</Text>
           <Text style={styles.messageTime}>{item.time}</Text>
         </View>
@@ -89,61 +118,99 @@ function Chat({route}) {
   };
 
   return (
-    <SafeAreaView>
-      <Text>Live Chat</Text>
-      <Text>{item.therapistName}</Text>
-      <Text>{item.appointeeName}</Text>
-      <Text>{item.appointmentDate.day.split('T')[0].split('-')[2]}</Text>
-      <Text>{item.appointmentDate.hour}</Text>
-      <View style={styles.textInputView}>
-        <Text style={styles.label}>contraseña</Text>
-        <TextInput
-          style={styles.textInput}
-          value={currentMessage}
-          onChangeText={text => setCurrentMessage(text)}></TextInput>
-      </View>
-      <Button
-        style={styles.buttonLogout}
-        mode="contained"
-        onPress={() => {
-          sendMessage();
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Live Chat</Text>
+      <View
+        style={{
+          width: '100%',
+          height: Dimensions.get('window').height - 120,
+          alignItems: 'center',
         }}>
-        SEND
-      </Button>
-      <View>
-        <FlatList
-          style={styles.flatList}
-          data={messageList}
-          renderItem={({item}) => {
-            return renderList(item);
-          }}
-          keyExtractor={item => `${item.key}`}></FlatList>
+        {loading ? (
+          <ActivityIndicator size="large" color={secondaryColor} />
+        ) : (
+          <AutoScrollFlatList
+            style={styles.flatList}
+            data={messageList}
+            renderItem={({item}) => {
+              return renderList(item);
+            }}
+            keyExtractor={item => `${item.key}`}
+            onRefresh={() => getMessages()}
+            refreshing={loading}
+          />
+        )}
+      </View>
+      <View style={styles.footer}>
+        <View style={styles.textInputView}>
+          <TextInput
+            style={styles.textInput}
+            value={currentMessage}
+            onChangeText={text => setCurrentMessage(text)}></TextInput>
+        </View>
+        <Button
+          style={styles.button}
+          icon="send"
+          mode="contained"
+          onPress={() => {
+            sendMessage();
+          }}></Button>
       </View>
     </SafeAreaView>
   );
 }
-
+var CONTAINER_HEIGHT = Dimensions.get('screen').height;
+var TITLE_FONT_SIZE = 35;
+var TITLE_HEIGHT = 50;
 const styles = StyleSheet.create({
-  textInputView: {
-    width: '100%',
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    height: CONTAINER_HEIGHT,
     alignItems: 'center',
-    textAlign: 'left',
-    marginBottom: 5,
+  },
+  title: {
+    color: tertiaryColor,
+    fontSize: TITLE_FONT_SIZE,
+    fontWeight: '600',
+    paddingLeft: 10,
+    height: TITLE_HEIGHT,
+    backgroundColor: mainColor,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+  },
+  flatList: {
+    paddingTop: 7,
+    width: Dimensions.get('window').width,
+  },
+  textInputView: {
+    width: '80%',
+    alignItems: 'center',
   },
   textInput: {
     width: '100%',
-    borderWidth: 2,
-    borderColor: 'black',
-    borderRadius: 8,
+    height: '100%',
+    borderRadius: 20,
     padding: 5,
+    marginLeft: 10,
+    paddingLeft: 10,
+    backgroundColor: textColor1,
     color: 'black',
-    fontSize: 12,
+    fontSize: 16,
+    elevation: 3,
   },
-  buttonLogout: {
-    width: '100%',
+  button: {
+    width: '15%',
+    height: '100%',
+    paddingLeft: 20,
+    marginRight: 5,
+    borderRadius: 100,
     backgroundColor: 'green',
-    padding: 8,
-    marginBottom: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   label: {
     color: 'black',
@@ -154,37 +221,47 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   messageBubbleMe: {
-    width: '50%',
-    padding: 5,
-    borderRadius: 4,
+    minWidth: '30%',
+    maxWidth: '90%',
+    padding: 8,
+    paddingRight: 20,
+    paddingBottom: 5,
+    borderRadius: 15,
     alignSelf: 'flex-end',
     backgroundColor: mainColor,
-    marginBottom: 5,
+    marginBottom: 8,
+    elevation: 3,
   },
   messageBubbleYou: {
-    padding: 5,
-    width: '50%',
-    borderRadius: 4,
-
+    minWidth: '30%',
+    maxWidth: '90%',
+    padding: 8,
+    alignSelf: 'flex-start',
+    paddingRight: 20,
+    borderRadius: 15,
+    marginBottom: 8,
     backgroundColor: secondaryColor,
+    elevation: 3,
   },
   messageText: {
     color: 'white',
+    fontSize: 17,
   },
   messageTime: {
     alignSelf: 'flex-end',
-    color: 'grey',
+    color: textColor2,
   },
-  textFrameMe: {
-    width: '50%',
+  footer: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    height: 70,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignSelf: 'flex-end',
-  },
-  textFrameYou: {
-    width: '50%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    elevation: 5,
   },
 });
 
