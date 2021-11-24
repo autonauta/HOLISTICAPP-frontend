@@ -5,12 +5,13 @@ import {
   TextInput,
   Text,
   StyleSheet,
-  FlatList,
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
 import {Button} from 'react-native-paper';
 import {AutoScrollFlatList} from 'react-native-autoscroll-flatlist';
+import {useFocusEffect} from '@react-navigation/native';
+
 import {
   API_URL,
   SOCKET_IO,
@@ -28,7 +29,7 @@ function Chat({route}) {
   const {token, userLogged, item} = route.params;
   const [currentMessage, setCurrentMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
-
+  const [userConnected, setUserConnected] = useState();
   const [loading, setLoading] = useState(false);
 
   const makeId = () => {
@@ -81,18 +82,28 @@ function Chat({route}) {
     }
   };
 
-  const joinRoom = () => {
+  const joinRoom = async () => {
     const roomInfo = {
       room: item._id,
       TherapistId: item.userIdTherapist,
       ClientId: item.userIdApointee,
     };
-    socket.emit('join_room', roomInfo);
+    await socket.emit('join_room', roomInfo);
+  };
+  const leaveRoom = async room => {
+    await socket.emit('leave_room', room);
   };
 
   useEffect(() => {
     socket.on('receive_message', data => {
       setMessageList(list => [...list, data]);
+    });
+    socket.on('user_connected', () => {
+      setUserConnected(true);
+    });
+    socket.on('user_disconnected', () => {
+      setUserConnected(false);
+      console.log('received user disconnected from socket');
     });
   }, [socket]);
 
@@ -100,7 +111,16 @@ function Chat({route}) {
     joinRoom();
     getMessages();
   }, []);
-
+  useFocusEffect(
+    React.useCallback(() => {
+      // Do something when the screen is focused
+      return () => {
+        // Do something when the screen is unfocused
+        leaveRoom(item._id);
+        console.log('chat screen unfocused');
+      };
+    }, []),
+  );
   const renderList = item => {
     return (
       <View style={styles.messageContainer}>
@@ -119,7 +139,22 @@ function Chat({route}) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Live Chat</Text>
+      <Text style={styles.title}>Mensajes directos</Text>
+      <View
+        style={{
+          width: '100%',
+          backgroundColor: mainColor,
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+        }}>
+        <Text
+          style={
+            userConnected ? styles.userConnected : styles.userDisconnected
+          }>
+          {userConnected ? 'online' : 'offline'}
+        </Text>
+      </View>
       <View
         style={{
           width: '100%',
@@ -179,7 +214,6 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 5,
   },
   flatList: {
     paddingTop: 7,
@@ -262,6 +296,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     elevation: 5,
+  },
+  userConnected: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: 'white',
+    marginBottom: 5,
+    paddingLeft: 10,
+  },
+  userDisconnected: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: 'gray',
+    marginBottom: 5,
+    paddingLeft: 10,
   },
 });
 
