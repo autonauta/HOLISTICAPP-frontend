@@ -13,9 +13,9 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //---------------------------------IMPORTS-----------------------------
 import {mainColor, secondaryColor, tertiaryColor, textColor1} from '../config';
-import PasswordChange from './PasswordChange';
-import ImageChange from './ImageChange';
-import UserTypeChange from './UserTypeChange';
+import PasswordChange from './modals/PasswordChange';
+import ImageChange from './modals/ImageChange';
+import UserTypeChange from './modals/UserTypeChange';
 
 const defaultImage = require('../assets/avatar.png');
 

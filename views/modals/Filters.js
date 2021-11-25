@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 
-import {API_URL, mainColor, secondaryColor, textColor1} from '../config';
+import {API_URL, mainColor, secondaryColor, textColor1} from '../../config';
 
 function Filters({modalVisible, setModalVisible, data, setData, setLoading}) {
   const [biomagnetismo, setBiomagnetismo] = useState(false);

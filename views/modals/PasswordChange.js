@@ -17,7 +17,7 @@ import {
   secondaryColor,
   textColor1,
   textColor2,
-} from '../config';
+} from '../../config';
 
 function PasswordChange({
   navigation,

@@ -1,7 +1,6 @@
 import React from 'react';
-import {StyleSheet, View, Text, PixelRatio, Dimensions} from 'react-native';
+import {StyleSheet, View, PixelRatio, Dimensions} from 'react-native';
 import {Button} from 'react-native-paper';
-import {red100} from 'react-native-paper/lib/typescript/styles/colors';
 import {mainColor, secondaryColor} from '../config';
 
 function Navbar({

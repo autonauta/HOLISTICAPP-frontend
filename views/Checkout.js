@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 import {mainColor, secondaryColor, tertiaryColor} from '../config';
-import PayModal from './PayModal';
+import PayModal from './modals/PayModal';
 
 const defaultImage = require('../assets/avatar.png');
 function Checkout({route, navigation}) {

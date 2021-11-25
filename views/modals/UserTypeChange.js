@@ -15,7 +15,7 @@ import {
   secondaryColor,
   textColor1,
   textColor2,
-} from '../config';
+} from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSafeArea} from 'react-native-safe-area-context';
 import {useState} from 'react';
@@ -27,10 +27,6 @@ function UserTypeChange({
   userLogged,
   navigation,
 }) {
-  const [therapistStatus, setTherapistStatus] = useState(
-    userLogged.isTherapist,
-  );
-
   const logOut = () => {
     const keys = ['xauthtoken', 'user'];
     AsyncStorage.multiRemove(keys).then(res => {
@@ -87,34 +83,35 @@ function UserTypeChange({
             style={{
               width: Dimensions.get('window').width,
               paddingTop: 20,
-              borderTopRightRadius: 80,
+              borderRadius: 20,
               alignItems: 'center',
-              shadowColor: secondaryColor,
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 4,
-              elevation: 5,
-              backgroundColor: mainColor,
+              backgroundColor: userLogged.isTherapist
+                ? secondaryColor
+                : mainColor,
             }}>
             <Text
               style={{
                 width: '100%',
                 textAlign: 'center',
-                color: secondaryColor,
+                color: userLogged.isTherapist ? mainColor : secondaryColor,
                 fontSize: TITLE_FONT_SIZE,
                 fontWeight: '700',
                 marginBottom: 25,
               }}>
-              {therapistStatus == true
+              {userLogged.isTherapist
                 ? 'Dejar de ser terapeuta!'
                 : 'Ser terapeuta!'}
             </Text>
             <View style={styles.formView}>
-              <Text style={styles.modalQuestion}>
-                {therapistStatus === true
+              <Text
+                style={{
+                  width: '70%',
+                  textAlign: 'center',
+                  color: userLogged.isTherapist ? mainColor : secondaryColor,
+                  fontSize: QUESTION_SIZE,
+                  marginBottom: 25,
+                }}>
+                {userLogged.isTherapist
                   ? 'Seguro que quieres dejar de servir al mundo?'
                   : 'Seguro que quieres ponerte al servicio del mundo?'}
               </Text>
@@ -156,7 +153,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    elevation: 1,
   },
   buttons: {
     width: Dimensions.get('window').width,
@@ -168,29 +164,23 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'red',
     padding: 10,
-    elevation: 2,
+    elevation: 3,
     width: '30%',
   },
   buttonAplicar: {
     borderRadius: 10,
     backgroundColor: '#1fc362',
     padding: 10,
-    elevation: 2,
+    elevation: 3,
     width: '30%',
   },
   textStyle: {
-    color: textColor2,
+    color: textColor1,
     fontWeight: 'bold',
     fontSize: 11,
     textAlign: 'center',
   },
-  modalQuestion: {
-    width: '70%',
-    textAlign: 'center',
-    color: secondaryColor,
-    fontSize: QUESTION_SIZE,
-    marginBottom: 25,
-  },
+  modalQuestion: {},
   formView: {
     width: '100%',
     marginBottom: FORM_MARGIN_BOTTOM,

@@ -12,7 +12,7 @@ import {
   PixelRatio,
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
-import {API_URL, mainColor, secondaryColor, textColor2} from '../config';
+import {API_URL, mainColor, secondaryColor, textColor2} from '../../config';
 import openpay from 'react-native-openpay';
 import {useState} from 'react';
 openpay.setup('mld1bopn3wpit9sejucx', 'pk_425ef633b7ea415da285c4909781424c');

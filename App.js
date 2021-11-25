@@ -5,7 +5,6 @@ import Register from './views/Register';
 import Login from './views/Login';
 import Therapist from './views/Therapist';
 import Profile from './views/Profile';
-import Filters from './views/Filters';
 import Calendar from './views/Calendar';
 import TherapistProfile from './views/TherapistProfile';
 import TherapistDocument from './views/TherapistDocument';
@@ -29,7 +28,6 @@ function App() {
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Therapist" component={Therapist} />
         <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Filters" component={Filters} />
         <Stack.Screen name="Calendar" component={Calendar} />
         <Stack.Screen name="TherapistProfile" component={TherapistProfile} />
         <Stack.Screen name="TherapistDocument" component={TherapistDocument} />

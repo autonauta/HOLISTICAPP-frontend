@@ -17,8 +17,8 @@ import CheckBox from '@react-native-community/checkbox';
 import {Card, Button} from 'react-native-paper';
 import SelectDropdown from 'react-native-select-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import UserTypeChange from './UserTypeChange';
-import ImageChange from './ImageChange';
+import UserTypeChange from './modals/UserTypeChange';
+import ImageChange from './modals/ImageChange';
 
 import {
   API_URL,
@@ -967,11 +967,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '700',
   },
-  buttonLogout: {
-    fontSize: 10,
-    backgroundColor: 'orange',
-    borderRadius: 5,
-  },
   logoutButtonText: {
     color: 'white',
     fontSize: LOGOUT_BUTTON_FONT_SIZE,
@@ -980,13 +975,13 @@ const styles = StyleSheet.create({
   buttonPassword: {
     width: '100%',
     backgroundColor: tertiaryColor,
-    padding: 8,
+    padding: 2,
     marginBottom: 20,
   },
   buttonLogout: {
     width: '100%',
+    padding: 2,
     backgroundColor: 'red',
-    padding: 8,
     marginBottom: 20,
   },
 });

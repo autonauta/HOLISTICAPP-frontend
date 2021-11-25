@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   flatList: {
-    width: '100%',
+    width: '96%',
   },
   myCard: {
     height: CARD_HEIGHT,
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     color: textColor1,
-    fontSize: 22,
+    fontSize: CARD_TITLE,
     justifyContent: 'center',
   },
   cardSubtitle: {color: textColor1, fontSize: 22},

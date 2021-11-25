@@ -110,6 +110,9 @@ function Chat({route}) {
   useEffect(() => {
     joinRoom();
     getMessages();
+    return () => {
+      setMessageList([]); // This worked for me
+    };
   }, []);
   useFocusEffect(
     React.useCallback(() => {
@@ -139,28 +142,30 @@ function Chat({route}) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Mensajes directos</Text>
       <View
         style={{
+          flex: 1,
           width: '100%',
-          backgroundColor: mainColor,
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
           alignItems: 'center',
+          paddingBottom: 60,
         }}>
-        <Text
-          style={
-            userConnected ? styles.userConnected : styles.userDisconnected
-          }>
-          {userConnected ? 'online' : 'offline'}
-        </Text>
-      </View>
-      <View
-        style={{
-          width: '100%',
-          height: Dimensions.get('window').height - 120,
-          alignItems: 'center',
-        }}>
+        <Text style={styles.title}>Mensajes directos</Text>
+        <View
+          style={{
+            width: '100%',
+            backgroundColor: mainColor,
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={
+              userConnected ? styles.userConnected : styles.userDisconnected
+            }>
+            {userConnected ? 'online' : 'offline'}
+          </Text>
+        </View>
+
         {loading ? (
           <ActivityIndicator size="large" color={secondaryColor} />
         ) : (
@@ -295,7 +300,6 @@ const styles = StyleSheet.create({
     height: 70,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    elevation: 5,
   },
   userConnected: {
     fontSize: 18,

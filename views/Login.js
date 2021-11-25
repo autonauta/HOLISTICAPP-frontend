@@ -59,6 +59,11 @@ function Login({navigation}) {
     })
       .then(res => res.json())
       .then(data => {
+        if (data.error) {
+          Alert.alert('Ups!!', `${data.error}`, [
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ]);
+        }
         if (data.token) {
           const token = data.token;
           console.log('token:', token);

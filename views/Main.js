@@ -13,11 +13,11 @@ import {
   StatusBar,
   SafeAreaView,
 } from 'react-native';
-import {Card} from 'react-native-paper';
+import {Card, Button} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Navbar from '../views/Navbar';
-import Filters from '../views/Filters';
+import Filters from '../views/modals/Filters';
 import {
   API_URL,
   mainColor,
@@ -117,6 +117,13 @@ function Main({navigation, route}) {
           <View style={styles.cardText}>
             <Text style={styles.cardTitle}>{item.name}</Text>
             <Text style={styles.cardSubtitle}>{item.specialization}</Text>
+            <View
+              style={{
+                width: '100%',
+                height: 30,
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+              }}></View>
           </View>
           <View style={styles.typeOf}>
             <Text style={styles.cardStars}>{getStars(item.rating)}</Text>
@@ -220,6 +227,7 @@ const styles = StyleSheet.create({
   },
   myCard: {
     height: CARD_HEIGHT,
+    borderRadius: 10,
     marginBottom: 5,
     backgroundColor: 'transparent',
   },

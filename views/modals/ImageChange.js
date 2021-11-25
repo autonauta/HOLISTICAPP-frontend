@@ -19,7 +19,7 @@ import {
   CLOUDINARY_URL,
   UPLOAD_PRESET,
   CLOUD_NAME,
-} from '../config';
+} from '../../config';
 import {Button} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -135,26 +135,25 @@ function ImageChange({
     });
   };
   const pickPhotoFromCamera = async () => {
-    var granted = "";
+    var granted = '';
     if (Platform.OS === 'ios') {
-      granted = "ios";
-      console.log(`From pick camera: ${Platform.OS}`)
+      granted = 'ios';
+      console.log(`From pick camera: ${Platform.OS}`);
+    } else {
+      granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'HolisticApp Camera Permission',
+          message:
+            'Requerimos de tu permiso para acceder a tu camara ' +
+            'para actualizar tu perfil correctamente.',
+          buttonNegative: 'DENEGAR',
+          buttonPositive: 'PERMITIR',
+        },
+      );
     }
-    else {
-    granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      {
-        title: 'HolisticApp Camera Permission',
-        message:
-          'Requerimos de tu permiso para acceder a tu camara ' +
-          'para actualizar tu perfil correctamente.',
-        buttonNegative: 'DENEGAR',
-        buttonPositive: 'PERMITIR',
-      },
-    );
-    }
-    if (granted === PermissionsAndroid.RESULTS.GRANTED || granted === "ios") {
-      ImagePicker.openCamera({  
+    if (granted === PermissionsAndroid.RESULTS.GRANTED || granted === 'ios') {
+      ImagePicker.openCamera({
         width: 600,
         height: 600,
         cropping: true,
@@ -171,7 +170,6 @@ function ImageChange({
     } else {
       console.log('Camera permission denied');
     }
-  
   };
   return (
     <View style={styles.centeredView}>
