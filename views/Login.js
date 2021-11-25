@@ -27,6 +27,8 @@ function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
+  const [userLogged, setUserLogged] = useState({});
+  const [userCalendar, setUserCalendar] = useState({});
 
   const _storeData = async (keyName, value) => {
     try {
@@ -66,11 +68,9 @@ function Login({navigation}) {
         }
         if (data.token) {
           const token = data.token;
-          console.log('token:', token);
-          const userLogged = data.user;
-          let userCalendar = {};
+          setUserLogged(data.user);
           if (data.calendar) {
-            userCalendar = data.calendar;
+            setUserCalendar(data.calendar);
             _storeData('userCalendar', JSON.stringify(userCalendar));
           }
           _storeData('xauthtoken', JSON.stringify(token));
@@ -83,13 +83,6 @@ function Login({navigation}) {
           setLoggingIn(false);
           navigation.navigate('Home', {token, userLogged, userCalendar});
         }
-      })
-      .catch(err => {
-        console.log(err);
-        setLoggingIn(false);
-        Alert.alert('Ups!!', `Algo malo hasucedido! \n Error: ${err}`, [
-          {text: 'NIMODO', onPress: () => console.log('OK Pressed')},
-        ]);
       });
   };
 
