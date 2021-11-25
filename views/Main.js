@@ -30,7 +30,7 @@ const defaultImage = require('../assets/avatar.png');
 function Main({navigation, route}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   //------------------------------States for user data and user Calendar data----------------
   const [userLogged, setUserLogged] = useState({});
   const [userCalendar, setUserCalendar] = useState({});
@@ -48,6 +48,7 @@ function Main({navigation, route}) {
         let calendar = await AsyncStorage.getItem('userCalendar');
         setUserLogged(JSON.parse(user));
         setUserCalendar(JSON.parse(calendar));
+        getTherapistsData();
       } else {
         console.log('No token found, no user logged in');
         navigation.navigate('Login');
@@ -60,7 +61,6 @@ function Main({navigation, route}) {
     React.useCallback(() => {
       // Do something when the screen is focused
       isAuth();
-      getTherapistsData();
       return () => {
         // Do something when the screen is unfocused
         // Useful for cleanup functions
