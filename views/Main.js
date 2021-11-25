@@ -46,10 +46,8 @@ function Main({navigation, route}) {
         console.log(`Token found, user Logedin`);
         let user = await AsyncStorage.getItem('user');
         let calendar = await AsyncStorage.getItem('userCalendar');
-        user = JSON.parse(user);
-        calendar = JSON.parse(calendar);
-        setUserLogged(user);
-        setUserCalendar(calendar);
+        setUserLogged(JSON.parse(user));
+        setUserCalendar(JSON.parse(calendar));
       } else {
         console.log('No token found, no user logged in');
         navigation.navigate('Login');
@@ -71,19 +69,15 @@ function Main({navigation, route}) {
   );
 
   //------------------------------Function for Querying the therapists available..............
-  const getTherapistsData = () => {
+  const getTherapistsData = async () => {
     setLoading(true);
-    try {
-      fetch(`${API_URL}/users`)
-        .then(res => res.json())
-        .then(results => {
-          const therapists = results;
-          setData(therapists);
-          setLoading(false);
-        });
-    } catch (error) {
-      console.error(error);
-    }
+    await fetch(`${API_URL}/users`)
+      .then(res => res.json())
+      .then(results => {
+        const therapists = results;
+        setData(therapists);
+        setLoading(false);
+      });
   };
   //------------------------------Function for Rendering the Therapists cards..............
   const renderList = item => {
