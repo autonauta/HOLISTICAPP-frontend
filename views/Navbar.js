@@ -6,7 +6,9 @@ import {mainColor, secondaryColor} from '../config';
 function Navbar({
   navigation,
   userLogged,
+  setUserLogged,
   userCalendar,
+  setUserCalendar,
   token,
   setModalVisible,
 }) {
@@ -36,12 +38,16 @@ function Navbar({
   };
   return (
     <View style={styles.navbar}>
-      {/* <Button
-        labelStyle={styles.buttonIcon}
-        icon="menu"
-        color="black"
-        color="transparent"
-        style={styles.buttons}></Button> */}
+      {userLogged.isTherapist ? (
+        <Button
+          labelStyle={styles.buttonIcon}
+          icon="menu"
+          color="black"
+          color="transparent"
+          style={styles.buttons}></Button>
+      ) : (
+        <></>
+      )}
       <Button
         labelStyle={styles.buttonIcon}
         icon="view-dashboard"
