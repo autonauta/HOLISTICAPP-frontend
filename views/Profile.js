@@ -16,6 +16,10 @@ import {mainColor, secondaryColor, tertiaryColor, textColor1} from '../config';
 import PasswordChange from './modals/PasswordChange';
 import ImageChange from './modals/ImageChange';
 import UserTypeChange from './modals/UserTypeChange';
+import Step1 from './therapist_upgrade/Step1';
+import Step2 from './therapist_upgrade/Step2';
+import Step3 from './therapist_upgrade/Step3';
+import Step4 from './therapist_upgrade/Step4';
 
 const defaultImage = require('../assets/avatar.png');
 
@@ -25,6 +29,10 @@ function Profile({navigation, route}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalTerapeutaVisible, setModalTerapeutaVisible] = useState(false);
   const [imageModalVisible, setImageModalVisible] = useState(false);
+  const [step1Visible, setStep1Visible] = useState(false);
+  const [step2Visible, setStep2Visible] = useState(false);
+  const [step3Visible, setStep3Visible] = useState(false);
+  const [step4Visible, setStep4Visible] = useState(false);
 
   const logOut = () => {
     const keys = ['xauthtoken', 'user'];
@@ -120,6 +128,38 @@ function Profile({navigation, route}) {
       <UserTypeChange
         modalTerapeutaVisible={modalTerapeutaVisible}
         setModalTerapeutaVisible={setModalTerapeutaVisible}
+        token={token}
+        userLogged={userLogged}
+        navigation={navigation}
+        step1Visible={step1Visible}
+        setStep1Visible={setStep1Visible}
+      />
+      <Step1
+        modalTerapeutaVisible={modalTerapeutaVisible}
+        setModalTerapeutaVisible={setModalTerapeutaVisible}
+        step1Visible={step1Visible}
+        setStep1Visible={setStep1Visible}
+        token={token}
+        userLogged={userLogged}
+        navigation={navigation}
+      />
+      <Step2
+        step2Visible={step2Visible}
+        setStep2Visible={setStep2Visible}
+        token={token}
+        userLogged={userLogged}
+        navigation={navigation}
+      />
+      <Step3
+        step3Visible={step3Visible}
+        setStep3Visible={setStep3Visible}
+        token={token}
+        userLogged={userLogged}
+        navigation={navigation}
+      />
+      <Step4
+        step4Visible={step4Visible}
+        setStep4Visible={setStep4Visible}
         token={token}
         userLogged={userLogged}
         navigation={navigation}

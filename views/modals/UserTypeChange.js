@@ -9,20 +9,14 @@ import {
   Alert,
   PixelRatio,
 } from 'react-native';
-import {
-  API_URL,
-  mainColor,
-  secondaryColor,
-  textColor1,
-  textColor2,
-} from '../../config';
+import {API_URL, mainColor, secondaryColor, textColor1} from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useSafeArea} from 'react-native-safe-area-context';
-import {useState} from 'react';
 
 function UserTypeChange({
   modalTerapeutaVisible,
   setModalTerapeutaVisible,
+  step1Visible,
+  setStep1Visible,
   token,
   userLogged,
   navigation,
@@ -110,18 +104,14 @@ function UserTypeChange({
                   color: userLogged.isTherapist ? mainColor : secondaryColor,
                   fontSize: QUESTION_SIZE,
                   marginBottom: 25,
-                }}>
-                {userLogged.isTherapist
-                  ? 'Seguro que quieres dejar de servir al mundo?'
-                  : 'Seguro que quieres ponerte al servicio del mundo?'}
-              </Text>
+                }}>{`Excelente ${userLogged.name}! Te vamos a pedir tus datos en 4 sencillos pasos. Quieres continuar?`}</Text>
             </View>
             <View style={styles.buttons}>
               <Pressable
                 style={[styles.button, styles.buttonAplicar]}
                 onPress={() => {
-                  changeToTherapist();
                   setModalTerapeutaVisible(!modalTerapeutaVisible);
+                  setStep1Visible(!step1Visible);
                 }}>
                 <Text style={styles.textStyle}>ACEPTAR</Text>
               </Pressable>
@@ -180,7 +170,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     textAlign: 'center',
   },
-  modalQuestion: {},
   formView: {
     width: '100%',
     marginBottom: FORM_MARGIN_BOTTOM,
