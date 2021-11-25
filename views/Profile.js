@@ -48,7 +48,6 @@ function Profile({navigation, route}) {
     return true;
   }
   const getImage = image => {
-    console.log('From getImage: ', image);
     if (
       typeof image === 'undefined' ||
       image === null ||
@@ -100,7 +99,7 @@ function Profile({navigation, route}) {
           onPress={() => {
             setModalTerapeutaVisible(true);
           }}>
-          <Text style={styles.buttonText}>SOY TERAPEUTA!</Text>
+          <Text style={styles.buttonText}>SER TERAPEUTA!</Text>
         </Pressable>
         <Pressable
           style={styles.buttonLogout}
