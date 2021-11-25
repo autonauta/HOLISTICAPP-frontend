@@ -17,9 +17,9 @@ import PasswordChange from './modals/PasswordChange';
 import ImageChange from './modals/ImageChange';
 import UserTypeChange from './modals/UserTypeChange';
 import Step1 from './therapist_upgrade/Step1';
-import Step2 from './therapist_upgrade/Step2';
+/* import Step2 from './therapist_upgrade/Step2';
 import Step3 from './therapist_upgrade/Step3';
-import Step4 from './therapist_upgrade/Step4';
+import Step4 from './therapist_upgrade/Step4'; */
 
 const defaultImage = require('../assets/avatar.png');
 
@@ -143,7 +143,7 @@ function Profile({navigation, route}) {
         userLogged={userLogged}
         navigation={navigation}
       />
-      <Step2
+      {/* <Step2
         step2Visible={step2Visible}
         setStep2Visible={setStep2Visible}
         token={token}
@@ -163,7 +163,7 @@ function Profile({navigation, route}) {
         token={token}
         userLogged={userLogged}
         navigation={navigation}
-      />
+      /> */}
     </SafeAreaView>
   );
 }

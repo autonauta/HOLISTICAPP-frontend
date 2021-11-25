@@ -68,6 +68,15 @@ function Step1({
     </View>
   );
 }
+var QUESTION_SIZE = 25;
+var TITLE_FONT_SIZE = 28;
+var FORM_MARGIN_BOTTOM = 20;
+if (PixelRatio.get() <= 2) {
+  FORM_MARGIN_BOTTOM = 15;
+  TITLE_FONT_SIZE = 23;
+  QUESTION_SIZE = 18;
+}
+
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
@@ -95,14 +104,14 @@ const styles = StyleSheet.create({
   },
   buttonCancel: {
     borderRadius: 10,
-    backgroundColor: 'red',
+    backgroundColor: '#1fc362',
     padding: 10,
     elevation: 3,
     width: '30%',
   },
   buttonAplicar: {
     borderRadius: 10,
-    backgroundColor: '#1fc362',
+    backgroundColor: 'red',
     padding: 10,
     elevation: 3,
     width: '30%',

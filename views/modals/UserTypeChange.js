@@ -108,19 +108,19 @@ function UserTypeChange({
             </View>
             <View style={styles.buttons}>
               <Pressable
+                style={[styles.button, styles.buttonCancel]}
+                onPress={() => {
+                  setModalTerapeutaVisible(!modalTerapeutaVisible);
+                }}>
+                <Text style={styles.textStyle}>CANCELAR</Text>
+              </Pressable>
+              <Pressable
                 style={[styles.button, styles.buttonAplicar]}
                 onPress={() => {
                   setModalTerapeutaVisible(!modalTerapeutaVisible);
                   setStep1Visible(!step1Visible);
                 }}>
                 <Text style={styles.textStyle}>ACEPTAR</Text>
-              </Pressable>
-              <Pressable
-                style={[styles.button, styles.buttonCancel]}
-                onPress={() => {
-                  setModalTerapeutaVisible(!modalTerapeutaVisible);
-                }}>
-                <Text style={styles.textStyle}>CANCELAR</Text>
               </Pressable>
             </View>
           </View>
