@@ -30,31 +30,29 @@ const defaultImage = require('../assets/avatar.png');
 function Main({navigation, route}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   //------------------------------States for user data and user Calendar data----------------
   const [userLogged, setUserLogged] = useState({});
   const [userCalendar, setUserCalendar] = useState({});
   const [token, setToken] = useState('');
   //------------------------------Function for checking if the user is logged..............---
   const isAuth = async () => {
-    try {
-      let token = await AsyncStorage.getItem('xauthtoken');
-
-      if (token !== null) {
-        token = JSON.parse(token);
-        setToken(token);
-        console.log(`Token found, user Logedin`);
-        let user = await AsyncStorage.getItem('user');
-        let calendar = await AsyncStorage.getItem('userCalendar');
-        setUserLogged(JSON.parse(user));
-        setUserCalendar(JSON.parse(calendar));
-        getTherapistsData();
-      } else {
-        console.log('No token found, no user logged in');
-        navigation.navigate('Login');
-      }
-    } catch (error) {
-      console.log(`Error in Async Storage from isAuth: ${error}`);
+    let token = await AsyncStorage.getItem('xauthtoken');
+    if (token !== null) {
+      token = JSON.parse(token);
+      setToken(token);
+      console.log(`Token found, user Logedin`);
+      let user = await AsyncStorage.getItem('user');
+      let calendar = await AsyncStorage.getItem('userCalendar');
+      user = JSON.parse(user);
+      calendar = JSON.parse(calendar);
+      setUserLogged(user);
+      setUserCalendar(calendar);
+      getTherapistsData();
+      console.log(user, calendar);
+    } else {
+      console.log('No token found, no user logged in');
+      navigation.navigate('Login');
     }
   };
   useFocusEffect(
@@ -136,7 +134,7 @@ function Main({navigation, route}) {
         barStyle={'default'}
         showHideTransition={'none'}
       />
-      <Text style={styles.title}>holisticapp</Text>
+      <Text style={styles.title}>holistica</Text>
 
       <Navbar
         navigation={navigation}
