@@ -17,25 +17,33 @@ import PasswordChange from './modals/PasswordChange';
 import ImageChange from './modals/ImageChange';
 import UserTypeChange from './modals/UserTypeChange';
 import Step1 from './therapist_upgrade/Step1';
-/* import Step2 from './therapist_upgrade/Step2';
+import Step2 from './therapist_upgrade/Step2';
 import Step3 from './therapist_upgrade/Step3';
-import Step4 from './therapist_upgrade/Step4'; */
+//import Step4 from './therapist_upgrade/Step4';
 
 const defaultImage = require('../assets/avatar.png');
 
 function Profile({navigation, route}) {
   let {userLogged} = route.params;
   const token = route.params.token;
+  //-------------------------------------------------------------------------------------------
   const [modalVisible, setModalVisible] = useState(false);
   const [modalTerapeutaVisible, setModalTerapeutaVisible] = useState(false);
   const [imageModalVisible, setImageModalVisible] = useState(false);
+  //-------------------------------------------------------------------------------------------
   const [step1Visible, setStep1Visible] = useState(false);
   const [step2Visible, setStep2Visible] = useState(false);
   const [step3Visible, setStep3Visible] = useState(false);
   const [step4Visible, setStep4Visible] = useState(false);
+  //-------------------------------------------------------------------------------------------
+  const [name, setName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [categories, setCategories] = useState('');
+  //-------------------------------------------------------------------------------------------
 
   const logOut = () => {
-    const keys = ['xauthtoken', 'user'];
+    const keys = ['xauthtoken', 'user', 'userCalendar'];
     AsyncStorage.multiRemove(keys).then(res => {
       console.log('Items removed from storage');
       navigation.navigate('Login');
@@ -138,25 +146,35 @@ function Profile({navigation, route}) {
         setModalTerapeutaVisible={setModalTerapeutaVisible}
         step1Visible={step1Visible}
         setStep1Visible={setStep1Visible}
-        token={token}
-        userLogged={userLogged}
-        navigation={navigation}
-      />
-      {/* <Step2
         step2Visible={step2Visible}
         setStep2Visible={setStep2Visible}
-        token={token}
         userLogged={userLogged}
-        navigation={navigation}
+        name={name}
+        setName={setName}
+        lastName={lastName}
+        setLastName={setLastName}
+        phone={phone}
+        setPhone={setPhone}
       />
-      <Step3
+      <Step2
+        categories={categories}
+        setCategories={setCategories}
+        step1Visible={step1Visible}
+        setStep1Visible={setStep1Visible}
+        step2Visible={step2Visible}
+        setStep2Visible={setStep2Visible}
         step3Visible={step3Visible}
         setStep3Visible={setStep3Visible}
-        token={token}
-        userLogged={userLogged}
-        navigation={navigation}
       />
-      <Step4
+      <Step3
+        step2Visible={step2Visible}
+        setStep2Visible={setStep2Visible}
+        step3Visible={step3Visible}
+        setStep3Visible={setStep3Visible}
+        step4Visible={step4Visible}
+        setStep4Visible={setStep4Visible}
+      />
+      {/*<Step4
         step4Visible={step4Visible}
         setStep4Visible={setStep4Visible}
         token={token}
@@ -245,7 +263,7 @@ const styles = StyleSheet.create({
 
   buttonLogout: {
     width: '100%',
-    backgroundColor: textColor1,
+    backgroundColor: 'red',
     padding: 8,
     marginBottom: 20,
     borderRadius: 3,
