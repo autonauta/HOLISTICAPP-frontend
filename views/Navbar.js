@@ -41,12 +41,12 @@ function Navbar({
       {userLogged.isTherapist ? (
         <Button
           labelStyle={styles.buttonIcon}
-          icon="menu"
+          icon="stethoscope"
           color="black"
           color="transparent"
-          style={styles.buttons}></Button>
+          style={styles.button}></Button>
       ) : (
-        <></>
+        <View></View>
       )}
       <Button
         labelStyle={styles.buttonIcon}
@@ -87,21 +87,17 @@ if (PixelRatio.get() <= 2) {
 }
 const styles = StyleSheet.create({
   navbar: {
-    width: Dimensions.get('window').width,
+    width: '96%',
     height: NAV_HEIGHT,
     marginTop: NAV_MARGIN_TOP,
     backgroundColor: mainColor,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginBottom: 10,
   },
   button: {
-    width: Dimensions.get('window').width / 4,
-    alignItems: 'flex-end',
     height: '100%',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 1,
   },
   buttonIcon: {
     fontSize: ICON_SIZE,
