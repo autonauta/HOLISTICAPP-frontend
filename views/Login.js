@@ -27,8 +27,6 @@ function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
-  const [userLogged, setUserLogged] = useState({});
-  const [userCalendar, setUserCalendar] = useState({});
 
   const _storeData = async (keyName, value) => {
     try {
@@ -68,16 +66,15 @@ function Login({navigation}) {
         }
         if (data.token) {
           const token = data.token;
-          setUserLogged(data.user);
+          const userLogged = data.user;
+          let userCalendar;
           if (data.calendar) {
-            setUserCalendar(data.calendar);
+            userCalendar = data.calendar;
             _storeData('userCalendar', JSON.stringify(userCalendar));
           }
           _storeData('xauthtoken', JSON.stringify(token));
           _storeData('user', JSON.stringify(userLogged));
           console.log('User correctly logged in');
-          console.log(JSON.stringify(userLogged));
-          console.log(JSON.stringify(userCalendar));
           setPassword('');
           setEmail('');
           setLoggingIn(false);
@@ -164,7 +161,6 @@ if (PixelRatio.get() <= 2) {
   TEXTINPUT_FONT_SIZE = 18;
   BUTTON_WIDTH = '90%';
   BUTTON_MARGIN_TOP = 0;
-  INPUT_MARGIN_BOTTOM = 0;
   INPUT_MARGIN_BOTTOM = 10;
   TEXT_BUTTON_FONT_SIZE = 14;
 }
