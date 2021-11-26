@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
+  TextInput,
   View,
   Modal,
   Dimensions,
@@ -10,17 +11,21 @@ import {
   PixelRatio,
 } from 'react-native';
 import {API_URL, mainColor, secondaryColor, textColor1} from '../../config';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Step1({
+  name,
+  lastName,
+  phone,
+  setName,
+  setLastName,
+  setPhone,
   modalTerapeutaVisible,
   setModalTerapeutaVisible,
   step1Visible,
+  step2Visible,
   setStep1Visible,
   setStep2Visible,
-  token,
   userLogged,
-  navigation,
 }) {
   return (
     <View style={styles.centeredView}>
@@ -38,12 +43,36 @@ function Step1({
               paddingTop: 20,
               borderRadius: 20,
               alignItems: 'center',
-              backgroundColor: userLogged.isTherapist
-                ? secondaryColor
-                : mainColor,
+              backgroundColor: mainColor,
             }}>
             <Text style={styles.title}>Datos personales</Text>
-
+            <View style={styles.textInputView}>
+              <Text style={styles.label}>nombre</Text>
+              <TextInput
+                style={styles.textInput}
+                value={name}
+                textContentType="name"
+                autoCompleteType="name"
+                onChangeText={text => setName(text)}></TextInput>
+            </View>
+            <View style={styles.textInputView}>
+              <Text style={styles.label}>apellidos</Text>
+              <TextInput
+                style={styles.textInput}
+                value={lastName}
+                textContentType="name"
+                autoCompleteType="name"
+                onChangeText={text => setLastName(text)}></TextInput>
+            </View>
+            <View style={(styles.textInputView, styles.textInputViewLast)}>
+              <Text style={styles.label}>telefono (10 dígitos)</Text>
+              <TextInput
+                style={styles.textInput}
+                value={phone}
+                textContentType="name"
+                autoCompleteType="name"
+                onChangeText={text => setPhone(text)}></TextInput>
+            </View>
             <View style={styles.buttons}>
               <Pressable
                 style={[styles.button, styles.buttonAplicar]}
@@ -59,7 +88,7 @@ function Step1({
                   setStep1Visible(!step1Visible);
                   setStep2Visible(!step2Visible);
                 }}>
-                <Text style={styles.textStyle}>ACEPTAR</Text>
+                <Text style={styles.textStyle}>SIGUIENTE</Text>
               </Pressable>
             </View>
           </View>
@@ -71,10 +100,20 @@ function Step1({
 var QUESTION_SIZE = 25;
 var TITLE_FONT_SIZE = 28;
 var FORM_MARGIN_BOTTOM = 20;
+var INPUT_WIDTH = '96%';
+var INPUT_PADDING = 10;
+var LABEL_FONT_SIZE = 24;
+var TEXTINPUT_FONT_SIZE = 20;
+var INPUT_MARGIN_BOTTOM = 10;
 if (PixelRatio.get() <= 2) {
   FORM_MARGIN_BOTTOM = 15;
   TITLE_FONT_SIZE = 23;
   QUESTION_SIZE = 18;
+  INPUT_WIDTH = '90%';
+  INPUT_PADDING = 6;
+  LABEL_FONT_SIZE = 17;
+  INPUT_MARGIN_BOTTOM = 10;
+  TEXTINPUT_FONT_SIZE = 18;
 }
 
 const styles = StyleSheet.create({
@@ -91,10 +130,36 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   title: {
-    color: textColor1,
+    color: secondaryColor,
     fontWeight: 'bold',
-    fontSize: 11,
+    fontSize: 28,
     textAlign: 'center',
+  },
+  textInputView: {
+    width: INPUT_WIDTH,
+    alignItems: 'center',
+    textAlign: 'left',
+    marginBottom: INPUT_MARGIN_BOTTOM,
+  },
+  textInputViewLast: {
+    width: INPUT_WIDTH,
+    alignItems: 'center',
+    textAlign: 'left',
+    marginBottom: 60,
+  },
+  textInput: {
+    width: '100%',
+    borderWidth: 2,
+    borderColor: 'white',
+    borderRadius: 8,
+    padding: INPUT_PADDING,
+    color: 'white',
+    fontSize: TEXTINPUT_FONT_SIZE,
+  },
+  label: {
+    color: 'white',
+    fontSize: LABEL_FONT_SIZE,
+    alignSelf: 'flex-start',
   },
   buttons: {
     width: Dimensions.get('window').width,
