@@ -10,25 +10,29 @@ import {
   Alert,
   PixelRatio,
 } from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
 import {API_URL, mainColor, secondaryColor, textColor1} from '../../config';
 
 function Step3({
-  name,
-  lastName,
-  phone,
-  setName,
-  setLastName,
-  setPhone,
-  modalTerapeutaVisible,
-  setModalTerapeutaVisible,
-  step1Visible,
   step2Visible,
   step3Visible,
-  setStep1Visible,
+  step4Visible,
+  step5Visible,
   setStep2Visible,
   setStep3Visible,
-  userLogged,
+  setStep4Visible,
+  setStep5Visible,
+  presencial,
+  online,
+  atemporal,
+  setPresencial,
+  setOnline,
+  setAtemporal,
 }) {
+  const checkBoxTheme = {
+    true: secondaryColor,
+    false: 'grey',
+  };
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -36,7 +40,7 @@ function Step3({
         transparent={true}
         visible={step3Visible}
         onRequestClose={() => {
-          setStep1Visible(!step1Visible);
+          setStep3Visible(!step3Visible);
         }}>
         <View style={styles.centeredView}>
           <View
@@ -47,24 +51,57 @@ function Step3({
               alignItems: 'center',
               backgroundColor: mainColor,
             }}>
-            <Text style={styles.title}>Tipo de servicio</Text>
-
+            <Text style={styles.title}>Tipo de consulta</Text>
+            <View style={styles.formView}>
+              <View style={styles.checkboxView}>
+                <CheckBox
+                  tintColors={checkBoxTheme}
+                  value={presencial}
+                  onValueChange={value => setPresencial(value)}
+                  style={styles.checkbox}
+                />
+                <Text style={styles.checkboxLabel}>Presencial</Text>
+              </View>
+              <View style={styles.checkboxView}>
+                <CheckBox
+                  tintColors={checkBoxTheme}
+                  value={online}
+                  onValueChange={value => setOnline(value)}
+                  style={styles.checkbox}
+                />
+                <Text style={styles.checkboxLabel}>Online</Text>
+              </View>
+              <View style={styles.checkboxView}>
+                <CheckBox
+                  tintColors={checkBoxTheme}
+                  value={atemporal}
+                  onValueChange={value => setAtemporal(value)}
+                  style={styles.checkbox}
+                />
+                <Text style={styles.checkboxLabel}>Atemporal</Text>
+              </View>
+            </View>
             <View style={styles.buttons}>
               <Pressable
-                style={[styles.button, styles.buttonAplicar]}
+                style={[styles.buttonCancel]}
                 onPress={() => {
                   setStep2Visible(!step2Visible);
                   setStep3Visible(!step3Visible);
                 }}>
-                <Text style={styles.textStyle}>ATRAS</Text>
+                <Text style={styles.buttonText}>ATRAS</Text>
               </Pressable>
               <Pressable
-                style={[styles.button, styles.buttonCancel]}
+                style={[styles.buttonAplicar]}
                 onPress={() => {
-                  setStep3Visible(!step3Visible);
-                  setStep4Visible(!step4Visible);
+                  if (presencial === false && online === false) {
+                    setStep3Visible(!step3Visible);
+                    setStep5Visible(!step5Visible);
+                  } else {
+                    setStep3Visible(!step3Visible);
+                    setStep4Visible(!step4Visible);
+                  }
                 }}>
-                <Text style={styles.textStyle}>SIGUIENTE</Text>
+                <Text style={styles.buttonText}>SIGUIENTE</Text>
               </Pressable>
             </View>
           </View>
@@ -73,23 +110,10 @@ function Step3({
     </View>
   );
 }
-var QUESTION_SIZE = 25;
-var TITLE_FONT_SIZE = 28;
-var FORM_MARGIN_BOTTOM = 20;
-var INPUT_WIDTH = '96%';
-var INPUT_PADDING = 10;
-var LABEL_FONT_SIZE = 24;
-var TEXTINPUT_FONT_SIZE = 20;
-var INPUT_MARGIN_BOTTOM = 10;
+
+var LABEL_SIZE = 20;
 if (PixelRatio.get() <= 2) {
-  FORM_MARGIN_BOTTOM = 15;
-  TITLE_FONT_SIZE = 23;
-  QUESTION_SIZE = 18;
-  INPUT_WIDTH = '90%';
-  INPUT_PADDING = 6;
-  LABEL_FONT_SIZE = 17;
-  INPUT_MARGIN_BOTTOM = 10;
-  TEXTINPUT_FONT_SIZE = 18;
+  LABEL_SIZE = 15;
 }
 
 const styles = StyleSheet.create({
@@ -98,44 +122,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  formView: {
-    width: '100%',
-    marginBottom: FORM_MARGIN_BOTTOM,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
   title: {
     color: secondaryColor,
     fontWeight: 'bold',
     fontSize: 28,
     textAlign: 'center',
-  },
-  textInputView: {
-    width: INPUT_WIDTH,
-    alignItems: 'center',
-    textAlign: 'left',
-    marginBottom: INPUT_MARGIN_BOTTOM,
-  },
-  textInputViewLast: {
-    width: INPUT_WIDTH,
-    alignItems: 'center',
-    textAlign: 'left',
-    marginBottom: 60,
-  },
-  textInput: {
-    width: '100%',
-    borderWidth: 2,
-    borderColor: 'white',
-    borderRadius: 8,
-    padding: INPUT_PADDING,
-    color: 'white',
-    fontSize: TEXTINPUT_FONT_SIZE,
-  },
-  label: {
-    color: 'white',
-    fontSize: LABEL_FONT_SIZE,
-    alignSelf: 'flex-start',
   },
   buttons: {
     width: Dimensions.get('window').width,
@@ -145,23 +136,40 @@ const styles = StyleSheet.create({
   },
   buttonCancel: {
     borderRadius: 10,
-    backgroundColor: '#1fc362',
+    backgroundColor: 'red',
     padding: 10,
     elevation: 3,
     width: '30%',
   },
   buttonAplicar: {
     borderRadius: 10,
-    backgroundColor: 'red',
+    backgroundColor: '#1fc362',
     padding: 10,
     elevation: 3,
     width: '30%',
   },
-  textStyle: {
+  buttonText: {
     color: textColor1,
     fontWeight: 'bold',
     fontSize: 11,
     textAlign: 'center',
+  },
+  formView: {
+    width: '100%',
+    padding: 5,
+    paddingLeft: 15,
+    marginBottom: 20,
+  },
+  checkboxView: {
+    width: Dimensions.get('window').width,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  checkboxLabel: {
+    fontSize: LABEL_SIZE,
+    color: 'white',
   },
 });
 

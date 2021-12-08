@@ -814,13 +814,9 @@ function TherapistProfile({navigation, route}) {
 var IMAGE_SIZE = 90;
 var TITLE_FONT_SIZE = 35;
 var SUBTITLE_FONT_SIZE = 28;
-var LOGOUT_BUTTON_PADDING = 10;
 var LOGOUT_BUTTON_FONT_SIZE = 16;
 var SUBTITLES_FONT_SIZE = 22;
-var CARDIMAGE_SIZE = 50;
-var CARD_TITLE_FONT_SIZE = 20;
 var CARD_HEIGHT = 60;
-var CARD_SUBTITLE_FONT_SIZE = 15;
 var DIAS_FONT_SIZE = 20;
 var LIMITS_FONT_SIZE = 22;
 if (PixelRatio.get() <= 2) {

@@ -19,7 +19,8 @@ import UserTypeChange from './modals/UserTypeChange';
 import Step1 from './therapist_upgrade/Step1';
 import Step2 from './therapist_upgrade/Step2';
 import Step3 from './therapist_upgrade/Step3';
-//import Step4 from './therapist_upgrade/Step4';
+import Step4 from './therapist_upgrade/Step4';
+import Step5 from './therapist_upgrade/Step5';
 
 const defaultImage = require('../assets/avatar.png');
 
@@ -35,12 +36,42 @@ function Profile({navigation, route}) {
   const [step2Visible, setStep2Visible] = useState(false);
   const [step3Visible, setStep3Visible] = useState(false);
   const [step4Visible, setStep4Visible] = useState(false);
+  const [step5Visible, setStep5Visible] = useState(false);
   //-------------------------------------------------------------------------------------------
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [categories, setCategories] = useState('');
+  const [description, setDescription] = useState('');
   //-------------------------------------------------------------------------------------------
+  const [presencial, setPresencial] = useState(false);
+  const [online, setOnline] = useState(false);
+  const [atemporal, setAtemporal] = useState(false);
+  //-------------------------------------------------------------------------------------------
+  const [presencialStartHour, setPresencialStartHour] = useState();
+  const [presencialEndHour, setPresencialEndHour] = useState();
+  const [presencialSessionDuration, setPresencialSessionDuration] = useState();
+  //-------------------------------------------------------------------------------------------
+  const [onlineStartHour, setOnlineStartHour] = useState();
+  const [onlineEndHour, setOnlineEndHour] = useState();
+  const [onlineSessionDuration, setOnlineSessionDuration] = useState();
+  //-------------------------------------------------------------------------------------------
+  //-------------------------------Week day presencial variables ---------------------------------------
+  const [pSunday, setPSunday] = useState(false);
+  const [pMonday, setPMonday] = useState(false);
+  const [pTuesday, setPTuesday] = useState(false);
+  const [pWednesday, setPWednesday] = useState(false);
+  const [pThursday, setPThursday] = useState(false);
+  const [pFriday, setPFriday] = useState(false);
+  const [pSaturday, setPSaturday] = useState(false);
+  //-------------------------------Week day online variables ---------------------------------------
+  const [oSunday, setOSunday] = useState(false);
+  const [oMonday, setOMonday] = useState(false);
+  const [oTuesday, setOTuesday] = useState(false);
+  const [oWednesday, setOWednesday] = useState(false);
+  const [oThursday, setOThursday] = useState(false);
+  const [oFriday, setOFriday] = useState(false);
+  const [oSaturday, setOSaturday] = useState(false);
 
   const logOut = () => {
     const keys = ['xauthtoken', 'user', 'userCalendar'];
@@ -165,6 +196,8 @@ function Profile({navigation, route}) {
         setStep2Visible={setStep2Visible}
         step3Visible={step3Visible}
         setStep3Visible={setStep3Visible}
+        description={description}
+        setDescription={setDescription}
       />
       <Step3
         step2Visible={step2Visible}
@@ -173,14 +206,104 @@ function Profile({navigation, route}) {
         setStep3Visible={setStep3Visible}
         step4Visible={step4Visible}
         setStep4Visible={setStep4Visible}
+        step5Visible={step5Visible}
+        setStep5Visible={setStep5Visible}
+        presencial={presencial}
+        online={online}
+        atemporal={atemporal}
+        setPresencial={setPresencial}
+        setOnline={setOnline}
+        setAtemporal={setAtemporal}
       />
-      {/*<Step4
+      <Step4
+        step3Visible={step3Visible}
+        setStep3Visible={setStep3Visible}
         step4Visible={step4Visible}
         setStep4Visible={setStep4Visible}
+        step5Visible={step5Visible}
+        setStep5Visible={setStep5Visible}
+        presencial={presencial}
+        online={online}
+        presencialStartHour={presencialStartHour}
+        setPresencialStartHour={setPresencialStartHour}
+        presencialEndHour={presencialEndHour}
+        setPresencialEndHour={setPresencialEndHour}
+        presencialSessionDuration={presencialSessionDuration}
+        setPresencialSessionDuration={setPresencialSessionDuration}
+        onlineStartHour={onlineStartHour}
+        setOnlineStartHour={setOnlineStartHour}
+        onlineEndHour={onlineEndHour}
+        setOnlineEndHour={setOnlineEndHour}
+        onlineSessionDuration={onlineSessionDuration}
+        setOnlineSessionDuration={setOnlineSessionDuration}
+        pSunday={pSunday}
+        pMonday={pMonday}
+        pTuesday={pTuesday}
+        pWednesday={pWednesday}
+        pThursday={pThursday}
+        pFriday={pFriday}
+        pSaturday={pSaturday}
+        setPSunday={setPSunday}
+        setPMonday={setPMonday}
+        setPTuesday={setPTuesday}
+        setPWednesday={setPWednesday}
+        setPThursday={setPThursday}
+        setPFriday={setPFriday}
+        setPSaturday={setPSaturday}
+        oSunday={oSunday}
+        oMonday={oMonday}
+        oTuesday={oTuesday}
+        oWednesday={oWednesday}
+        oThursday={oThursday}
+        oFriday={oFriday}
+        oSaturday={oSaturday}
+        setOSunday={setOSunday}
+        setOMonday={setOMonday}
+        setOTuesday={setOTuesday}
+        setOWednesday={setOWednesday}
+        setOThursday={setOThursday}
+        setOFriday={setOFriday}
+        setOSaturday={setOSaturday}
+      />
+      <Step5
+        step3Visible={step3Visible}
+        setStep3Visible={setStep3Visible}
+        step4Visible={step4Visible}
+        setStep4Visible={setStep4Visible}
+        step5Visible={step5Visible}
+        setStep5Visible={setStep5Visible}
+        presencial={presencial}
+        online={online}
+        atemporal={atemporal}
+        name={name}
+        lastName={lastName}
+        phone={phone}
+        description={description}
+        categories={categories}
+        presencialStartHour={presencialStartHour}
+        presencialEndHour={presencialEndHour}
+        presencialSessionDuration={presencialSessionDuration}
+        onlineStartHour={onlineStartHour}
+        onlineEndHour={onlineEndHour}
+        onlineSessionDuration={onlineSessionDuration}
+        pMonday={pMonday}
+        pTuesday={pTuesday}
+        pWednesday={pWednesday}
+        pThursday={pThursday}
+        pFriday={pFriday}
+        pSaturday={pSaturday}
+        pSunday={pSunday}
+        oMonday={oMonday}
+        oTuesday={oTuesday}
+        oWednesday={oWednesday}
+        oThursday={oThursday}
+        oFriday={oFriday}
+        oSaturday={oSaturday}
+        oSunday={oSunday}
         token={token}
-        userLogged={userLogged}
         navigation={navigation}
-      /> */}
+      />
+      <View style={styles.covering}></View>
     </SafeAreaView>
   );
 }
@@ -283,6 +406,12 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: BUTTON_FONT_SIZE,
     color: 'white',
+  },
+  covering: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    flex: 1,
   },
 });
 

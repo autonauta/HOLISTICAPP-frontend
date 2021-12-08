@@ -44,6 +44,8 @@ function Step2({
   setStep2Visible,
   step3Visible,
   setStep3Visible,
+  description,
+  setDescription,
 }) {
   const [cat1Active, setCat1Active] = useState(false);
   const [cat2Active, setCat2Active] = useState(false);
@@ -51,7 +53,10 @@ function Step2({
   const [category1, setCategory1] = useState(null);
   const [category2, setCategory2] = useState(null);
   const [category3, setCategory3] = useState(null);
-  const [description, setDescription] = useState('');
+
+  const charactersLeft = () => {
+    return 750 - description.length;
+  };
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -59,7 +64,7 @@ function Step2({
         transparent={true}
         visible={step2Visible}
         onRequestClose={() => {
-          setStep1Visible(!step1Visible);
+          setStep2Visible(!step2Visible);
         }}>
         <View style={styles.centeredView}>
           <View
@@ -252,6 +257,9 @@ function Step2({
               multiline
               maxLength={750}
             />
+            <Text style={styles.charactersLeft}>
+              {charactersLeft()} caracteres restantes
+            </Text>
             <View style={styles.buttons}>
               <Pressable
                 style={[styles.button, styles.buttonAplicar]}
@@ -324,6 +332,11 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
   },
+  subtitles: {
+    fontSize: 14,
+    paddingLeft: 15,
+    color: secondaryColor,
+  },
   inputView: {
     width: '100%',
     flexDirection: 'row',
@@ -366,6 +379,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 11,
     textAlign: 'center',
+  },
+  charactersLeft: {
+    paddingLeft: 15,
+    alignSelf: 'flex-start',
+    color: secondaryColor,
   },
 });
 

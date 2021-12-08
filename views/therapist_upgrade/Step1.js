@@ -10,7 +10,13 @@ import {
   Alert,
   PixelRatio,
 } from 'react-native';
-import {API_URL, mainColor, secondaryColor, textColor1} from '../../config';
+import {
+  API_URL,
+  mainColor,
+  secondaryColor,
+  tertiaryColor,
+  textColor1,
+} from '../../config';
 
 function Step1({
   name,
@@ -102,7 +108,7 @@ var TITLE_FONT_SIZE = 28;
 var FORM_MARGIN_BOTTOM = 20;
 var INPUT_WIDTH = '96%';
 var INPUT_PADDING = 10;
-var LABEL_FONT_SIZE = 24;
+var LABEL_FONT_SIZE = 20;
 var TEXTINPUT_FONT_SIZE = 20;
 var INPUT_MARGIN_BOTTOM = 10;
 if (PixelRatio.get() <= 2) {
@@ -150,14 +156,14 @@ const styles = StyleSheet.create({
   textInput: {
     width: '100%',
     borderWidth: 2,
-    borderColor: 'white',
+    borderColor: secondaryColor,
     borderRadius: 8,
     padding: INPUT_PADDING,
-    color: 'white',
+    color: secondaryColor,
     fontSize: TEXTINPUT_FONT_SIZE,
   },
   label: {
-    color: 'white',
+    color: secondaryColor,
     fontSize: LABEL_FONT_SIZE,
     alignSelf: 'flex-start',
   },
