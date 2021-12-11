@@ -28,6 +28,7 @@
     "react-native-detect-navbar-android": "^0.3.0",
     "react-native-device-info": "^8.3.1",
     "react-native-elements": "^3.4.2",
+    "react-native-geocoding": "^0.5.0",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-get-location": "^2.2.1",
     "react-native-image-crop-picker": "^0.36.2",
