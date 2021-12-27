@@ -120,6 +120,7 @@ function Step5({
         ]);
         setSendingData(false);
       } else {
+        console.log(JSON.stringify(data));
         Alert.alert(`Perfecto!`, `Hemos actualizado tu perfil`, [
           {
             text: 'OK',
