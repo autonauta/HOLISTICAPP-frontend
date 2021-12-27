@@ -806,20 +806,20 @@ function Step4({
             ) : (
               <View></View>
             )}
-            <Text style={styles.subtitle}>latitude: {latitude}</Text>
+            {/* <Text style={styles.subtitle}>latitude: {latitude}</Text>
             <Text style={styles.subtitle}>longitud: {longitude}</Text>
             <Text style={styles.subtitle}>precision: {precision}</Text>
             <Text style={styles.subtitle}>calle: {street}</Text>
             <Text style={styles.subtitle}>colonia: {colony}</Text>
-            <Text style={styles.subtitle}>ciudad: {city}</Text>
+            <Text style={styles.subtitle}>ciudad: {city}</Text> */}
 
-            <Pressable
+            {/* <Pressable
               style={[styles.buttonCancel]}
               onPress={() => {
                 getGPS();
               }}>
               <Text style={styles.buttonText}>ATRAS</Text>
-            </Pressable>
+            </Pressable> */}
             <View style={styles.buttons}>
               <Pressable
                 style={[styles.buttonCancel]}
