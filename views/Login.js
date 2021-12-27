@@ -80,6 +80,14 @@ function Login({navigation}) {
           setLoggingIn(false);
           navigation.navigate('Home', {token, userLogged, userCalendar});
         }
+      })
+      .catch(err => {
+        Alert.alert(
+          'Ups!!',
+          `Ese usuario no existe o el password es incorrecto. Verifica tus datos`, //modificar al error real
+          [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+        );
+        setLoggingIn(false);
       });
   };
 
