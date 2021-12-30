@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,6 +10,9 @@ import {
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import SelectDropdown from 'react-native-select-dropdown';
+import GetLocation from 'react-native-get-location';
+import Geocoder from 'react-native-geocoding';
+Geocoder.init('AIzaSyBfdjVIdrtudPD1ykRCR6S8Zf8Nt9T2Q18'); // use a valid API key
 import {
   API_URL,
   mainColor,
@@ -68,6 +71,12 @@ function Step4({
   setOFriday,
   setOSaturday,
 }) {
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
+  const [precision, setPrecision] = useState();
+  const [street, setStreet] = useState();
+  const [colony, setColony] = useState();
+  const [city, setCity] = useState();
   const HourDropdown = [
     '04:00',
     '04:30',
@@ -123,6 +132,41 @@ function Step4({
     true: secondaryColor,
     false: 'grey',
   };
+  const getAddress = (lat, lon) => {
+    Geocoder.from(lat, lon)
+      .then(json => {
+        var street = json.results[0].address_components[1].long_name;
+        var colony = json.results[0].address_components[2].long_name;
+        var city = json.results[0].address_components[3].long_name;
+        console.log('Street: ', street);
+        console.log('Colony: ', colony);
+        console.log('Ciudad: ', city);
+        setStreet(street);
+        setColony(colony);
+        setCity(city);
+      })
+      .catch(error => console.warn(error));
+  };
+  const getGPS = () => {
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 15000,
+    })
+      .then(location => {
+        console.log(location);
+        setLatitude(location.latitude);
+        setLongitude(location.longitude);
+        setPrecision(location.accuracy);
+        getAddress(location.latitude, location.longitude);
+      })
+      .catch(error => {
+        const {code, message} = error;
+        console.warn(code, message);
+      });
+  };
+  //useEffect(() => {
+  //getGPS();
+  //}, []);
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -762,6 +806,20 @@ function Step4({
             ) : (
               <View></View>
             )}
+            {/* <Text style={styles.subtitle}>latitude: {latitude}</Text>
+            <Text style={styles.subtitle}>longitud: {longitude}</Text>
+            <Text style={styles.subtitle}>precision: {precision}</Text>
+            <Text style={styles.subtitle}>calle: {street}</Text>
+            <Text style={styles.subtitle}>colonia: {colony}</Text>
+            <Text style={styles.subtitle}>ciudad: {city}</Text> */}
+
+            {/* <Pressable
+              style={[styles.buttonCancel]}
+              onPress={() => {
+                getGPS();
+              }}>
+              <Text style={styles.buttonText}>ATRAS</Text>
+            </Pressable> */}
             <View style={styles.buttons}>
               <Pressable
                 style={[styles.buttonCancel]}

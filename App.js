@@ -17,6 +17,7 @@ import Chat from './views/Chat';
 import TherapistDashboard from './views/TherapistDashboard';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
+import UserContext from './Context/UserContext';
 
 const Stack = createStackNavigator();
 function App() {

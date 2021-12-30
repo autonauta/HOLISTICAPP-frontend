@@ -71,6 +71,7 @@ function PayModal({
         therapist_id: _id,
         day,
         hour,
+        online: true,
       }),
     })
       .then(res => res.json())

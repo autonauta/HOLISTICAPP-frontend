@@ -1,7 +1,9 @@
 import React from 'react';
 
 const UserContext = React.createContext({
-  userData: null,
+  token: '',
+  user: {},
+  calendar: {},
 });
 
 export default UserContext;
