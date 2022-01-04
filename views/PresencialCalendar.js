@@ -145,7 +145,7 @@ function Calendars({route, navigation}) {
   };
   const paySession = hour => {
     navigation.navigate('Checkout', {
-      type: 'presencial',
+      online: false,
       hour,
       day,
       token,

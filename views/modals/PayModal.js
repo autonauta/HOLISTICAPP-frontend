@@ -27,6 +27,7 @@ function PayModal({
   day,
   hour,
   navigation,
+  online,
 }) {
   const [cardNumber, setCardNumber] = useState('4111111111111111');
   const [cardHolder, setCardHolder] = useState('CESAR ALANIS NUNEZ');
@@ -71,7 +72,7 @@ function PayModal({
         therapist_id: _id,
         day,
         hour,
-        online: true,
+        online,
       }),
     })
       .then(res => res.json())
