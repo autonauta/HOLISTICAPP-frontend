@@ -72,7 +72,7 @@ function Register({navigation}) {
         style={styles.inputsView}
         contentContainerStyle={{alignItems: 'center'}}>
         <View style={styles.textInputView}>
-          <Text style={styles.label}>nombre</Text>
+          <Text style={styles.label}>usuario</Text>
           <TextInput
             style={styles.textInput}
             theme={theme}

@@ -38,22 +38,30 @@ function Navbar({
   };
   return (
     <View style={styles.navbar}>
-      {userLogged.isTherapist ? (
+      {userLogged.isTherapist && (
         <Button
           labelStyle={styles.buttonIcon}
           icon="stethoscope"
-          color="black"
-          color="transparent"
-          style={styles.button}></Button>
-      ) : (
-        <View></View>
+          color={secondaryColor}
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate('TherapistDashboard', {
+              userLogged,
+              token,
+            })
+          }></Button>
       )}
       <Button
         labelStyle={styles.buttonIcon}
         icon="view-dashboard"
         color={secondaryColor}
         style={styles.button}
-        onPress={dashboardNavigation}></Button>
+        onPress={() =>
+          navigation.navigate('Dashboard', {
+            userLogged,
+            token,
+          })
+        }></Button>
       <Button
         labelStyle={styles.buttonIcon}
         icon="store"

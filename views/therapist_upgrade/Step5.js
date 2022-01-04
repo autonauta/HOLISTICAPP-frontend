@@ -66,6 +66,14 @@ function Step5({
     });
     navigation.navigate('Login');
   };
+  const _storeData = async (keyName, value) => {
+    console.log('entered to sotre data');
+    try {
+      await AsyncStorage.setItem(keyName, value);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const submitData = () => {
     setSendingData(true);
     const myHeaders = new Headers();
@@ -109,31 +117,35 @@ function Step5({
       description,
     };
     console.log(data);
-    fetch(`${API_URL}/profile/edit`, {
+    fetch(`${API_URL}/therapists`, {
       method: 'post',
       headers: myHeaders,
       body: JSON.stringify(data),
-    }).then(data => {
-      if (data.error) {
-        Alert.alert('Ups!!', `${data.error}`, [
-          {text: 'OK', onPress: () => console.log('OK Pressed')},
-        ]);
-        setSendingData(false);
-      } else {
-        console.log(JSON.stringify(data));
-        Alert.alert(`Perfecto!`, `Hemos actualizado tu perfil`, [
-          {
-            text: 'OK',
-            onPress: () => {
-              console.log('OK Pressed');
-              setStep5Visible(!step5Visible);
-              logOut();
+    })
+      .then(res => res.json())
+      .then(data => {
+        const user = data;
+        if (data.error || data.status === 400) {
+          Alert.alert('Ups!!', `${data.error}`, [
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ]);
+          setSendingData(false);
+        } else if (user) {
+          console.log(`From convertirse en terapeuta: ${JSON.stringify(user)}`);
+          _storeData('user', JSON.stringify(user));
+          Alert.alert(`Perfecto!`, `Hemos actualizado tu perfil`, [
+            {
+              text: 'OK',
+              onPress: () => {
+                console.log('OK Pressed');
+                setStep5Visible(!step5Visible);
+                navigation.navigate('Home');
+              },
             },
-          },
-        ]);
-        setSendingData(false);
-      }
-    });
+          ]);
+          setSendingData(false);
+        }
+      });
   };
   return (
     <View style={styles.centeredView}>
@@ -149,7 +161,8 @@ function Step5({
             style={{
               width: Dimensions.get('window').width,
               paddingTop: 20,
-              borderRadius: 20,
+              borderTopEndRadius: 30,
+              borderTopStartRadius: 30,
               alignItems: 'center',
               backgroundColor: mainColor,
             }}>
@@ -164,7 +177,6 @@ function Step5({
               {categories[2] ? ', ' : ''}
               {categories[2]}
             </Text>
-            <Text style={styles.data}>Descripción: {description}</Text>
             {presencial ? (
               <>
                 <Text style={styles.data}>Horario Presencial</Text>

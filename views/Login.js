@@ -10,6 +10,7 @@ import {
   TextInput,
   PixelRatio,
   ActivityIndicator,
+  StatusBar,
 } from 'react-native';
 import {Button} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -67,18 +68,13 @@ function Login({navigation}) {
         if (data.token) {
           const token = data.token;
           const userLogged = data.user;
-          let userCalendar;
-          if (data.calendar) {
-            userCalendar = data.calendar;
-            _storeData('userCalendar', JSON.stringify(userCalendar));
-          }
           _storeData('xauthtoken', JSON.stringify(token));
           _storeData('user', JSON.stringify(userLogged));
           console.log('User correctly logged in');
           setPassword('');
           setEmail('');
           setLoggingIn(false);
-          navigation.navigate('Home', {token, userLogged, userCalendar});
+          navigation.navigate('Home', {token, userLogged});
         }
       })
       .catch(err => {
@@ -93,6 +89,12 @@ function Login({navigation}) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar
+        animated={true}
+        backgroundColor={mainColor}
+        barStyle={'default'}
+        showHideTransition={'none'}
+      />
       <Image source={iconImage} style={styles.image}></Image>
       <Text style={styles.title}>Login</Text>
       <View style={styles.inputsView}>

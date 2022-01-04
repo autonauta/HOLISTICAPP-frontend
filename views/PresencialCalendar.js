@@ -72,7 +72,7 @@ else smallPhone = false;
 function Calendars({route, navigation}) {
   const {name, image, specialization, token, _id} = route.params;
   const userLogged = route.params.userLogged;
-  const userCalendar = route.params.calendar[0];
+  const userCalendar = route.params.calendar[1];
   const [hours, setHours] = useState([]);
 
   const [markedDates] = useState(
@@ -145,6 +145,7 @@ function Calendars({route, navigation}) {
   };
   const paySession = hour => {
     navigation.navigate('Checkout', {
+      type: 'presencial',
       hour,
       day,
       token,
@@ -207,7 +208,7 @@ function Calendars({route, navigation}) {
         <Image style={styles.image} source={getImage(image)}></Image>
         <View>
           <Text style={styles.titleName}>{name}</Text>
-          <Text style={styles.subtitle}>{specialization}</Text>
+          <Text style={styles.subtitle}>Calendario presencial</Text>
         </View>
       </View>
 

@@ -13,13 +13,14 @@ import {
 } from 'react-native';
 import {Card} from 'react-native-paper';
 import {useFocusEffect} from '@react-navigation/native';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   API_URL,
   mainColor,
   secondaryColor,
   tertiaryColor,
   textColor1,
+  textColor2,
 } from '../config';
 
 function Dashboard({route, navigation}) {
@@ -36,6 +37,9 @@ function Dashboard({route, navigation}) {
     fetch(`${API_URL}/appointments`, {
       method: 'POST',
       headers: myHeaders,
+      body: JSON.stringify({
+        type: 'user',
+      }),
     })
       .then(response => response.json())
       .then(res => {
@@ -82,13 +86,33 @@ function Dashboard({route, navigation}) {
         style={styles.myCard}
         onPress={() => navigation.navigate('Chat', {item, token, userLogged})}>
         <View style={styles.cardView}>
-          <View style={styles.cardText}>
+          <View
+            style={
+              item.online === true
+                ? styles.cardTextOnline
+                : styles.cardTextPresencial
+            }>
             <Text style={styles.cardTitle}>
               {TransformDate(item.appointmentDate.day)}
             </Text>
             <Text style={styles.cardSubtitle}>{item.appointmentDate.hour}</Text>
           </View>
           <View style={styles.typeOf}>
+            {item.online ? (
+              <Icon
+                style={{alignSelf: 'flex-start', marginLeft: 10}}
+                name="connected-tv"
+                size={40}
+                color={textColor2}
+              />
+            ) : (
+              <Icon
+                style={{alignSelf: 'flex-start', marginLeft: 10}}
+                name="group"
+                size={40}
+                color={textColor2}
+              />
+            )}
             <Text style={styles.cardApointeeName}>{item.therapistName}</Text>
           </View>
         </View>
@@ -118,7 +142,7 @@ function Dashboard({route, navigation}) {
           refreshing={loading}></FlatList>
       ) : (
         <Text style={styles.noAppointmentsText}>
-          NO TIENES CITAS PROGRAMADAS
+          NO TIENES NINGUN SERVICIO PENDIENTE
         </Text>
       )}
     </SafeAreaView>
@@ -127,7 +151,7 @@ function Dashboard({route, navigation}) {
 
 var CONTAINER_HEIGHT =
   Dimensions.get('screen').height - StatusBar.currentHeight;
-var CARD_HEIGHT = 120;
+var CARD_HEIGHT = 180;
 var CARD_TITLE = 20;
 var CARD_SUBTITLE = 15;
 var NAME_SIZE = 40;
@@ -169,12 +193,24 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'white',
   },
-  cardText: {
+  cardTextOnline: {
     width: '100%',
     height: '30%',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     backgroundColor: tertiaryColor,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  cardTextPresencial: {
+    width: '100%',
+    height: '30%',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    backgroundColor: secondaryColor,
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 5,

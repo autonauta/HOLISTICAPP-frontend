@@ -64,12 +64,12 @@ function PasswordChange({
         setPassConfirm('');
         Alert.alert(
           `Perfecto ${userLogged.name}!`,
-          `Hemos actualizado tu contraseña. Por favor inicia sesión de nuevo.`,
+          `Hemos actualizado tu contraseña.`,
           [
             {
               text: 'OK',
               onPress: () => {
-                logOut();
+                console.log('OK pressed');
               },
             },
           ],

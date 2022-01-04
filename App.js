@@ -5,7 +5,9 @@ import Register from './views/Register';
 import Login from './views/Login';
 import Therapist from './views/Therapist';
 import Profile from './views/Profile';
-import Calendar from './views/Calendar';
+import OnlineCalendar from './views/OnlineCalendar';
+import PresencialCalendar from './views/PresencialCalendar';
+import Atemporal from './views/Atemporal';
 import TherapistProfile from './views/TherapistProfile';
 import TherapistDocument from './views/TherapistDocument';
 import PasswordRecovery from './views/PasswordRecovery';
@@ -29,7 +31,12 @@ function App() {
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Therapist" component={Therapist} />
         <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Calendar" component={Calendar} />
+        <Stack.Screen name="OnlineCalendar" component={OnlineCalendar} />
+        <Stack.Screen
+          name="PresencialCalendar"
+          component={PresencialCalendar}
+        />
+        <Stack.Screen name="Atemporal" component={Atemporal} />
         <Stack.Screen name="TherapistProfile" component={TherapistProfile} />
         <Stack.Screen name="TherapistDocument" component={TherapistDocument} />
         <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />

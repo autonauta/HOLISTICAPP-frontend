@@ -18,12 +18,24 @@ import {
   textColor1,
   textColor2,
 } from '../config';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 const defaultImage = require('../assets/avatar.png');
 
 //--------------------------MAIN EXPORT FUNCTION--------------------------
 function Therapist({navigation, route}) {
-  const {name, calendar, image, description, specialization, _id} =
-    route.params.item;
+  const {
+    name,
+    lastName,
+    calendar,
+    image,
+    description,
+    specialization,
+    _id,
+    online,
+    presencial,
+    atemporal,
+    categories,
+  } = route.params.item;
   const token = route.params.token;
   const userLogged = route.params.userLogged;
   function isEmpty(obj) {
@@ -60,28 +72,107 @@ function Therapist({navigation, route}) {
         <Image style={styles.image} source={getImage(image)}></Image>
         <View style={styles.card}>
           <Text style={styles.name}>{name}</Text>
-          <Text style={styles.props}>{specialization}</Text>
+          <Text style={styles.name}>{lastName}</Text>
+          <Text style={styles.props}>
+            {categories.map(category => {
+              return <Text>{category}, </Text>;
+            })}
+          </Text>
+          <View style={styles.typeView}>
+            {presencial && (
+              <View style={styles.typeElement}>
+                <Icon
+                  style={styles.icon}
+                  name="group"
+                  size={30}
+                  color={textColor2}
+                />
+                <Text style={styles.types}>presencial</Text>
+              </View>
+            )}
+            {online && (
+              <View style={styles.typeElement}>
+                <Icon
+                  style={styles.icon}
+                  name="connected-tv"
+                  size={30}
+                  color={textColor2}
+                />
+                <Text style={styles.types}>online</Text>
+              </View>
+            )}
+            {atemporal && (
+              <View style={styles.typeElement}>
+                <Icon
+                  style={styles.icon}
+                  name="timer-off"
+                  size={30}
+                  color={textColor2}
+                />
+                <Text style={styles.types}>sin tiempo</Text>
+              </View>
+            )}
+          </View>
         </View>
         <View style={styles.scroll}>
           <Text style={styles.description}>{description}</Text>
         </View>
         <View style={styles.buttons}>
-          <Button
-            style={styles.button}
-            mode="contained"
-            onPress={() => {
-              navigation.navigate('Calendar', {
-                name,
-                image,
-                calendar,
-                specialization,
-                token,
-                userLogged,
-                _id,
-              });
-            }}>
-            PROGRAMA UNA CITA
-          </Button>
+          {online && (
+            <Button
+              style={styles.button}
+              mode="contained"
+              icon="rss"
+              onPress={() => {
+                navigation.navigate('OnlineCalendar', {
+                  name,
+                  image,
+                  calendar,
+                  specialization,
+                  token,
+                  userLogged,
+                  _id,
+                });
+              }}>
+              CITA ONLINE
+            </Button>
+          )}
+          {presencial && (
+            <Button
+              style={styles.button}
+              mode="contained"
+              icon="account-multiple"
+              onPress={() => {
+                navigation.navigate('PresencialCalendar', {
+                  name,
+                  image,
+                  calendar,
+                  specialization,
+                  token,
+                  userLogged,
+                  _id,
+                });
+              }}>
+              CITA PRESENCIAL
+            </Button>
+          )}
+          {atemporal && (
+            <Button
+              style={styles.button}
+              mode="contained"
+              icon="timer-off"
+              onPress={() => {
+                navigation.navigate('Atemporal', {
+                  name,
+                  image,
+                  token,
+                  userLogged,
+                  _id,
+                });
+              }}>
+              CONSULTA SIN TIEMPO
+            </Button>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -130,7 +221,6 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingRight: 10,
   },
   name: {
     fontSize: NAME_SIZE,
@@ -147,15 +237,30 @@ const styles = StyleSheet.create({
     fontSize: DESCRIPTION_SIZE,
     marginTop: 10,
   },
+  typeView: {
+    width: '100%',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    paddingLeft: 20,
+    paddingTop: 10,
+  },
+  typeElement: {
+    flexDirection: 'row',
+  },
+  types: {
+    color: textColor2,
+    fontSize: 20,
+    marginLeft: 10,
+  },
   buttons: {
     width: '90%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
+    paddingTop: 20,
     marginBottom: 30,
   },
   button: {
     width: '100%',
-    marginTop: 40,
+    marginTop: 10,
     backgroundColor: mainColor,
   },
 });

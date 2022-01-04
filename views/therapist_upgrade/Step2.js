@@ -71,7 +71,8 @@ function Step2({
             style={{
               width: Dimensions.get('window').width,
               paddingTop: 20,
-              borderRadius: 20,
+              borderTopEndRadius: 30,
+              borderTopStartRadius: 30,
               alignItems: 'center',
               backgroundColor: mainColor,
             }}>

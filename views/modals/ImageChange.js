@@ -30,6 +30,7 @@ function ImageChange({
   setImageModalVisible,
   token,
   userLogged,
+  setUserLogged,
 }) {
   const _storeData = async (keyName, value) => {
     console.log('entered to sotre data');
@@ -64,8 +65,9 @@ function ImageChange({
     })
       .then(data => {
         console.log(`Response from API change image: ${JSON.stringify(data)}`);
-        userLogged = {...userLogged, image: {uri: imageUrl}};
-        _storeData('user', JSON.stringify(userLogged));
+        user = {...userLogged, image: {uri: imageUrl}};
+        setUserLogged(user);
+        _storeData('user', JSON.stringify(user));
         Alert.alert(
           `Perfecto ${userLogged.name}!`,
           `Hemos actualizado tu imagen.`,
@@ -73,7 +75,6 @@ function ImageChange({
             {
               text: 'OK',
               onPress: () => {
-                navigation.navigate('Home');
                 console.log('OK pressed');
               },
             },

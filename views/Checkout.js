@@ -19,7 +19,8 @@ import PayModal from './modals/PayModal';
 const defaultImage = require('../assets/avatar.png');
 function Checkout({route, navigation}) {
   const userLogged = route.params.userLogged;
-  const {day, hour, token, name, _id, image, specialization} = route.params;
+  const {type, day, hour, token, name, _id, image, specialization} =
+    route.params;
 
   const [payModalVisible, setPayModalVisible] = useState(false);
 
@@ -46,7 +47,7 @@ function Checkout({route, navigation}) {
       <Image style={styles.image} source={getImage(image)}></Image>
       <View style={{paddingBottom: 20, width: '100%'}}>
         <Text style={styles.subtitle1}>{`Terapeuta: ${name}`}</Text>
-        <Text style={styles.subtitle2}>{`Categoría: ${specialization}`}</Text>
+        <Text style={styles.subtitle2}>{`Tipo de sesión: ${type}`}</Text>
         <Text style={styles.subtitle2}>{`Fecha: ${day.split('-')[2]}-${
           day.split('-')[1]
         }-${day.split('-')[0]}`}</Text>
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonText: {
-    color: secondaryColor,
+    color: 'white',
   },
 });
 export default Checkout;

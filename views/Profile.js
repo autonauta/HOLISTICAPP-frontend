@@ -25,7 +25,8 @@ import Step5 from './therapist_upgrade/Step5';
 const defaultImage = require('../assets/avatar.png');
 
 function Profile({navigation, route}) {
-  let {userLogged} = route.params;
+  const userRoute = route.params.userLogged;
+  const [userLogged, setUserLogged] = useState(userRoute);
   const token = route.params.token;
   //-------------------------------------------------------------------------------------------
   const [modalVisible, setModalVisible] = useState(false);
@@ -101,6 +102,12 @@ function Profile({navigation, route}) {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar
+        animated={true}
+        backgroundColor={secondaryColor}
+        barStyle={'default'}
+        showHideTransition={'none'}
+      />
       <View style={styles.top}></View>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={getImage(userLogged.image)}></Image>
@@ -161,6 +168,7 @@ function Profile({navigation, route}) {
         setImageModalVisible={setImageModalVisible}
         token={token}
         userLogged={userLogged}
+        setUserLogged={setUserLogged}
         navigation={navigation}
       />
       <UserTypeChange
@@ -346,7 +354,7 @@ const styles = StyleSheet.create({
   top: {
     width: '100%',
     height: TOP_HEIGHT,
-    backgroundColor: mainColor,
+    backgroundColor: secondaryColor,
   },
   profile: {
     width: '100%',

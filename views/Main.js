@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import {Card, Button} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import Navbar from '../views/Navbar';
 import Filters from '../views/modals/Filters';
 import {
@@ -23,7 +23,7 @@ import {
   mainColor,
   secondaryColor,
   tertiaryColor,
-  textColor1,
+  textColor2,
 } from '../config';
 const defaultImage = require('../assets/avatar.png');
 //--------------------------MAIN EXPORT FUNCTION------------------------------------------
@@ -43,13 +43,10 @@ function Main({navigation, route}) {
       setToken(token);
       console.log(`Token found, user Logedin`);
       let user = await AsyncStorage.getItem('user');
-      let calendar = await AsyncStorage.getItem('userCalendar');
       user = JSON.parse(user);
-      calendar = JSON.parse(calendar);
       setUserLogged(user);
-      setUserCalendar(calendar);
       getTherapistsData();
-      console.log(user, calendar);
+      console.log(user);
     } else {
       console.log('No token found, no user logged in');
       navigation.navigate('Login');
@@ -98,32 +95,71 @@ function Main({navigation, route}) {
         return image;
       }
     };
-    return userLogged.name != item.name ? (
-      <Card
-        style={styles.myCard}
-        onPress={() =>
-          navigation.navigate('Therapist', {item, token, userLogged})
-        }>
-        <View style={styles.cardView}>
-          <Image style={styles.image} source={getImage(item.image)}></Image>
-          <View style={styles.cardText}>
-            <Text style={styles.cardTitle}>{item.name}</Text>
-            <Text style={styles.cardSubtitle}>{item.specialization}</Text>
-            <View
-              style={{
-                width: '100%',
-                height: 30,
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-              }}></View>
+    return (
+      userLogged.name && (
+        <Card
+          style={styles.myCard}
+          onPress={() =>
+            navigation.navigate('Therapist', {item, token, userLogged})
+          }>
+          <View style={styles.cardView}>
+            <Image style={styles.image} source={getImage(item.image)}></Image>
+            <View style={styles.cardText}>
+              <Text style={styles.cardTitle}>{item.name}</Text>
+              {item.categories ? (
+                <Text style={styles.cardSubtitle}>{item.categories[0]}</Text>
+              ) : (
+                <></>
+              )}
+              {item.categories ? (
+                <Text style={styles.cardSubtitle}>{item.categories[1]}</Text>
+              ) : (
+                <></>
+              )}
+              {item.categories ? (
+                <Text style={styles.cardSubtitle}>{item.categories[2]}</Text>
+              ) : (
+                <></>
+              )}
+              <View
+                style={{
+                  width: '100%',
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  marginTop: 10,
+                }}>
+                {item.online && (
+                  <Icon
+                    style={styles.icon}
+                    name="connected-tv"
+                    size={20}
+                    color={textColor2}
+                  />
+                )}
+                {item.presencial && (
+                  <Icon
+                    style={styles.icon}
+                    name="group"
+                    size={20}
+                    color={textColor2}
+                  />
+                )}
+                {item.atemporal && (
+                  <Icon
+                    style={styles.icon}
+                    name="timer-off"
+                    size={20}
+                    color={textColor2}
+                  />
+                )}
+              </View>
+            </View>
+            <View style={styles.typeOf}>
+              <Text style={styles.cardStars}>{getStars(item.rating)}</Text>
+            </View>
           </View>
-          <View style={styles.typeOf}>
-            <Text style={styles.cardStars}>{getStars(item.rating)}</Text>
-          </View>
-        </View>
-      </Card>
-    ) : (
-      <View></View>
+        </Card>
+      )
     );
   };
   return (
@@ -171,7 +207,7 @@ function Main({navigation, route}) {
 var TITLE_FONT_SIZE = 35;
 var TITLE_HEIGHT = 40;
 var PROMOS_HEIGHT = 140;
-var CARD_HEIGHT = 140;
+var CARD_HEIGHT = 180;
 var IMAGE_HEIGHT = 100;
 var CARD_TITLE = 20;
 var CARD_SUBTITLE = 15;
@@ -227,6 +263,8 @@ const styles = StyleSheet.create({
     height: '100%',
     paddingLeft: 10,
     paddingRight: 8,
+    paddingTop: 10,
+    paddingBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 10,
@@ -235,17 +273,18 @@ const styles = StyleSheet.create({
   image: {
     height: IMAGE_HEIGHT,
     width: IMAGE_HEIGHT,
+    alignSelf: 'flex-start',
     marginRight: 25,
     borderRadius: 20,
   },
   cardText: {
     flex: 1,
-    height: '80%',
+    height: '100%',
     justifyContent: 'flex-start',
   },
   typeOf: {
     flex: 0.7,
-    height: '80%',
+    height: '100%',
     marginRight: 3,
     justifyContent: 'flex-end',
   },
@@ -260,13 +299,16 @@ const styles = StyleSheet.create({
     fontSize: STARS_SIZE,
     fontWeight: '700',
     color: tertiaryColor,
-    marginTop: 0,
     textAlign: 'right',
   },
   button: {
     width: '60%',
     marginTop: 40,
     backgroundColor: secondaryColor,
+  },
+  icon: {
+    color: textColor2,
+    marginRight: 10,
   },
 });
 
