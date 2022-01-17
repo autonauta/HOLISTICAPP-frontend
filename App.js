@@ -7,7 +7,7 @@ import Therapist from './views/Therapist';
 import Profile from './views/Profile';
 import OnlineCalendar from './views/OnlineCalendar';
 import PresencialCalendar from './views/PresencialCalendar';
-import Atemporal from './views/Atemporal';
+
 import TherapistProfile from './views/TherapistProfile';
 import TherapistDocument from './views/TherapistDocument';
 import PasswordRecovery from './views/PasswordRecovery';
@@ -16,6 +16,8 @@ import Dashboard from './views/Dashboard';
 import StoreHome from './views/store/StoreHome';
 import Product from './views/store/Product';
 import Chat from './views/Chat';
+import VideoChat from './views/VideoChat';
+import Atemporal from './views/Atemporal';
 import TherapistDashboard from './views/TherapistDashboard';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
@@ -36,7 +38,7 @@ function App() {
           name="PresencialCalendar"
           component={PresencialCalendar}
         />
-        <Stack.Screen name="Atemporal" component={Atemporal} />
+
         <Stack.Screen name="TherapistProfile" component={TherapistProfile} />
         <Stack.Screen name="TherapistDocument" component={TherapistDocument} />
         <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />
@@ -49,6 +51,8 @@ function App() {
         <Stack.Screen name="StoreHome" component={StoreHome} />
         <Stack.Screen name="Product" component={Product} />
         <Stack.Screen name="Chat" component={Chat} />
+        <Stack.Screen name="VideoChat" component={VideoChat} />
+        <Stack.Screen name="Atemporal" component={Atemporal} />
       </Stack.Navigator>
     </NavigationContainer>
   );

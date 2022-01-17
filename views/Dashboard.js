@@ -80,16 +80,16 @@ function Dashboard({route, navigation}) {
     const day = date.split('T')[0].split('-').pop();
     return month + ' ' + day;
   };
-  const navigateTo = isOnline => {
-    if (isOnline === true)
+  const navigateTo = item => {
+    if (item.online === true)
       navigation.navigate('VideoChat', {item, token, userLogged});
-    else if (isOnline === false)
+    else if (item.online === false)
       navigation.navigate('Chat', {item, token, userLogged});
     else navigation.navigate('Atemporal', {item, token, userLogged});
   };
   const renderList = item => {
     return (
-      <Card style={styles.myCard} onPress={() => navigateTo(item.online)}>
+      <Card style={styles.myCard} onPress={() => navigateTo(item)}>
         <View style={styles.cardView}>
           <View
             style={
