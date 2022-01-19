@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
+  View,
   Text,
   StyleSheet,
   Dimensions,
@@ -8,7 +9,16 @@ import {
 } from 'react-native';
 import {Button} from 'react-native-paper';
 import {useFocusEffect} from '@react-navigation/native';
-
+import {
+  mediaDevices,
+  RTCView,
+  RTCPeerConnection,
+  RTCIceCandidate,
+  RTCSessionDescription,
+  MediaStream,
+  MediaStreamTrack,
+  registerGlobals,
+} from 'react-native-webrtc';
 import {
   API_URL,
   SOCKET_IO,
@@ -18,10 +28,47 @@ import {
   textColor1,
   textColor2,
 } from '../config';
+import {useHasSystemFeature} from 'react-native-device-info';
 
 function VideoChat({route}) {
   const {token, userLogged, item} = route.params;
-  return (
+  const [localStream, setLocalStream] = useState();
+  const [camera, setCamera] = useState(true);
+  const getLocalStream = async () => {
+    console.log('isFront: ' + camera);
+    const sourceInfos = await mediaDevices.enumerateDevices();
+    console.log('source Infos: ' + JSON.stringify(sourceInfos));
+    let videoSourceId;
+    for (let i = 0; i < sourceInfos.length; i++) {
+      const sourceInfo = sourceInfos[i];
+      if (
+        sourceInfo.kind == 'videoinput' &&
+        sourceInfo.facing == (camera ? 'front' : 'environment')
+      ) {
+        videoSourceId = sourceInfo.deviceId;
+        console.log(videoSourceId);
+      }
+    }
+    const stream = await mediaDevices.getUserMedia({
+      audio: true,
+      video: {
+        width: Dimensions.get('window').height,
+        height: Dimensions.get('window').width,
+        frameRate: 30,
+        facingMode: camera ? 'user' : 'environment',
+        deviceId: videoSourceId,
+      },
+    });
+    setLocalStream(stream);
+  };
+  const changeCamera = () => {
+    setCamera(!camera);
+    getLocalStream();
+  };
+  useEffect(() => {
+    getLocalStream();
+  }, []);
+  return localStream ? (
     <SafeAreaView style={styles.container}>
       <StatusBar
         animated={true}
@@ -30,7 +77,48 @@ function VideoChat({route}) {
         showHideTransition={'fade'}
       />
       <Text style={styles.title}>Video llamada</Text>
+      <View
+        style={{
+          width: Dimensions.get('window').width,
+          height: Dimensions.get('window').height,
+        }}>
+        <RTCView
+          objectFit="cover"
+          style={{
+            width: '100%',
+            height: '100%',
+          }}
+          streamURL={localStream.toURL()}
+        />
+        <RTCView
+          objectFit="cover"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '30%',
+            height: '30%',
+            borderRadius: 20,
+          }}
+          streamURL={localStream.toURL()}
+        />
+        <Button
+          style={{
+            width: '100%',
+            height: 100,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+          }}
+          onPress={() => {
+            changeCamera();
+          }}>
+          change cam
+        </Button>
+      </View>
     </SafeAreaView>
+  ) : (
+    <></>
   );
 }
 var CONTAINER_HEIGHT = Dimensions.get('screen').height;
