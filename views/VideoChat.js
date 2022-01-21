@@ -28,16 +28,21 @@ import {
   textColor1,
   textColor2,
 } from '../config';
-import {useHasSystemFeature} from 'react-native-device-info';
 
 function VideoChat({route}) {
   const {token, userLogged, item} = route.params;
   const [localStream, setLocalStream] = useState();
   const [camera, setCamera] = useState(true);
+  let appDate = new Date(item.appointmentDate);
+  const todayDate = new Date();
+  const notToday = appDate.getDate() < todayDate.getDate();
+  const today = todayDate.getDate() === appDate.getDate();
+
+  const isToday = ()=>{}
   const getLocalStream = async () => {
     console.log('isFront: ' + camera);
     const sourceInfos = await mediaDevices.enumerateDevices();
-    console.log('source Infos: ' + JSON.stringify(sourceInfos));
+    console.log('source Infos: ' + sourceInfos);
     let videoSourceId;
     for (let i = 0; i < sourceInfos.length; i++) {
       const sourceInfo = sourceInfos[i];
@@ -59,6 +64,7 @@ function VideoChat({route}) {
         deviceId: videoSourceId,
       },
     });
+    console.log("Stream: " + JSON.stringify(stream));
     setLocalStream(stream);
   };
   const changeCamera = () => {
@@ -66,7 +72,7 @@ function VideoChat({route}) {
     getLocalStream();
   };
   useEffect(() => {
-    getLocalStream();
+    console.log(today, notToday);
   }, []);
   return localStream ? (
     <SafeAreaView style={styles.container}>
@@ -98,7 +104,6 @@ function VideoChat({route}) {
             left: 0,
             width: '30%',
             height: '30%',
-            borderRadius: 20,
           }}
           streamURL={localStream.toURL()}
         />
@@ -118,7 +123,17 @@ function VideoChat({route}) {
       </View>
     </SafeAreaView>
   ) : (
-    <></>
+    <SafeAreaView style={styles.container}>
+      <StatusBar
+        animated={true}
+        backgroundColor={mainColor}
+        barStyle={'default'}
+        showHideTransition={'fade'}
+      />
+      <Text style={styles.title}>Video llamada</Text>
+      {notToday && <Text>{`Tu cita está programada para el día ${date.split("-")[2]}`}</Text>}
+      {today && <Text>{`Tu cita está programada para las ${appDate.hour}`}</Text>}
+    </SafeAreaView>
   );
 }
 var CONTAINER_HEIGHT = Dimensions.get('screen').height;

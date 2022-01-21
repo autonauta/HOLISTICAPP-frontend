@@ -46,6 +46,13 @@ function TherapistDashboard({route, navigation}) {
         console.log(error);
       });
   };
+  const navigateTo = item => {
+    if (item.online === true)
+      navigation.navigate('VideoChat', {item, token, userLogged});
+    else if (item.online === false)
+      navigation.navigate('Chat', {item, token, userLogged});
+    else navigation.navigate('Atemporal', {item, token, userLogged});
+  };
   useFocusEffect(
     React.useCallback(() => {
       // Do something when the screen is focused
@@ -79,7 +86,7 @@ function TherapistDashboard({route, navigation}) {
     return (
       <Card
         style={styles.myCard}
-        onPress={() => navigation.navigate('Chat', {item, token, userLogged})}>
+        onPress={() => navigateTo(item)}>
         <View style={styles.cardView}>
           <View
             style={

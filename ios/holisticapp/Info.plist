@@ -45,6 +45,8 @@
 	<string>Photo_Library_add_permission</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Photo_Library_permission</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone permission description</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
