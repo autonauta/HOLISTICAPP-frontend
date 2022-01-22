@@ -67,7 +67,7 @@ function PayModal({
       );
       if(token) {
         console.log("token generado", token);
-        setCardToken(token)
+        setCardToken(token);
         submitData();
       }
     }catch(e) {
@@ -94,73 +94,78 @@ function PayModal({
     setDeviceSId(response);
   };
 
-  const submitData = async () => {
-    const myHeaders = new Headers();
+  const submitData = () => {
+    
+    
+    
+      const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('xAuthToken', token);
-    try{
-      var res = await fetch(`${API_URL}/payment/charge`, {
+      const toSendData = {
+        sessiondId: deviceSId,
+        cardToken: cardToken.id,
+        method: 'card',
+        amount: 500,
+        currency: 'MXN',
+        description: `Pago de sesión con ${name}`,
+        customer: {
+          name: cardHolder.split(' ')[0],
+          last_name: cardHolder.split(' ')[1],
+          email: userLogged.email,
+        },
+        cardHolder: cardHolder,
+        therapist_id: _id,
+        day,
+        hour,
+        online,
+      }
+      console.log("What is going to be fetched: ", toSendData);
+      fetch(`${API_URL}/payment/charge`, {
         method: 'post',
         headers: myHeaders,
-        body: JSON.stringify({
-          sessiondId: deviceSId,
-          cardToken,
-          method: 'card',
-          amount: 500,
-          currency: 'MXN',
-          description: `Pago de sesión con ${name}`,
-          customer: {
-            name: cardHolder.split(' ')[0],
-            last_name: cardHolder.split(' ')[1],
-            email: userLogged.email,
-          },
-          cardHolder: cardHolder,
-          therapist_id: _id,
-          day,
-          hour,
-          online,
-        }),
+        body: JSON.stringify(toSendData),
+      }).then(res => res.json())
+      .then(data=>{
+        console.log(`Data received on fetch: ${data}`);
+        if (data._id) {
+          setLoading(false);
+          Alert.alert(
+            `Perfecto ${userLogged.name}!`,
+            `Pago relizado con exito!`,
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  setPayModalVisible(false);
+                  navigation.dispatch(goToHome);
+                  console.log('OK pressed');
+                },
+              },
+            ],
+          );
+        }else {
+          setLoading(false);
+          Alert.alert(
+            `Upss ${userLogged.name}!`,
+            `Respuesta mala del servidor`,
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  setPayModalVisible(false);
+                  console.log('OK pressed');
+                },
+              },
+            ],
+          );
+        }
       })
-      data = res.json();
-      console.log(`Data received on fetch: ${data}`);
-      if (data._id) {
-        setLoading(false);
-        Alert.alert(
-          `Perfecto ${userLogged.name}!`,
-          `Pago relizado con exito!`,
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                setPayModalVisible(false);
-                navigation.dispatch(goToHome);
-                console.log('OK pressed');
-              },
-            },
-          ],
-        );
-      }else {
-        setLoading(false);
-        Alert.alert(
-          `Upss ${userLogged.name}!`,
-          `Respuesta mala del servidor`,
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                setPayModalVisible(false);
-                console.log('OK pressed');
-              },
-            },
-          ],
-        );
-      }
-    }catch(e) {
+    .catch(e=>{
       setLoading(false);
       console.error(`Error del fetch al server: ${JSON.stringify(e)}`);
       
-    }
+    }) ;
   };
   /* const generatePayRequest = () => {
     setLoading(true);

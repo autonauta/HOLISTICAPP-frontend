@@ -73,6 +73,7 @@ function VideoChat({route}) {
   };
   useEffect(() => {
     console.log(today, notToday);
+    getLocalStream();
   }, []);
   return localStream ? (
     <SafeAreaView style={styles.container}>
@@ -142,7 +143,7 @@ var TITLE_HEIGHT = 50;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: mainColor,
+    backgroundColor: mainColor, 
     height: CONTAINER_HEIGHT,
     alignItems: 'center',
   },
