@@ -88,7 +88,7 @@ function Chat({route}) {
       TherapistId: item.userIdTherapist,
       ClientId: item.userIdApointee,
     };
-    await socket.emit('join_room', roomInfo);
+    await socket.emit('join_chat_room', roomInfo);
   };
   const leaveRoom = async room => {
     await socket.emit('leave_room', room);
@@ -111,7 +111,7 @@ function Chat({route}) {
     joinRoom();
     getMessages();
     return () => {
-      setMessageList([]); // This worked for me
+      setMessageList([]); 
     };
   }, []);
   useFocusEffect(

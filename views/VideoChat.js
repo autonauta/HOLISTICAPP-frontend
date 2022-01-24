@@ -8,37 +8,56 @@ import {
   StatusBar,
 } from 'react-native';
 import {Button} from 'react-native-paper';
-import {useFocusEffect} from '@react-navigation/native';
 import {
   mediaDevices,
   RTCView,
-  RTCPeerConnection,
-  RTCIceCandidate,
-  RTCSessionDescription,
-  MediaStream,
-  MediaStreamTrack,
-  registerGlobals,
 } from 'react-native-webrtc';
+import Peer from 'react-native-peerjs';
 import {
-  API_URL,
-  SOCKET_IO,
   mainColor,
   secondaryColor,
   tertiaryColor,
-  textColor1,
-  textColor2,
+  PEER_JS_URL,
+  PEER_JS_PORT,
+  SOCKET_IO,
 } from '../config';
+
+import io from 'socket.io-client';
+const socket = io.connect(SOCKET_IO);
+
+
 
 function VideoChat({route}) {
   const {token, userLogged, item} = route.params;
-  const [localStream, setLocalStream] = useState();
+  const [localStream, setLocalStream] = useState(null);
+  const [remoteStream, setRemoteStream] = useState(null);
+  const [peerId, setPeerId] = useState();
+  const [remotePeer, setRemotePeer] = useState(null);
   const [camera, setCamera] = useState(true);
-  let appDate = new Date(item.appointmentDate);
-  const todayDate = new Date();
-  const notToday = appDate.getDate() < todayDate.getDate();
-  const today = todayDate.getDate() === appDate.getDate();
-
-  const isToday = ()=>{}
+  let appDate = new Date(item.appointmentDate.day);
+  let todayDate = new Date();
+  let thisMonth = appDate.getMonth() === todayDate.getMonth();
+  let thisDay = todayDate.getDate() === appDate.getDate();
+  let notToday = !thisMonth || thisMonth && appDate.getDate() > todayDate.getDate();
+  let today = thisMonth && thisDay;
+  
+  
+  
+  
+  const selectMonth = m => {
+    if (m == '01') return 'ENERO';
+    else if (m == '02') return 'FEBRERO';
+    else if (m == '03') return 'MARZO';
+    else if (m == '04') return 'ABRIL';
+    else if (m == '05') return 'MAYO';
+    else if (m == '06') return 'JUNIO';
+    else if (m == '07') return 'JULIO';
+    else if (m == '08') return 'AGOSTO';
+    else if (m == '09') return 'SEPTIEMBRE';
+    else if (m == '10') return 'OCTUBRE';
+    else if (m == '11') return 'NOVIEMBRE';
+    else if (m == '12') return 'DICIEMBRE';
+  };
   const getLocalStream = async () => {
     console.log('isFront: ' + camera);
     const sourceInfos = await mediaDevices.enumerateDevices();
@@ -67,16 +86,60 @@ function VideoChat({route}) {
     console.log("Stream: " + JSON.stringify(stream));
     setLocalStream(stream);
   };
+  const stopLocalStream = ()=>{
+      localStream.getTracks().forEach(function(track) {
+          if (track.readyState == 'live') {
+              track.stop();
+          }
+      });
+      setLocalStream(null);
+  }
   const changeCamera = () => {
     setCamera(!camera);
     getLocalStream();
   };
-  useEffect(() => {
-    console.log(today, notToday);
+  const joinRoom = async (peer) => {
+    const room = item._id;
+    const id = peer;
+    await socket.emit('join_video_room', room, id);
+  };
+  const leaveRoom = async room => {
+    await socket.emit('leave_room', room);
+  };
+  const callRemoteUser = (peer)=>{
+    const call = myPeer.call(peer, localStream);
+    call.on("stream", remoteStream=>{
+    setRemoteStream(remoteStream);
+    })
+   }
+  useEffect(()=>{
     getLocalStream();
-  }, []);
+    let myPeer = new Peer();
+    
+    myPeer.on("open", myPeerId =>{
+      console.log('Local peer open with ID', myPeerId);
+      joinRoom(myPeerId);
+    })
+    myPeer.on("call", call=>{
+      call.answer(localStream);
+      call.on("stream", remoteStream=>{
+        setRemoteStream(remoteStream);
+      })
+    })
+  },[])
+ 
+  useEffect(() => {
+    socket.on('user_connected', (peer) => {
+      callRemoteUser(peer);
+      
+    });
+    socket.on('user_disconnected', () => {
+      setUserConnected(false);
+      console.log('received user disconnected from socket');
+    });
+  }, [socket]);
   return localStream ? (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.videoContainer}>
       <StatusBar
         animated={true}
         backgroundColor={mainColor}
@@ -97,7 +160,7 @@ function VideoChat({route}) {
           }}
           streamURL={localStream.toURL()}
         />
-        <RTCView
+        {remoteStream && <RTCView
           objectFit="cover"
           style={{
             position: 'absolute',
@@ -106,25 +169,26 @@ function VideoChat({route}) {
             width: '30%',
             height: '30%',
           }}
-          streamURL={localStream.toURL()}
-        />
+          streamURL={remoteStream.toURL()}
+        />}
         <Button
           style={{
             width: '100%',
-            height: 100,
-            position: 'absolute',
-            bottom: 0,
+            height: 40,
+            bottom: 100,
             left: 0,
+            zIndex: 100,
           }}
+          mode="contained"
           onPress={() => {
-            changeCamera();
+            stopLocalStream();
           }}>
-          change cam
+          stop
         </Button>
       </View>
     </SafeAreaView>
   ) : (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.videoContainer}>
       <StatusBar
         animated={true}
         backgroundColor={mainColor}
@@ -132,8 +196,27 @@ function VideoChat({route}) {
         showHideTransition={'fade'}
       />
       <Text style={styles.title}>Video llamada</Text>
-      {notToday && <Text>{`Tu cita está programada para el día ${date.split("-")[2]}`}</Text>}
-      {today && <Text>{`Tu cita está programada para las ${appDate.hour}`}</Text>}
+      <View style={styles.container}>
+      {notToday && <Text style = {styles.legend}>{`Tu cita está programada para el dìa: `}</Text>}
+      {notToday && <Text style = {styles.legend}>{`${item.appointmentDate.day.split("T")[0].split("-")[2]} de ${selectMonth(item.appointmentDate.day.split("T")[0].split("-")[1])}`}</Text>}
+      {today && <Text style = {styles.legend}>{`Tu cita está programada para las: `}</Text>}
+      {today && <Text style = {styles.legend}>{`${item.appointmentDate.hour} horas`}</Text>}
+      </View>
+      <Button
+          style={{
+            width: '100%',
+            height: 40,
+            position: 'absolute',
+            bottom: 20,
+            left: 0,
+          }}
+          mode="contained"
+          onPress={() => {
+            getLocalStream();
+          }}>
+          start
+        </Button>
+      
     </SafeAreaView>
   );
 }
@@ -141,10 +224,17 @@ var CONTAINER_HEIGHT = Dimensions.get('screen').height;
 var TITLE_FONT_SIZE = 35;
 var TITLE_HEIGHT = 50;
 const styles = StyleSheet.create({
+  videoContainer: {
+    flex: 1,
+    backgroundColor: mainColor, 
+    height: CONTAINER_HEIGHT,
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: mainColor, 
     height: CONTAINER_HEIGHT,
+    justifyContent: "center",
     alignItems: 'center',
   },
   title: {
@@ -158,25 +248,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  flatList: {
-    paddingTop: 7,
-    width: Dimensions.get('window').width,
-  },
-  textInputView: {
-    width: '80%',
-    alignItems: 'center',
-  },
-  textInput: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 20,
-    padding: 5,
-    marginLeft: 10,
-    paddingLeft: 10,
-    backgroundColor: textColor1,
-    color: 'black',
-    fontSize: 16,
-    elevation: 3,
+  legend: {
+    color: "white",
   },
   button: {
     width: '15%',
@@ -194,65 +267,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     alignSelf: 'flex-start',
   },
-  messageContainer: {
-    width: '100%',
-  },
-  messageBubbleMe: {
-    minWidth: '30%',
-    maxWidth: '90%',
-    padding: 8,
-    paddingRight: 20,
-    paddingBottom: 5,
-    borderRadius: 15,
-    alignSelf: 'flex-end',
-    backgroundColor: mainColor,
-    marginBottom: 8,
-    elevation: 3,
-  },
-  messageBubbleYou: {
-    minWidth: '30%',
-    maxWidth: '90%',
-    padding: 8,
-    alignSelf: 'flex-start',
-    paddingRight: 20,
-    borderRadius: 15,
-    marginBottom: 8,
-    backgroundColor: secondaryColor,
-    elevation: 3,
-  },
-  messageText: {
-    color: 'white',
-    fontSize: 17,
-  },
-  messageTime: {
-    alignSelf: 'flex-end',
-    color: textColor2,
-  },
-  footer: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: '100%',
-    height: 70,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  userConnected: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: 'white',
-    marginBottom: 5,
-    paddingLeft: 10,
-  },
-  userDisconnected: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: 'gray',
-    marginBottom: 5,
-    paddingLeft: 10,
-  },
+  
 });
 
 export default VideoChat;
