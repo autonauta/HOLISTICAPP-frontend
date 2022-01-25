@@ -13,6 +13,7 @@ import {
   RTCView,
 } from 'react-native-webrtc';
 import Peer from 'react-native-peerjs';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   mainColor,
   secondaryColor,
@@ -29,19 +30,19 @@ const socket = io.connect(SOCKET_IO);
 
 function VideoChat({route}) {
   const {token, userLogged, item} = route.params;
-  const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
+  const [lStream, setLStream] = useState(null);
   const [peerId, setPeerId] = useState();
   const [remotePeer, setRemotePeer] = useState(null);
   const [camera, setCamera] = useState(true);
+  const [userConnected, setUserConnected] = useState();
   let appDate = new Date(item.appointmentDate.day);
   let todayDate = new Date();
   let thisMonth = appDate.getMonth() === todayDate.getMonth();
   let thisDay = todayDate.getDate() === appDate.getDate();
   let notToday = !thisMonth || thisMonth && appDate.getDate() > todayDate.getDate();
   let today = thisMonth && thisDay;
-  
-  
+  const myPeer = new Peer();
   
   
   const selectMonth = m => {
@@ -58,6 +59,7 @@ function VideoChat({route}) {
     else if (m == '11') return 'NOVIEMBRE';
     else if (m == '12') return 'DICIEMBRE';
   };
+  let localStream;
   const getLocalStream = async () => {
     console.log('isFront: ' + camera);
     const sourceInfos = await mediaDevices.enumerateDevices();
@@ -73,7 +75,7 @@ function VideoChat({route}) {
         console.log(videoSourceId);
       }
     }
-    const stream = await mediaDevices.getUserMedia({
+    localStream = await mediaDevices.getUserMedia({
       audio: true,
       video: {
         width: Dimensions.get('window').height,
@@ -83,21 +85,40 @@ function VideoChat({route}) {
         deviceId: videoSourceId,
       },
     });
-    console.log("Stream: " + JSON.stringify(stream));
-    setLocalStream(stream);
+    console.log("Stream: " + JSON.stringify(localStream));
+    myPeer.on("open", myPeerId =>{
+      console.log('Local peer open with ID', myPeerId);
+      joinRoom(myPeerId);
+    })
+    myPeer.on("call", call=>{
+      call.answer(localStream);
+      call.on("stream", remoteStream=>{
+        setRemoteStream(remoteStream);
+      })
+    })
+    socket.on('user_connected', (peer) => {
+      console.log("myPeer: " , myPeer);
+      const call = myPeer.call(peer, localStream);
+      console.log("Call: ", call);
+      call.on("stream", remoteStream=>{
+      setRemoteStream(remoteStream);
+      })
+    });
+    socket.on('user_disconnected', () => {
+      setUserConnected(false); 
+      setRemoteStream(null);
+      console.log('received user disconnected from socket');
+    });
+    console.log("local stream: ",localStream);
+    setLStream(localStream);
   };
-  const stopLocalStream = ()=>{
-      localStream.getTracks().forEach(function(track) {
-          if (track.readyState == 'live') {
-              track.stop();
-          }
-      });
-      setLocalStream(null);
+  const stopLocalStream = () =>{
+    localStream.getTracks().forEach(function(track) {
+        if (track.readyState == 'live') {
+            track.stop();
+        }
+    });
   }
-  const changeCamera = () => {
-    setCamera(!camera);
-    getLocalStream();
-  };
   const joinRoom = async (peer) => {
     const room = item._id;
     const id = peer;
@@ -112,33 +133,22 @@ function VideoChat({route}) {
     setRemoteStream(remoteStream);
     })
    }
-  useEffect(()=>{
+   useEffect(()=>{
     getLocalStream();
-    let myPeer = new Peer();
-    
-    myPeer.on("open", myPeerId =>{
-      console.log('Local peer open with ID', myPeerId);
-      joinRoom(myPeerId);
-    })
-    myPeer.on("call", call=>{
-      call.answer(localStream);
-      call.on("stream", remoteStream=>{
-        setRemoteStream(remoteStream);
-      })
-    })
-  },[])
- 
-  useEffect(() => {
-    socket.on('user_connected', (peer) => {
-      callRemoteUser(peer);
-      
-    });
-    socket.on('user_disconnected', () => {
-      setUserConnected(false);
-      console.log('received user disconnected from socket');
-    });
-  }, [socket]);
-  return localStream ? (
+   },[])
+   useFocusEffect(
+    React.useCallback(() => {
+      // Do something when the screen is focused
+      return () => {
+        // Do something when the screen is unfocused
+        leaveRoom(item._id);
+        stopLocalStream();
+        console.log('video chat screen unfocused');
+      };
+    }, []),
+  );
+  
+  return lStream ? (
     <SafeAreaView style={styles.videoContainer}>
       <StatusBar
         animated={true}
@@ -147,45 +157,39 @@ function VideoChat({route}) {
         showHideTransition={'fade'}
       />
       <Text style={styles.title}>Video llamada</Text>
+      {remoteStream ? 
       <View
         style={{
           width: Dimensions.get('window').width,
           height: Dimensions.get('window').height,
         }}>
-        <RTCView
+          <View style={styles.backStream}>
+          <RTCView
+          style={{width: "100%", height: "100%"}}
           objectFit="cover"
-          style={{
-            width: '100%',
-            height: '100%',
-          }}
-          streamURL={localStream.toURL()}
-        />
-        {remoteStream && <RTCView
-          objectFit="cover"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '30%',
-            height: '30%',
-          }}
           streamURL={remoteStream.toURL()}
-        />}
-        <Button
-          style={{
-            width: '100%',
-            height: 40,
-            bottom: 100,
-            left: 0,
-            zIndex: 100,
-          }}
-          mode="contained"
-          onPress={() => {
-            stopLocalStream();
-          }}>
-          stop
-        </Button>
-      </View>
+          />
+          </View>
+          <View style={styles.frontStream}>
+        <RTCView
+        objectFit="cover"
+          style={{width: "100%", height: "100%"}}
+          streamURL={lStream.toURL()}
+        />
+          </View>
+      </View> : <View
+        style={{
+          width: Dimensions.get('window').width,
+          height: Dimensions.get('window').height,
+        }}>
+          <View style={styles.frontNoStream}>
+        <RTCView
+        objectFit="cover"
+          style={{width: "100%", height: "100%"}}
+          streamURL={lStream.toURL()}
+        />
+          </View>
+      </View>}
     </SafeAreaView>
   ) : (
     <SafeAreaView style={styles.videoContainer}>
@@ -267,6 +271,28 @@ const styles = StyleSheet.create({
     fontSize: 15,
     alignSelf: 'flex-start',
   },
+  frontStream: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: '30%',
+    height: '30%',
+    zIndex: 100,
+  },
+  frontNoStream: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: 100,
+  },
+  backStream: {
+    width: '100%',
+    height: '100%',
+    zIndex: 0,
+    backgroundColor: "red"
+  }
   
 });
 
