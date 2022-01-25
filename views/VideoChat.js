@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   StatusBar,
+  Alert,
 } from 'react-native';
 import {Button} from 'react-native-paper';
 import {
@@ -39,11 +40,10 @@ function VideoChat({route}) {
   let appDate = new Date(item.appointmentDate.day);
   let todayDate = new Date();
   let thisMonth = appDate.getMonth() === todayDate.getMonth();
-  let thisDay = todayDate.getDate() === appDate.getDate();
-  let notToday = !thisMonth || thisMonth && appDate.getDate() > todayDate.getDate();
+  let thisDay = todayDate.getDate() === appDate.getDate()+1;
+  let notToday = !thisMonth || thisMonth && appDate.getDate()+1 > todayDate.getDate();
   let today = thisMonth && thisDay;
-  const myPeer = new Peer();
-  
+  let now = todayDate.getHours() >= item.appointmentDate.hour; //me va a tener que mandar el date completo como objeto en UTC 
   
   const selectMonth = m => {
     if (m == '01') return 'ENERO';
@@ -61,6 +61,7 @@ function VideoChat({route}) {
   };
   let localStream;
   const getLocalStream = async () => {
+    let myPeer = new Peer();
     console.log('isFront: ' + camera);
     const sourceInfos = await mediaDevices.enumerateDevices();
     console.log('source Infos: ' + sourceInfos);
@@ -99,7 +100,6 @@ function VideoChat({route}) {
     socket.on('user_connected', (peer) => {
       console.log("myPeer: " , myPeer);
       const call = myPeer.call(peer, localStream);
-      console.log("Call: ", call);
       call.on("stream", remoteStream=>{
       setRemoteStream(remoteStream);
       })
@@ -113,11 +113,13 @@ function VideoChat({route}) {
     setLStream(localStream);
   };
   const stopLocalStream = () =>{
+    if(localStream){
     localStream.getTracks().forEach(function(track) {
         if (track.readyState == 'live') {
             track.stop();
         }
     });
+  }
   }
   const joinRoom = async (peer) => {
     const room = item._id;
@@ -133,9 +135,6 @@ function VideoChat({route}) {
     setRemoteStream(remoteStream);
     })
    }
-   useEffect(()=>{
-    getLocalStream();
-   },[])
    useFocusEffect(
     React.useCallback(() => {
       // Do something when the screen is focused
@@ -206,7 +205,8 @@ function VideoChat({route}) {
       {today && <Text style = {styles.legend}>{`Tu cita está programada para las: `}</Text>}
       {today && <Text style = {styles.legend}>{`${item.appointmentDate.hour} horas`}</Text>}
       </View>
-      <Button
+      
+      {today ? (<Button
           style={{
             width: '100%',
             height: 40,
@@ -218,8 +218,27 @@ function VideoChat({route}) {
           onPress={() => {
             getLocalStream();
           }}>
-          start
-        </Button>
+          start stream
+        </Button>)
+        :
+        (<Button
+          style={{
+            width: '100%',
+            height: 40,
+            position: 'absolute',
+            bottom: 20,
+            left: 0,
+          }}
+          mode="contained"
+          onPress={() => {
+            Alert.alert(
+              'Ups!!',
+              `¡Aun no es tiempo de tu llamada!`, //modificar al error real
+              [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+            );
+          }}>
+          not start stream
+        </Button>)}
       
     </SafeAreaView>
   );
