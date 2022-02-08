@@ -9,6 +9,7 @@ import {
   Alert,
   PermissionsAndroid,
   Platform,
+  PixelRatio,
 } from 'react-native';
 import {
   API_URL,
@@ -183,7 +184,7 @@ function ImageChange({
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Cambio de Imagen</Text>
+            <Text style={styles.modalTitle}>Cambio de Imagen</Text>
             <View style={styles.formView}>
               <Button
                 labelStyle={styles.buttonIcon}
@@ -200,7 +201,7 @@ function ImageChange({
             </View>
             <View style={styles.buttons}>
               <Pressable
-                style={[styles.button, styles.buttonCancel]}
+                style={[styles.buttonCancel]}
                 onPress={() => {
                   setImageModalVisible(!imageModalVisible);
                 }}>
@@ -220,6 +221,37 @@ const theme = {
   },
 };
 
+//RESPONSIVE STYLES BASED ON PIXEL RATIO
+var ICON_SIZE;
+var BUTTON_HEIGHT;
+
+var BUTTON_FONT_SIZE;
+var TITLE_SIZE;
+//Telefonos con resoluciones altas
+if (PixelRatio.get() >= 3.6 && PixelRatio.get() < 4.5) {
+  ICON_SIZE = 40;
+  BUTTON_HEIGHT = 28;
+
+  BUTTON_FONT_SIZE = 16;
+  TITLE_SIZE = 18;
+}
+//Telefonos con resoluciones medias
+if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 3.6) {
+  ICON_SIZE = 50;
+  BUTTON_HEIGHT = 40;
+
+  BUTTON_FONT_SIZE = 16;
+  TITLE_SIZE = 25;
+}
+//Telefonos con resoluciones bajas
+if (PixelRatio.get() >= 1 && PixelRatio.get() < 2.2) {
+  ICON_SIZE = 40;
+  BUTTON_HEIGHT = 34;
+
+  BUTTON_FONT_SIZE = 12;
+  TITLE_SIZE = 20;
+}
+
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
@@ -231,9 +263,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     paddingTop: 10,
     backgroundColor: secondaryColor,
-    borderTopRightRadius: 50,
+    borderTopRightRadius: 20,
     alignItems: 'center',
-    elevation: 5,
   },
   buttons: {
     width: Dimensions.get('window').width,
@@ -243,27 +274,35 @@ const styles = StyleSheet.create({
   },
   buttonAplicar: {
     borderRadius: 8,
-    backgroundColor: tertiaryColor,
-    elevation: 1,
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft: 10,
   },
   buttonIcon: {
-    fontSize: 40,
+    fontSize: ICON_SIZE,
     color: 'white',
   },
+  buttonCancel: {
+    width: '90%',
+    height: BUTTON_HEIGHT,
+    backgroundColor: 'red',
+    padding: 8,
+    borderRadius: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 3,
+  },
   textStyle: {
-    fontSize: 15,
-    color: '#f34950',
+    fontSize: BUTTON_FONT_SIZE,
+    color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  modalText: {
+  modalTitle: {
     width: '100%',
     textAlign: 'center',
     color: mainColor,
-    fontSize: 30,
+    fontSize: TITLE_SIZE,
     fontWeight: '700',
     marginBottom: 25,
   },

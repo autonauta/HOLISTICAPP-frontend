@@ -178,19 +178,42 @@ function Therapist({navigation, route}) {
     </SafeAreaView>
   );
 }
-var IMAGE_SIZE = 150;
-var IMAGE_MARGIN_TOP = IMAGE_SIZE / -2;
-var NAME_SIZE = 30;
-var DESCRIPTION_SIZE = 18;
-var PROPS_SIZE = 26;
-var TOP_HEIGHT = 120;
-if (PixelRatio.get() <= 2) {
+
+//RESPONSIVE STYLES BASED ON PIXEL RATIO
+var IMAGE_SIZE;
+var IMAGE_MARGIN_TOP;
+var NAME_SIZE;
+var DESCRIPTION_SIZE;
+var PROPS_SIZE;
+var TOP_HEIGHT;
+//Telefonos con resoluciones altas
+if (PixelRatio.get() >= 2.8 && PixelRatio.get() < 3.6) {
+  IMAGE_SIZE = 150;
+  IMAGE_MARGIN_TOP = IMAGE_SIZE / -2;
+  NAME_SIZE = 30;
+  DESCRIPTION_SIZE = 18;
+  PROPS_SIZE = 26;
+  TOP_HEIGHT = 120;
+}
+//Telefonos con resoluciones medias
+if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 3.6) {
+  IMAGE_SIZE = 150;
+  IMAGE_MARGIN_TOP = IMAGE_SIZE / -2;
+  NAME_SIZE = 30;
+  DESCRIPTION_SIZE = 18;
+  PROPS_SIZE = 26;
+  TOP_HEIGHT = 120;
+}
+//Telefonos con resoluciones bajas
+if (PixelRatio.get() >= 1 && PixelRatio.get() < 2.2) {
   IMAGE_SIZE = 100;
+  IMAGE_MARGIN_TOP = IMAGE_SIZE / -2;
   NAME_SIZE = 24;
   DESCRIPTION_SIZE = 14;
   PROPS_SIZE = 16;
   TOP_HEIGHT = 70;
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

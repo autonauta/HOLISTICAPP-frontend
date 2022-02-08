@@ -138,7 +138,7 @@ function Main({navigation, route}) {
                   <Icon
                     style={styles.icon}
                     name="connected-tv"
-                    size={20}
+                    size={ICON_SIZE}
                     color={textColor2}
                   />
                 )}
@@ -146,7 +146,7 @@ function Main({navigation, route}) {
                   <Icon
                     style={styles.icon}
                     name="group"
-                    size={20}
+                    size={ICON_SIZE}
                     color={textColor2}
                   />
                 )}
@@ -154,7 +154,7 @@ function Main({navigation, route}) {
                   <Icon
                     style={styles.icon}
                     name="timer-off"
-                    size={20}
+                    size={ICON_SIZE}
                     color={textColor2}
                   />
                 )}
@@ -218,7 +218,7 @@ var IMAGE_HEIGHT;
 var CARD_TITLE;
 var CARD_SUBTITLE;
 var STARS_SIZE;
-var NAV_HEIGHT;
+var ICON_SIZE;
 
 var STATUS_BAR_HEIGHT = StatusBar.currentHeight;
 var CONTAINER_HEIGHT =
@@ -238,31 +238,31 @@ if (PixelRatio.get() >= 2.8 && PixelRatio.get() < 3.6) {
   IMAGE_HEIGHT = 100;
   CARD_TITLE = 28;
   CARD_SUBTITLE = 15;
+  ICON_SIZE = 25;
   STARS_SIZE = 20;
-  NAV_HEIGHT = 60;
 }
 //Telefonos con resoluciones medias
 if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 2.8) {
   TITLE_FONT_SIZE = 30;
   TITLE_HEIGHT = 40;
   PROMOS_HEIGHT = 140;
-  CARD_HEIGHT = 150;
+  CARD_HEIGHT = 155;
   IMAGE_HEIGHT = 100;
   CARD_TITLE = 28;
   CARD_SUBTITLE = 15;
   STARS_SIZE = 20;
-  NAV_HEIGHT = 60;
+  ICON_SIZE = 22;
 }
 //Telefonos con resoluciones bajas
 if (PixelRatio.get() >= 1 && PixelRatio.get() < 2.2) {
   TITLE_FONT_SIZE = 25;
   PROMOS_HEIGHT = 110;
-  CARD_HEIGHT = 100;
-  IMAGE_HEIGHT = 60;
-  CARD_TITLE = 16;
+  CARD_HEIGHT = 120;
+  IMAGE_HEIGHT = 75;
+  CARD_TITLE = 20;
   CARD_SUBTITLE = 12;
   STARS_SIZE = 20;
-  NAV_HEIGHT = 60;
+  ICON_SIZE = 18;
 }
 
 const styles = StyleSheet.create({

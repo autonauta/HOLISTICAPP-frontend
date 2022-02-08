@@ -110,11 +110,10 @@ function Profile({navigation, route}) {
     <SafeAreaView style={styles.container}>
       <StatusBar
         animated={true}
-        backgroundColor={secondaryColor}
+        backgroundColor={mainColor}
         barStyle={'default'}
         showHideTransition={'none'}
       />
-      <View style={styles.top}></View>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={getImage(userLogged.image)}></Image>
         <Text
@@ -323,20 +322,45 @@ function Profile({navigation, route}) {
     </SafeAreaView>
   );
 }
-var TEXT_NAME_SIZE = 40;
-var TOP_HEIGHT = 140;
-var IMAGE_HEIGHT = 160;
-var BUTTON_HEIGHT = 40;
-var BUTTON_FONT_SIZE = 16;
-var BUTTON_MARGIN_BOTTOM = 20;
+var TEXT_NAME_SIZE;
+var TOP_HEIGHT;
+var IMAGE_HEIGHT;
+var BUTTON_HEIGHT;
+var BUTTON_FONT_SIZE;
+var BUTTON_MARGIN_BOTTOM;
+var IMAGE_BUTTON;
 
-if (PixelRatio.get() <= 2) {
-  BUTTON_HEIGHT = 25;
+//RESPONSIVE STYLES BASED ON PIXEL RATIO
+
+//Telefonos con resoluciones altas
+if (PixelRatio.get() >= 2.8 && PixelRatio.get() < 3.6) {
+  TEXT_NAME_SIZE = 40;
+  TOP_HEIGHT = 120;
+  IMAGE_HEIGHT = 120;
+  BUTTON_HEIGHT = 40;
+  BUTTON_FONT_SIZE = 16;
+  BUTTON_MARGIN_BOTTOM = 20;
+  IMAGE_BUTTON = 16;
+}
+//Telefonos con resoluciones medias
+if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 3.6) {
+  TEXT_NAME_SIZE = 40;
+  TOP_HEIGHT = 140;
+  IMAGE_HEIGHT = 120;
+  BUTTON_HEIGHT = 35;
+  BUTTON_FONT_SIZE = 14;
+  BUTTON_MARGIN_BOTTOM = 20;
+  IMAGE_BUTTON = 15;
+}
+//Telefonos con resoluciones bajas
+if (PixelRatio.get() >= 1 && PixelRatio.get() < 2.2) {
+  BUTTON_HEIGHT = 28;
   BUTTON_FONT_SIZE = 11;
   BUTTON_MARGIN_BOTTOM = 10;
   TEXT_NAME_SIZE = 30;
   TOP_HEIGHT = 80;
   IMAGE_HEIGHT = 100;
+  IMAGE_BUTTON = 12;
 }
 
 const styles = StyleSheet.create({
@@ -344,7 +368,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     flex: 1,
     alignItems: 'center',
-    backgroundColor: secondaryColor,
+    backgroundColor: mainColor,
   },
   imageContainer: {
     alignItems: 'center',
@@ -353,8 +377,8 @@ const styles = StyleSheet.create({
   image: {
     height: IMAGE_HEIGHT,
     width: IMAGE_HEIGHT,
-    borderRadius: 40,
-    marginTop: -IMAGE_HEIGHT / 2,
+    borderRadius: 20,
+    marginTop: 10,
   },
   top: {
     width: '100%',
@@ -369,7 +393,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   textName: {
-    color: mainColor,
+    color: secondaryColor,
     fontSize: TEXT_NAME_SIZE,
     fontWeight: '700',
     alignSelf: 'flex-start',
@@ -384,12 +408,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '90%',
-    marginBottom: 30,
   },
   buttonPassword: {
     width: '100%',
     marginBottom: BUTTON_MARGIN_BOTTOM,
-    backgroundColor: mainColor,
+    backgroundColor: secondaryColor,
     height: BUTTON_HEIGHT,
     borderRadius: 3,
     justifyContent: 'center',
@@ -399,9 +422,10 @@ const styles = StyleSheet.create({
 
   buttonLogout: {
     width: '100%',
+    height: BUTTON_HEIGHT,
     backgroundColor: 'red',
     padding: 8,
-    marginBottom: 20,
+    marginBottom: BUTTON_MARGIN_BOTTOM,
     borderRadius: 3,
     justifyContent: 'center',
     alignItems: 'center',
@@ -411,7 +435,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     color: tertiaryColor,
     fontWeight: '700',
-    fontSize: 15,
+    fontSize: IMAGE_BUTTON,
     padding: 5,
     paddingRight: 20,
     paddingLeft: 20,
