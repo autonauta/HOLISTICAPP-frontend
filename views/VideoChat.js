@@ -9,42 +9,39 @@ import {
   Alert,
 } from 'react-native';
 import {Button} from 'react-native-paper';
-import {
-  mediaDevices,
-  RTCView,
-} from 'react-native-webrtc';
+import {mediaDevices, RTCView} from 'react-native-webrtc';
 import Peer from 'react-native-peerjs';
 import {useFocusEffect} from '@react-navigation/native';
-import {
-  mainColor,
-  secondaryColor,
-  tertiaryColor,
-  PEER_JS_URL,
-  PEER_JS_PORT,
-  SOCKET_IO,
-} from '../config';
+import {mainColor, tertiaryColor, SOCKET_IO} from '../config';
 
 import io from 'socket.io-client';
-const socket = io.connect(SOCKET_IO);
+var socket;
 
-
+const getSocket = async () => {
+  socket = await io.connect(SOCKET_IO);
+};
 
 function VideoChat({route}) {
-  const {token, userLogged, item} = route.params;
+  const {userLogged, item} = route.params;
   const [remoteStream, setRemoteStream] = useState(null);
   const [lStream, setLStream] = useState(null);
-  const [peerId, setPeerId] = useState();
-  const [remotePeer, setRemotePeer] = useState(null);
   const [camera, setCamera] = useState(true);
-  const [userConnected, setUserConnected] = useState();
+  const isTheTherapist = userLogged._id === item.userIdTherapist;
   let appDate = new Date(item.appointmentDate.day);
   let todayDate = new Date();
+  todayDate = new Date(
+    todayDate.getTime() - todayDate.getTimezoneOffset() * 60 * 1000,
+  );
   let thisMonth = appDate.getMonth() === todayDate.getMonth();
-  let thisDay = todayDate.getDate() === appDate.getDate()+1;
-  let notToday = !thisMonth || thisMonth && appDate.getDate()+1 > todayDate.getDate();
+  let thisDay = todayDate.getDate() === appDate.getDate();
+  let notToday =
+    !thisMonth || (thisMonth && appDate.getDate() > todayDate.getDate());
   let today = thisMonth && thisDay;
-  let now = todayDate.getHours() >= item.appointmentDate.hour; //me va a tener que mandar el date completo como objeto en UTC 
-  
+  let now = todayDate.getUTCHours() >= appDate.getUTCHours();
+  let missingHours = appDate.getUTCHours() - todayDate.getUTCHours();
+  var myPeer = null;
+  var call = null;
+  const room = item._id;
   const selectMonth = m => {
     if (m == '01') return 'ENERO';
     else if (m == '02') return 'FEBRERO';
@@ -59,12 +56,10 @@ function VideoChat({route}) {
     else if (m == '11') return 'NOVIEMBRE';
     else if (m == '12') return 'DICIEMBRE';
   };
-  let localStream;
-  const getLocalStream = async () => {
-    let myPeer = new Peer();
-    console.log('isFront: ' + camera);
+  //Set comunication when the user enters the view
+  const setComunication = async () => {
+    console.log('entered set comunication');
     const sourceInfos = await mediaDevices.enumerateDevices();
-    console.log('source Infos: ' + sourceInfos);
     let videoSourceId;
     for (let i = 0; i < sourceInfos.length; i++) {
       const sourceInfo = sourceInfos[i];
@@ -76,78 +71,89 @@ function VideoChat({route}) {
         console.log(videoSourceId);
       }
     }
-    localStream = await mediaDevices.getUserMedia({
+    const stream = await mediaDevices.getUserMedia({
       audio: true,
       video: {
         width: Dimensions.get('window').height,
         height: Dimensions.get('window').width,
-        frameRate: 30,
+        frameRate: {
+          ideal: 60,
+          min: 15,
+        },
         facingMode: camera ? 'user' : 'environment',
         deviceId: videoSourceId,
       },
     });
-    console.log("Stream: " + JSON.stringify(localStream));
-    myPeer.on("open", myPeerId =>{
-      console.log('Local peer open with ID', myPeerId);
-      joinRoom(myPeerId);
-    })
-    myPeer.on("call", call=>{
-      call.answer(localStream);
-      call.on("stream", remoteStream=>{
+    if (stream) {
+      console.log('Local stream generated: ', stream);
+      setLStream(stream);
+    }
+    myPeer = await new Peer();
+    //Listener for joining room as soon as it has the peer
+
+    myPeer.on('open', peer => {
+      console.log('Local peer open with ID', peer);
+      socket.emit('join_video_room', room, peer);
+    });
+    //Listener for receiving the call when the first user make it
+    myPeer.on('call', receivedCall => {
+      console.log('Call received form other user');
+      call = receivedCall;
+      call.answer(stream);
+      call.on('stream', remoteStream => {
         setRemoteStream(remoteStream);
-      })
-    })
-    socket.on('user_connected', (peer) => {
-      console.log("myPeer: " , myPeer);
-      const call = myPeer.call(peer, localStream);
-      call.on("stream", remoteStream=>{
-      setRemoteStream(remoteStream);
-      })
+      });
     });
+
+    //When the other user joins the socket room
+    socket.on('user_connected', peer => {
+      console.log('form user connected myPeer: ', myPeer);
+      console.log('form user connected peer: ', peer);
+      console.log('form user connected stream: ', stream);
+      call = myPeer.call(peer, stream);
+      call.on('stream', remoteStream => {
+        setRemoteStream(remoteStream);
+      });
+    });
+    //When the other user grts disconnected, end connections
     socket.on('user_disconnected', () => {
-      setUserConnected(false); 
+      if (call) {
+        console.log('entered to call close');
+        call.close();
+        call = null;
+      }
       setRemoteStream(null);
-      console.log('received user disconnected from socket');
     });
-    console.log("local stream: ",localStream);
-    setLStream(localStream);
   };
-  const stopLocalStream = () =>{
-    if(localStream){
-    localStream.getTracks().forEach(function(track) {
-        if (track.readyState == 'live') {
-            track.stop();
-        }
-    });
-  }
-  }
-  const joinRoom = async (peer) => {
-    const room = item._id;
-    const id = peer;
-    await socket.emit('join_video_room', room, id);
-  };
-  const leaveRoom = async room => {
-    await socket.emit('leave_room', room);
-  };
-  const callRemoteUser = (peer)=>{
-    const call = myPeer.call(peer, localStream);
-    call.on("stream", remoteStream=>{
-    setRemoteStream(remoteStream);
-    })
-   }
-   useFocusEffect(
+
+  useFocusEffect(
     React.useCallback(() => {
       // Do something when the screen is focused
+      if (today && now) {
+        getSocket();
+        setComunication();
+        console.log('Entered useFocusEffect setting comunication');
+      }
+      console.log('today Date: ', todayDate);
+      console.log('app date: ', appDate);
+      console.log('today day: ', todayDate.getDate());
+      console.log('today month: ', todayDate.getMonth());
+      console.log('app day: ', appDate.getDate());
+      console.log('app month: ', appDate.getMonth());
       return () => {
         // Do something when the screen is unfocused
-        leaveRoom(item._id);
-        stopLocalStream();
+        if (call) {
+          call.close();
+          call = null;
+          console.log('call.close called from leaving the view');
+        }
+        if (myPeer) myPeer.destroy();
+        socket.emit('leave_room', room);
         console.log('video chat screen unfocused');
       };
     }, []),
   );
-  
-  return lStream ? (
+  return (
     <SafeAreaView style={styles.videoContainer}>
       <StatusBar
         animated={true}
@@ -156,108 +162,149 @@ function VideoChat({route}) {
         showHideTransition={'fade'}
       />
       <Text style={styles.title}>Video llamada</Text>
-      {remoteStream ? 
-      <View
-        style={{
-          width: Dimensions.get('window').width,
-          height: Dimensions.get('window').height,
-        }}>
+      {remoteStream ? (
+        <View
+          style={{
+            width: Dimensions.get('window').width,
+            height: Dimensions.get('window').height,
+          }}>
           <View style={styles.backStream}>
-          <RTCView
-          style={{width: "100%", height: "100%"}}
-          objectFit="cover"
-          streamURL={remoteStream.toURL()}
-          />
+            <RTCView
+              style={{width: '100%', height: '100%'}}
+              objectFit="cover"
+              streamURL={remoteStream.toURL()}
+            />
           </View>
           <View style={styles.frontStream}>
-        <RTCView
-        objectFit="cover"
-          style={{width: "100%", height: "100%"}}
-          streamURL={lStream.toURL()}
-        />
+            <RTCView
+              objectFit="cover"
+              style={{width: '100%', height: '100%'}}
+              streamURL={lStream.toURL()}
+              mirror={true}
+            />
           </View>
-      </View> : <View
-        style={{
-          width: Dimensions.get('window').width,
-          height: Dimensions.get('window').height,
-        }}>
+        </View>
+      ) : (
+        <View
+          style={{
+            width: Dimensions.get('window').width,
+            height: Dimensions.get('window').height,
+          }}>
           <View style={styles.frontNoStream}>
-        <RTCView
-        objectFit="cover"
-          style={{width: "100%", height: "100%"}}
-          streamURL={lStream.toURL()}
-        />
+            {lStream && (
+              <RTCView
+                objectFit="cover"
+                style={{width: '100%', height: '100%'}}
+                streamURL={lStream.toURL()}
+                mirror={true}
+              />
+            )}
           </View>
-      </View>}
-    </SafeAreaView>
-  ) : (
-    <SafeAreaView style={styles.videoContainer}>
-      <StatusBar
-        animated={true}
-        backgroundColor={mainColor}
-        barStyle={'default'}
-        showHideTransition={'fade'}
-      />
-      <Text style={styles.title}>Video llamada</Text>
-      <View style={styles.container}>
-      {notToday && <Text style = {styles.legend}>{`Tu cita está programada para el dìa: `}</Text>}
-      {notToday && <Text style = {styles.legend}>{`${item.appointmentDate.day.split("T")[0].split("-")[2]} de ${selectMonth(item.appointmentDate.day.split("T")[0].split("-")[1])}`}</Text>}
-      {today && <Text style = {styles.legend}>{`Tu cita está programada para las: `}</Text>}
-      {today && <Text style = {styles.legend}>{`${item.appointmentDate.hour} horas`}</Text>}
-      </View>
-      
-      {today ? (<Button
-          style={{
-            width: '100%',
-            height: 40,
-            position: 'absolute',
-            bottom: 20,
-            left: 0,
-          }}
-          mode="contained"
-          onPress={() => {
-            getLocalStream();
-          }}>
-          start stream
-        </Button>)
-        :
-        (<Button
-          style={{
-            width: '100%',
-            height: 40,
-            position: 'absolute',
-            bottom: 20,
-            left: 0,
-          }}
-          mode="contained"
-          onPress={() => {
-            Alert.alert(
-              'Ups!!',
-              `¡Aun no es tiempo de tu llamada!`, //modificar al error real
-              [{text: 'OK', onPress: () => console.log('OK Pressed')}],
-            );
-          }}>
-          not start stream
-        </Button>)}
-      
+        </View>
+      )}
+      {isTheTherapist ? (
+        <View style={styles.infoContainer}>
+          {notToday && (
+            <Text
+              style={
+                styles.legend
+              }>{`Tu cita está programada para el dìa: `}</Text>
+          )}
+          {notToday && (
+            <Text style={styles.legend}>{`${
+              item.appointmentDate.day.split('T')[0].split('-')[2]
+            } de ${selectMonth(
+              item.appointmentDate.day.split('T')[0].split('-')[1],
+            )}`}</Text>
+          )}
+          {today && !now && (
+            <Text
+              style={
+                styles.legend
+              }>{`Tu cita está programada para las: `}</Text>
+          )}
+          {today && !now && (
+            <Text
+              style={
+                styles.legendBig
+              }>{`${item.appointmentDate.hour} horas`}</Text>
+          )}
+          {today && !now && (
+            <Text style={styles.legend}>{`${
+              missingHours > 1 ? 'Faltan' : 'Falta'
+            } ${missingHours} ${
+              missingHours > 1 ? 'horas' : 'hora'
+            } para que puedas iniciar la llamada`}</Text>
+          )}
+        </View>
+      ) : (
+        <View style={styles.infoContainer}>
+          {notToday && (
+            <Text
+              style={
+                styles.legend
+              }>{`Tu cita está programada para el dìa: `}</Text>
+          )}
+          {notToday && (
+            <Text style={styles.legend}>{`${
+              item.appointmentDate.day.split('T')[0].split('-')[2]
+            } de ${selectMonth(
+              item.appointmentDate.day.split('T')[0].split('-')[1],
+            )}`}</Text>
+          )}
+          {today && !now && (
+            <Text
+              style={
+                styles.legend
+              }>{`Tu cita está programada para las: `}</Text>
+          )}
+          {today && !now && (
+            <Text
+              style={
+                styles.legend
+              }>{`${item.appointmentDate.hour} horas`}</Text>
+          )}
+          {today && !now && (
+            <Text style={styles.legend}>{`${
+              missingHours > 1 ? 'Faltan' : 'Falta'
+            } ${missingHours} ${
+              missingHours > 1 ? 'horas' : 'hora'
+            } para que el terapeuta pueda iniciar la llamada. ¡Regresa mas tarde!`}</Text>
+          )}
+          {today && now && (
+            <Text style={styles.legend}>{`Es hora de tu cita!`}</Text>
+          )}
+          {today && now && (
+            <Text
+              style={
+                styles.legend
+              }>{`!Espera a que el terapeuta inicie la llamada!`}</Text>
+          )}
+        </View>
+      )}
     </SafeAreaView>
   );
 }
 var CONTAINER_HEIGHT = Dimensions.get('screen').height;
 var TITLE_FONT_SIZE = 35;
 var TITLE_HEIGHT = 50;
+var LEGEND_SIZE = 20;
 const styles = StyleSheet.create({
   videoContainer: {
     flex: 1,
-    backgroundColor: mainColor, 
+    backgroundColor: mainColor,
     height: CONTAINER_HEIGHT,
     alignItems: 'center',
   },
-  container: {
-    flex: 1,
-    backgroundColor: mainColor, 
+  infoContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: Dimensions.get('screen').width,
+
     height: CONTAINER_HEIGHT,
-    justifyContent: "center",
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
@@ -272,18 +319,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   legend: {
-    color: "white",
+    color: 'white',
+    fontSize: LEGEND_SIZE,
+    marginBottom: 10,
   },
-  button: {
-    width: '15%',
-    height: '100%',
-    paddingLeft: 20,
-    marginRight: 5,
-    borderRadius: 100,
-    backgroundColor: 'green',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+  legendBig: {
+    color: 'white',
+    fontSize: LEGEND_SIZE + 10,
+    marginBottom: 10,
   },
   label: {
     color: 'black',
@@ -291,7 +334,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   frontStream: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     width: '30%',
@@ -299,7 +342,7 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   frontNoStream: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     width: '100%',
@@ -310,9 +353,18 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     zIndex: 0,
-    backgroundColor: "red"
-  }
-  
+    backgroundColor: 'red',
+  },
+  userConnected: {
+    color: 'green',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  userDisconnected: {
+    color: 'red',
+    fontSize: 16,
+    fontWeight: '400',
+  },
 });
 
 export default VideoChat;

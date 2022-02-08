@@ -68,9 +68,9 @@ const defaultImage = require('../assets/avatar.png');
 let smallPhone = false;
 if (PixelRatio.get() <= 2) smallPhone = true;
 else smallPhone = false;
-
+const type = 'presencial';
 function Calendars({route, navigation}) {
-  const {name, image, specialization, token, _id} = route.params;
+  const {name, image, token, _id, online} = route.params;
   const userLogged = route.params.userLogged;
   const userCalendar = route.params.calendar[1];
   const [hours, setHours] = useState([]);
@@ -145,7 +145,7 @@ function Calendars({route, navigation}) {
   };
   const paySession = hour => {
     navigation.navigate('Checkout', {
-      online: false,
+      type,
       hour,
       day,
       token,
@@ -153,7 +153,7 @@ function Calendars({route, navigation}) {
       userLogged,
       _id,
       image,
-      specialization,
+      online,
     });
   };
   const renderList = item => {

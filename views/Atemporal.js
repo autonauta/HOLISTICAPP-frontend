@@ -6,23 +6,16 @@ import {
   Text,
   Image,
   View,
-  FlatList,
   StatusBar,
   PixelRatio,
-  ScrollView,
 } from 'react-native';
-import {
-  mainColor,
-  secondaryColor,
-  tertiaryColor,
-  textColor1,
-  textColor2,
-} from '../config';
+import {Button} from 'react-native-paper';
+import {mainColor} from '../config';
 
 const defaultImage = require('../assets/avatar.png');
-
-function Calendars({route, navigation}) {
-  const {name, image, token, _id} = route.params;
+const type = 'atemporal';
+function Atemporal({route, navigation}) {
+  const {name, image, token, _id, online} = route.params;
   const userLogged = route.params.userLogged;
 
   const getCurrentDate = () => {
@@ -49,16 +42,15 @@ function Calendars({route, navigation}) {
       return image;
     }
   };
-  const paySession = hour => {
+  const paySession = () => {
     navigation.navigate('Checkout', {
-      hour,
-      day,
+      type,
       token,
       name,
       userLogged,
       _id,
       image,
-      specialization,
+      online,
     });
   };
 
@@ -77,6 +69,20 @@ function Calendars({route, navigation}) {
           <Text style={styles.subtitle}>Consulta sin tiempo</Text>
         </View>
       </View>
+      <View style={styles.mainView}>
+        <Text style={styles.instrucciones}>
+          ¡Las consultas sin tiempo te permiten enviar un video y mandarlo al
+          terapeuta! En cuanto tenga tu respuesta la podrás ver en tu Dashboard
+        </Text>
+      </View>
+      <Button
+        style={styles.buttonLogout}
+        mode="contained"
+        onPress={() => {
+          paySession();
+        }}>
+        COMPRAR ESPACIO
+      </Button>
     </SafeAreaView>
   );
 }
@@ -99,6 +105,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 10,
     paddingRight: 10,
+  },
+  mainView: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  instrucciones: {
+    width: '70%',
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '600',
+    textAlign: 'justify',
   },
   header: {
     width: '100%',
@@ -126,6 +147,12 @@ const styles = StyleSheet.create({
     width: IMAGE_SIZE,
     borderRadius: 10,
   },
+  buttonLogout: {
+    width: '90%',
+    padding: 2,
+    backgroundColor: 'green',
+    marginBottom: 20,
+  },
 });
 
-export default Calendars;
+export default Atemporal;

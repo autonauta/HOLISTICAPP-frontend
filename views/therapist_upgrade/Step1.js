@@ -7,16 +7,9 @@ import {
   Modal,
   Dimensions,
   Pressable,
-  Alert,
   PixelRatio,
 } from 'react-native';
-import {
-  API_URL,
-  mainColor,
-  secondaryColor,
-  tertiaryColor,
-  textColor1,
-} from '../../config';
+import {mainColor, secondaryColor, textColor1} from '../../config';
 
 function Step1({
   name,
@@ -25,13 +18,14 @@ function Step1({
   setName,
   setLastName,
   setPhone,
+  city,
+  setCity,
   modalTerapeutaVisible,
   setModalTerapeutaVisible,
   step1Visible,
   step2Visible,
   setStep1Visible,
   setStep2Visible,
-  userLogged,
 }) {
   return (
     <View style={styles.centeredView}>
@@ -79,6 +73,15 @@ function Step1({
                 textContentType="name"
                 autoCompleteType="name"
                 onChangeText={text => setPhone(text)}></TextInput>
+            </View>
+            <View style={(styles.textInputView, styles.textInputViewLast)}>
+              <Text style={styles.label}>ciudad</Text>
+              <TextInput
+                style={styles.textInput}
+                value={city}
+                textContentType="name"
+                autoCompleteType="name"
+                onChangeText={text => setCity(text)}></TextInput>
             </View>
             <View style={styles.buttons}>
               <Pressable

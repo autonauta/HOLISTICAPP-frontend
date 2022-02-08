@@ -29,7 +29,6 @@ function Therapist({navigation, route}) {
     calendar,
     image,
     description,
-    specialization,
     _id,
     online,
     presencial,
@@ -75,7 +74,7 @@ function Therapist({navigation, route}) {
           <Text style={styles.name}>{lastName}</Text>
           <Text style={styles.props}>
             {categories.map(category => {
-              return <Text>{category}, </Text>;
+              return <Text key={category}>{category}, </Text>;
             })}
           </Text>
           <View style={styles.typeView}>
@@ -128,10 +127,10 @@ function Therapist({navigation, route}) {
                   name,
                   image,
                   calendar,
-                  specialization,
                   token,
                   userLogged,
                   _id,
+                  online: true,
                 });
               }}>
               CITA ONLINE
@@ -147,10 +146,10 @@ function Therapist({navigation, route}) {
                   name,
                   image,
                   calendar,
-                  specialization,
                   token,
                   userLogged,
                   _id,
+                  online: false,
                 });
               }}>
               CITA PRESENCIAL
@@ -168,6 +167,7 @@ function Therapist({navigation, route}) {
                   token,
                   userLogged,
                   _id,
+                  online: false,
                 });
               }}>
               CONSULTA SIN TIEMPO

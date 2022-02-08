@@ -135,7 +135,7 @@ function Step2({
               />
             </View>
 
-            {cat1Active ? (
+            {cat1Active && (
               <View style={styles.inputView}>
                 <CheckBox
                   disabled={cat3Active}
@@ -180,10 +180,8 @@ function Step2({
                   }}
                 />
               </View>
-            ) : (
-              <View></View>
             )}
-            {cat1Active && cat2Active ? (
+            {cat1Active && cat2Active && (
               <View style={styles.inputView}>
                 <CheckBox
                   tintColors={checkBoxTheme}
@@ -227,8 +225,6 @@ function Step2({
                   }}
                 />
               </View>
-            ) : (
-              <View></View>
             )}
             <View
               style={{

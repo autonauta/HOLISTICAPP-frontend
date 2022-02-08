@@ -17,6 +17,15 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {API_URL, tertiaryColor} from '../config';
 import {mainColor, secondaryColor, textColor1, textColor2} from '../config';
 
+var pixelRatio;
+const getIconSize = () => {
+  pixelRatio = PixelRatio.get();
+  if (pixelRatio < 1.4) return 30;
+  else if (pixelRatio > 1.4 && pixelRatio < 2) return 20;
+  else return 40;
+};
+const iconSize = getIconSize();
+
 function TherapistDashboard({route, navigation}) {
   let {token, userLogged} = route.params;
   const [appointments, setAppointments] = useState([]);
@@ -45,13 +54,6 @@ function TherapistDashboard({route, navigation}) {
       .catch(error => {
         console.log(error);
       });
-  };
-  const navigateTo = item => {
-    if (item.online === true)
-      navigation.navigate('VideoChat', {item, token, userLogged});
-    else if (item.online === false)
-      navigation.navigate('Chat', {item, token, userLogged});
-    else navigation.navigate('Atemporal', {item, token, userLogged});
   };
   useFocusEffect(
     React.useCallback(() => {
@@ -82,15 +84,36 @@ function TherapistDashboard({route, navigation}) {
     const day = date.split('T')[0].split('-').pop();
     return month + ' ' + day;
   };
+  const navigateTo = item => {
+    if (item.type === 'online')
+      navigation.navigate('VideoChat', {item, token, userLogged});
+    else if (item.type === 'presencial')
+      navigation.navigate('Chat', {item, token, userLogged});
+    else navigation.navigate('MediaChat', {item, token, userLogged});
+  };
+
   const renderList = item => {
+    const cardApointeeName = {
+      color:
+        item.type == 'atemporal'
+          ? 'gray'
+          : item.type == 'online'
+          ? tertiaryColor
+          : secondaryColor,
+      fontSize: APOINTEE_SIZE,
+      fontWeight: '700',
+    };
+
     return (
-      <Card
-        style={styles.myCard}
-        onPress={() => navigateTo(item)}>
+      <Card style={styles.myCard} onPress={() => navigateTo(item)}>
         <View style={styles.cardView}>
           <View
             style={
-              item.online ? styles.cardTextOnline : styles.cardTextPresencial
+              item.type == 'online'
+                ? styles.cardTextOnline
+                : item.type == 'atemporal'
+                ? styles.cardTextAtemporal
+                : styles.cardTextPresencial
             }>
             <Text style={styles.cardTitle}>
               {TransformDate(item.appointmentDate.day)}
@@ -98,22 +121,29 @@ function TherapistDashboard({route, navigation}) {
             <Text style={styles.cardSubtitle}>{item.appointmentDate.hour}</Text>
           </View>
           <View style={styles.typeOf}>
-            {item.online ? (
+            {item.type === 'online' ? (
               <Icon
                 style={{alignSelf: 'flex-start', marginLeft: 10}}
                 name="connected-tv"
-                size={40}
+                size={iconSize}
+                color={textColor2}
+              />
+            ) : item.type === 'presencial' ? (
+              <Icon
+                style={{alignSelf: 'flex-start', marginLeft: 10}}
+                name="group"
+                size={iconSize}
                 color={textColor2}
               />
             ) : (
               <Icon
                 style={{alignSelf: 'flex-start', marginLeft: 10}}
-                name="group"
-                size={40}
+                name="timer-off"
+                size={iconSize}
                 color={textColor2}
               />
             )}
-            <Text style={styles.cardApointeeName}>{item.appointeeName}</Text>
+            <Text style={cardApointeeName}>{item.appointeeName}</Text>
           </View>
         </View>
       </Card>
@@ -149,23 +179,39 @@ function TherapistDashboard({route, navigation}) {
     </SafeAreaView>
   );
 }
-var CONTAINER_HEIGHT =
-  Dimensions.get('screen').height - StatusBar.currentHeight;
+
 var TITLE_FONT_SIZE = 35;
 var CARD_HEIGHT = 180;
 var CARD_TITLE = 20;
 var CARD_SUBTITLE = 15;
-if (PixelRatio.get() <= 2) {
+var APOINTEE_SIZE = 40;
+if (PixelRatio > 2 && PixelRatio <= 3) {
+  var TITLE_FONT_SIZE = 35;
+  var CARD_HEIGHT = 18;
+  var CARD_TITLE = 20;
+  var CARD_SUBTITLE = 15;
+  var APOINTEE_SIZE = 40;
+}
+if (PixelRatio > 1.4 && PixelRatio <= 2) {
+  TITLE_FONT_SIZE = 25;
+  CARD_HEIGHT = 95;
+  CARD_TITLE = 16;
+  CARD_SUBTITLE = 16;
+  APOINTEE_SIZE = 20;
+}
+if (PixelRatio <= 1.4) {
   TITLE_FONT_SIZE = 30;
   CARD_HEIGHT = 60;
   CARD_TITLE = 16;
   CARD_SUBTITLE = 12;
+  APOINTEE_SIZE = 40;
 }
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: mainColor,
-    height: CONTAINER_HEIGHT,
     alignItems: 'center',
+    paddingBottom: 10,
   },
   title: {
     color: tertiaryColor,
@@ -201,6 +247,7 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   cardTextPresencial: {
     width: '100%',
@@ -213,6 +260,20 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cardTextAtemporal: {
+    width: '100%',
+    height: '30%',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    backgroundColor: tertiaryColor,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   typeOf: {
     width: '100%',
@@ -222,11 +283,15 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     color: textColor1,
-    fontSize: 22,
+    fontSize: CARD_TITLE,
     justifyContent: 'center',
   },
-  cardSubtitle: {color: textColor1, fontSize: 22},
-  cardApointeeName: {color: tertiaryColor, fontSize: 40, fontWeight: '700'},
+  cardSubtitle: {color: textColor1, fontSize: CARD_SUBTITLE},
+  cardApointeeName: {
+    color: tertiaryColor,
+    fontSize: APOINTEE_SIZE,
+    fontWeight: '700',
+  },
   noAppointmentsText: {
     marginTop: 30,
     color: textColor1,

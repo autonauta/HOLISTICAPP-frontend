@@ -21,6 +21,7 @@ import {
   tertiaryColor,
   textColor1,
   textColor2,
+  markColor,
 } from '../config';
 
 function Dashboard({route, navigation}) {
@@ -81,20 +82,33 @@ function Dashboard({route, navigation}) {
     return month + ' ' + day;
   };
   const navigateTo = item => {
-    if (item.online === true)
+    if (item.type === 'online')
       navigation.navigate('VideoChat', {item, token, userLogged});
-    else if (item.online === false)
+    else if (item.type === 'presencial')
       navigation.navigate('Chat', {item, token, userLogged});
-    else navigation.navigate('Atemporal', {item, token, userLogged});
+    else navigation.navigate('MediaChat', {item, token, userLogged});
   };
   const renderList = item => {
+    const cardApointeeName = {
+      color:
+        item.type == 'atemporal'
+          ? 'gray'
+          : item.type == 'online'
+          ? tertiaryColor
+          : secondaryColor,
+      fontSize: 30,
+      fontWeight: '700',
+    };
+    const iconSize = 30;
     return (
       <Card style={styles.myCard} onPress={() => navigateTo(item)}>
         <View style={styles.cardView}>
           <View
             style={
-              item.online === true
+              item.type == 'online'
                 ? styles.cardTextOnline
+                : item.type == 'atemporal'
+                ? styles.cardTextAtemporal
                 : styles.cardTextPresencial
             }>
             <Text style={styles.cardTitle}>
@@ -103,22 +117,33 @@ function Dashboard({route, navigation}) {
             <Text style={styles.cardSubtitle}>{item.appointmentDate.hour}</Text>
           </View>
           <View style={styles.typeOf}>
-            {item.online ? (
+            {item.type === 'online' ? (
               <Icon
-                style={{alignSelf: 'flex-start', marginLeft: 10}}
+                style={{
+                  alignSelf: 'flex-start',
+                  marginLeft: 10,
+                  marginTop: 10,
+                }}
                 name="connected-tv"
-                size={40}
-                color={textColor2}
+                size={iconSize}
+                color={markColor}
+              />
+            ) : item.type === 'presencial' ? (
+              <Icon
+                style={{alignSelf: 'flex-start', marginLeft: 10, marginTop: 10}}
+                name="group"
+                size={iconSize}
+                color={markColor}
               />
             ) : (
               <Icon
-                style={{alignSelf: 'flex-start', marginLeft: 10}}
-                name="group"
-                size={40}
-                color={textColor2}
+                style={{alignSelf: 'flex-start', marginLeft: 10, marginTop: 10}}
+                name="timer-off"
+                size={iconSize}
+                color={markColor}
               />
             )}
-            <Text style={styles.cardApointeeName}>{item.therapistName}</Text>
+            <Text style={cardApointeeName}>{item.therapistName}</Text>
           </View>
         </View>
       </Card>
@@ -146,9 +171,22 @@ function Dashboard({route, navigation}) {
           onRefresh={() => getAppointments()}
           refreshing={loading}></FlatList>
       ) : (
-        <Text style={styles.noAppointmentsText}>
-          NO TIENES NINGUN SERVICIO PENDIENTE
-        </Text>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Icon
+            style={{marginLeft: 10}}
+            name="code"
+            size={40}
+            color={textColor2}
+          />
+          <Text style={styles.noAppointmentsText}>
+            NO TIENES NINGUN SERVICIO PENDIENTE
+          </Text>
+        </View>
       )}
     </SafeAreaView>
   );
@@ -156,8 +194,8 @@ function Dashboard({route, navigation}) {
 
 var CONTAINER_HEIGHT =
   Dimensions.get('screen').height - StatusBar.currentHeight;
-var CARD_HEIGHT = 180;
-var CARD_TITLE = 20;
+var CARD_HEIGHT = 160;
+var CARD_TITLE = 18;
 var CARD_SUBTITLE = 15;
 var NAME_SIZE = 40;
 
@@ -175,6 +213,7 @@ const styles = StyleSheet.create({
     backgroundColor: mainColor,
     height: CONTAINER_HEIGHT,
     alignItems: 'center',
+    paddingBottom: 10,
   },
   title: {
     color: tertiaryColor,
@@ -200,44 +239,53 @@ const styles = StyleSheet.create({
   },
   cardTextOnline: {
     width: '100%',
-    height: '30%',
+    height: '25%',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     backgroundColor: tertiaryColor,
     paddingLeft: 10,
     paddingRight: 10,
-    paddingTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   cardTextPresencial: {
     width: '100%',
-    height: '30%',
+    height: '25%',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     backgroundColor: secondaryColor,
     paddingLeft: 10,
     paddingRight: 10,
-    paddingTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cardTextAtemporal: {
+    width: '100%',
+    height: '25%',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    backgroundColor: 'grey',
+    paddingLeft: 10,
+    paddingRight: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   typeOf: {
     width: '100%',
-    height: '70%',
-    justifyContent: 'center',
+    height: '100%',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   cardTitle: {
     color: textColor1,
     fontSize: CARD_TITLE,
-    justifyContent: 'center',
   },
   cardSubtitle: {color: textColor1, fontSize: 22},
-  cardApointeeName: {color: tertiaryColor, fontSize: 40, fontWeight: '700'},
   noAppointmentsText: {
-    marginTop: 30,
-    color: textColor1,
+    color: textColor2,
   },
 });
 export default Dashboard;

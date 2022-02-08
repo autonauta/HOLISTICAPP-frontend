@@ -23,68 +23,59 @@ import {
 } from '../config';
 
 const iconImage = require('../assets/icon.png');
+const showAlert = message => {
+  Alert.alert(
+    'Ups!!',
+    message, //modificar al error real
+    [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+  );
+};
+//Function for storing data in local
+const _storeData = async (keyName, value) => {
+  try {
+    await AsyncStorage.setItem(keyName, value);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
 
-  const _storeData = async (keyName, value) => {
-    try {
-      await AsyncStorage.setItem(keyName, value);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useFocusEffect(
-    React.useCallback(() => {
-      // Do something when the screen is focused
-      console.log('Login screen focused');
-      return () => {
-        // Do something when the screen is unfocused
-        // Useful for cleanup functions
-        console.log('Login screen unfucused');
-      };
-    }, []),
-  );
-  //------------------------Codigo para tamaños de letra responsivos-------------------------------
-
-  const submitData = () => {
+  //Function for posting the data to the backend server
+  const submitData = async () => {
     setLoggingIn(true);
-    fetch(`${API_URL}/auth`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({email, password}),
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) {
-          Alert.alert('Ups!!', `${data.error}`, [
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ]);
-        }
-        if (data.token) {
-          const token = data.token;
-          const userLogged = data.user;
-          _storeData('xauthtoken', JSON.stringify(token));
-          _storeData('user', JSON.stringify(userLogged));
-          console.log('User correctly logged in');
-          setPassword('');
-          setEmail('');
-          setLoggingIn(false);
-          navigation.navigate('Home', {token, userLogged});
-        }
-      })
-      .catch(err => {
-        Alert.alert(
-          'Ups!!',
-          `Ese usuario no existe o el password es incorrecto. Verifica tus datos`, //modificar al error real
-          [{text: 'OK', onPress: () => console.log('OK Pressed')}],
-        );
-        setLoggingIn(false);
+    const loginData = {email, password};
+    try {
+      const res = await fetch(`${API_URL}/auth`, {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginData),
       });
+      const data = await res.json();
+      if (data.error) {
+        showAlert(data.error);
+      } else if (data.token) {
+        const token = data.token;
+        const userLogged = data.user;
+        _storeData('xauthtoken', JSON.stringify(token));
+        _storeData('user', JSON.stringify(userLogged));
+        console.log('User correctly logged in');
+        setPassword('');
+        setEmail('');
+        setLoggingIn(false);
+        navigation.navigate('Home', {token, userLogged});
+      }
+    } catch (err) {
+      showAlert(
+        '¡Ese usuario no existe o el password es incorrecto. Verifica tus datos!',
+      );
+      setLoggingIn(false);
+    }
   };
 
   return (
@@ -148,19 +139,21 @@ function Login({navigation}) {
   );
 }
 
-var TITLE_FONT_SIZE = 40;
-var LABEL_FONT_SIZE = 24;
-var IMAGE_SIZE = 80;
-var IMAGE_MARGIN_BOTTOM = 20;
-var INPUT_WIDTH = '100%';
-var INPUT_PADDING = 10;
-var TEXTINPUT_FONT_SIZE = 20;
-var TITLE_MARGIN_BOTTOM = 0;
-var BUTTON_WIDTH = '100%';
-var BUTTON_MARGIN_TOP = 0;
-var INPUT_MARGIN_BOTTOM = 10;
-var TEXT_BUTTON_FONT_SIZE = 18;
-if (PixelRatio.get() <= 2) {
+var TITLE_FONT_SIZE;
+var LABEL_FONT_SIZE;
+var IMAGE_SIZE;
+var IMAGE_MARGIN_BOTTOM;
+var INPUT_WIDTH;
+var INPUT_PADDING;
+var TEXTINPUT_FONT_SIZE;
+var TITLE_MARGIN_BOTTOM;
+var BUTTON_WIDTH;
+var BUTTON_MARGIN_TOP;
+var INPUT_MARGIN_BOTTOM;
+var TEXT_BUTTON_FONT_SIZE;
+
+//Telefonos con resoluciones altas
+if (PixelRatio.get() >= 2.8 && PixelRatio.get() < 3.6) {
   TITLE_FONT_SIZE = 30;
   TITLE_MARGIN_BOTTOM = 0;
   LABEL_FONT_SIZE = 17;
@@ -169,6 +162,36 @@ if (PixelRatio.get() <= 2) {
   INPUT_WIDTH = '90%';
   INPUT_PADDING = 6;
   TEXTINPUT_FONT_SIZE = 18;
+  BUTTON_WIDTH = '90%';
+  BUTTON_MARGIN_TOP = 0;
+  INPUT_MARGIN_BOTTOM = 10;
+  TEXT_BUTTON_FONT_SIZE = 18;
+}
+//Telefonos con resoluciones medianas
+if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 2.8) {
+  TITLE_FONT_SIZE = 30;
+  TITLE_MARGIN_BOTTOM = 0;
+  LABEL_FONT_SIZE = 17;
+  IMAGE_SIZE = 70;
+  IMAGE_MARGIN_BOTTOM = 0;
+  INPUT_WIDTH = '90%';
+  INPUT_PADDING = 6;
+  TEXTINPUT_FONT_SIZE = 18;
+  BUTTON_WIDTH = '90%';
+  BUTTON_MARGIN_TOP = 0;
+  INPUT_MARGIN_BOTTOM = 10;
+  TEXT_BUTTON_FONT_SIZE = 16;
+}
+//Telefonos con resoluciones pequeñas
+if (PixelRatio.get() >= 1 && PixelRatio.get() < 2.2) {
+  TITLE_FONT_SIZE = 25;
+  LABEL_FONT_SIZE = 16;
+  IMAGE_SIZE = 60;
+  IMAGE_MARGIN_BOTTOM = 20;
+  INPUT_WIDTH = '90%';
+  INPUT_PADDING = 5;
+  TEXTINPUT_FONT_SIZE = 16;
+  TITLE_MARGIN_BOTTOM = 0;
   BUTTON_WIDTH = '90%';
   BUTTON_MARGIN_TOP = 0;
   INPUT_MARGIN_BOTTOM = 10;

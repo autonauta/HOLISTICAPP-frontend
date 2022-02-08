@@ -5,29 +5,15 @@ import {
   View,
   Text,
   Image,
-  Dimensions,
-  TextInput,
-  Alert,
-  ScrollView,
   Pressable,
   PixelRatio,
   StatusBar,
 } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
-import {Card, Button} from 'react-native-paper';
-import SelectDropdown from 'react-native-select-dropdown';
+import {Button} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import UserTypeChange from './modals/UserTypeChange';
 import ImageChange from './modals/ImageChange';
 
-import {
-  API_URL,
-  mainColor,
-  secondaryColor,
-  tertiaryColor,
-  textColor1,
-  textColor2,
-} from '../config';
+import {mainColor, tertiaryColor, textColor1} from '../config';
 const defaultImage = require('../assets/avatar.png');
 const categories = [
   'biomagnetismo',
@@ -163,28 +149,33 @@ function TherapistProfile({navigation, route}) {
           <Text style={styles.title}>{userLogged.name}</Text>
           <View style={styles.categoriesView}>
             {userLogged.categories.map(category => {
-              return <Text style={styles.subtitle}>{category} </Text>;
+              return (
+                <Text key={category} style={styles.subtitle}>
+                  {category}{' '}
+                </Text>
+              );
             })}
           </View>
         </View>
       </View>
-
-      <Button
-        style={styles.buttonPassword}
-        mode="contained"
-        onPress={() => {
-          setModalTerapeutaVisible(true);
-        }}>
-        DEJAR DE SERVIR AL MUNDO!
-      </Button>
-      <Button
-        style={styles.buttonLogout}
-        mode="contained"
-        onPress={() => {
-          logOut();
-        }}>
-        LOGOUT
-      </Button>
+      <View style={styles.buttons}>
+        <Button
+          style={styles.buttonPassword}
+          mode="contained"
+          onPress={() => {
+            setModalTerapeutaVisible(true);
+          }}>
+          DEJAR DE SERVIR AL MUNDO!
+        </Button>
+        <Button
+          style={styles.buttonLogout}
+          mode="contained"
+          onPress={() => {
+            logOut();
+          }}>
+          LOGOUT
+        </Button>
+      </View>
 
       <ImageChange
         imageModalVisible={imageModalVisible}
@@ -272,6 +263,12 @@ const styles = StyleSheet.create({
   imageChangeText: {
     color: tertiaryColor,
     fontSize: 16,
+  },
+  buttons: {
+    position: 'absolute',
+    bottom: 0,
+    width: '90%',
+    marginBottom: 30,
   },
   logoutButtonText: {
     color: 'white',

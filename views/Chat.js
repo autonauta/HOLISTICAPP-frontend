@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   ActivityIndicator,
+  StatusBar,
 } from 'react-native';
 import {Button} from 'react-native-paper';
 import {AutoScrollFlatList} from 'react-native-autoscroll-flatlist';
@@ -23,7 +24,7 @@ import {
 } from '../config';
 
 import io from 'socket.io-client';
-const socket = io.connect(SOCKET_IO);
+var socket;
 
 function Chat({route}) {
   const {token, userLogged, item} = route.params;
@@ -32,6 +33,32 @@ function Chat({route}) {
   const [userConnected, setUserConnected] = useState();
   const [loading, setLoading] = useState(false);
 
+  const getSocket = async () => {
+    socket = await io.connect(SOCKET_IO);
+    socket.on('receive_message', data => {
+      setMessageList(list => [...list, data]);
+    });
+    socket.on('user_connected', () => {
+      setUserConnected(true);
+    });
+    socket.on('user_disconnected', () => {
+      setUserConnected(false);
+      console.log('received user disconnected from socket');
+    });
+    joinRoom();
+  };
+
+  const joinRoom = async () => {
+    const roomInfo = {
+      room: item._id,
+      TherapistId: item.userIdTherapist,
+      ClientId: item.userIdApointee,
+    };
+    await socket.emit('join_chat_room', roomInfo);
+  };
+  const leaveRoom = async room => {
+    await socket.emit('leave_room', room);
+  };
   const makeId = () => {
     var result = '';
     var characters =
@@ -56,7 +83,6 @@ function Chat({route}) {
         .then(res => res.json())
         .then(response => {
           if (response.error) {
-            console.error(`${response.error}`);
             setLoading(false);
           } else if (response) {
             setMessageList(response);
@@ -82,36 +108,11 @@ function Chat({route}) {
     }
   };
 
-  const joinRoom = async () => {
-    const roomInfo = {
-      room: item._id,
-      TherapistId: item.userIdTherapist,
-      ClientId: item.userIdApointee,
-    };
-    await socket.emit('join_chat_room', roomInfo);
-  };
-  const leaveRoom = async room => {
-    await socket.emit('leave_room', room);
-  };
-
   useEffect(() => {
-    socket.on('receive_message', data => {
-      setMessageList(list => [...list, data]);
-    });
-    socket.on('user_connected', () => {
-      setUserConnected(true);
-    });
-    socket.on('user_disconnected', () => {
-      setUserConnected(false);
-      console.log('received user disconnected from socket');
-    });
-  }, [socket]);
-
-  useEffect(() => {
-    joinRoom();
+    getSocket();
     getMessages();
     return () => {
-      setMessageList([]); 
+      setMessageList([]);
     };
   }, []);
   useFocusEffect(
@@ -120,7 +121,6 @@ function Chat({route}) {
       return () => {
         // Do something when the screen is unfocused
         leaveRoom(item._id);
-        console.log('chat screen unfocused');
       };
     }, []),
   );
@@ -142,6 +142,12 @@ function Chat({route}) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar
+        animated={true}
+        backgroundColor={mainColor}
+        barStyle={'default'}
+        showHideTransition={'fade'}
+      />
       <View
         style={{
           flex: 1,

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {
-  Alert,
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -13,13 +12,13 @@ import {
   View,
 } from 'react-native';
 
-import {mainColor, secondaryColor, tertiaryColor} from '../config';
+import {mainColor, tertiaryColor} from '../config';
 import PayModal from './modals/PayModal';
 
 const defaultImage = require('../assets/avatar.png');
 function Checkout({route, navigation}) {
   const userLogged = route.params.userLogged;
-  const {online, day, hour, token, name, _id, image} = route.params;
+  const {type, day, hour, token, name, _id, image, online} = route.params;
 
   const [payModalVisible, setPayModalVisible] = useState(false);
 
@@ -47,12 +46,21 @@ function Checkout({route, navigation}) {
       <View style={{paddingBottom: 20, width: '100%'}}>
         <Text style={styles.subtitle1}>{`Terapeuta: ${name}`}</Text>
         <Text style={styles.subtitle2}>{`Tipo de sesión: ${
-          online ? 'online' : 'presencial'
+          type == 'online'
+            ? 'online'
+            : type == 'presencial'
+            ? 'presencial'
+            : 'atemporal'
         }`}</Text>
-        <Text style={styles.subtitle2}>{`Fecha: ${day.split('-')[2]}-${
-          day.split('-')[1]
-        }-${day.split('-')[0]}`}</Text>
-        <Text style={styles.subtitle3}>{`Hora: ${hour}`}</Text>
+
+        {type != 'atemporal' && (
+          <>
+            <Text style={styles.subtitle2}>{`Fecha: ${day.split('-')[2]}-${
+              day.split('-')[1]
+            }-${day.split('-')[0]}`}</Text>
+            <Text style={styles.subtitle3}>{`Hora: ${hour} horas`}</Text>
+          </>
+        )}
       </View>
       <Pressable style={styles.button} onPress={() => setPayModalVisible(true)}>
         <Text style={styles.buttonText}>IR A PAGO</Text>
@@ -67,6 +75,7 @@ function Checkout({route, navigation}) {
         _id={_id}
         day={day}
         hour={hour}
+        type={type}
         online={online}
       />
     </SafeAreaView>
@@ -119,6 +128,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
+    position: 'absolute',
+    bottom: 30,
     alignItems: 'center',
     paddingVertical: 8,
     borderRadius: 10,

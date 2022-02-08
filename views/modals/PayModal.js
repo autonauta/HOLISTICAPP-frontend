@@ -10,14 +10,13 @@ import {
   TextInput,
   ActivityIndicator,
   PixelRatio,
-  Platform,
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import {API_URL, mainColor, secondaryColor, textColor2} from '../../config';
 import {useState} from 'react';
 import {createTokenWithCard, Openpay} from 'openpay-react-native';
-const merchantId = "mld1bopn3wpit9sejucx";
-const publicKey = "pk_425ef633b7ea415da285c4909781424c";
+const merchantId = 'mld1bopn3wpit9sejucx';
+const publicKey = 'pk_425ef633b7ea415da285c4909781424c';
 /* if(Platform.OS == "android") openpay.setup('mld1bopn3wpit9sejucx', 'pk_425ef633b7ea415da285c4909781424c'); */
 
 function PayModal({
@@ -30,6 +29,7 @@ function PayModal({
   day,
   hour,
   navigation,
+  type,
   online,
 }) {
   const [cardNumber, setCardNumber] = useState('4111111111111111');
@@ -37,9 +37,10 @@ function PayModal({
   const [monthExp, setMonthExp] = useState('02');
   const [yearExp, setYearExp] = useState('25');
   const [CVV, setCVV] = useState('432');
-  const [cardToken, setCardToken] = useState();
+  //const [cardToken, setCardToken] = useState();
   const [deviceSId, setDeviceSId] = useState();
   const [loading, setLoading] = useState(false);
+  var cardToken;
   const goToHome = CommonActions.reset({
     index: 1,
     routes: [
@@ -50,83 +51,82 @@ function PayModal({
     ],
     key: null,
   });
-  const generateToken = async () =>{
+  const generateToken = async () => {
     setLoading(true);
-    try{
-      const token = await createTokenWithCard(
-        {
-          holder_name: cardHolder,
-          cvv2: CVV,
-          expiration_month: monthExp,
-          card_number: cardNumber,
-          expiration_year: yearExp,
-          isProductionMode: false,
-          merchantId: merchantId,
-          publicKey: publicKey,
-        }
-      );
-      if(token) {
-        console.log("token generado", token);
-        setCardToken(token);
+    try {
+      let token = await createTokenWithCard({
+        holder_name: cardHolder,
+        cvv2: CVV,
+        expiration_month: monthExp,
+        card_number: cardNumber,
+        expiration_year: yearExp,
+        isProductionMode: false,
+        merchantId: merchantId,
+        publicKey: publicKey,
+      });
+
+      if (token) {
+        console.log('token generado:', token.id);
+        cardToken = token;
+        //setCardToken(token);
         submitData();
       }
-    }catch(e) {
-      console.error(e)
+    } catch (e) {
+      console.error(e);
     }
   };
-  const successToken = (response) => {
+  const successToken = response => {
     console.log(response);
     Alert.alert('Token generado', response.id, [
-      { text: 'OK', onPress: () => console.log('OK Pressed') },
+      {text: 'OK', onPress: () => console.log('OK Pressed')},
     ]);
   };
-  const failToken = (response) => {
-    console.log("failToken");
+  const failToken = response => {
+    console.log('failToken');
     console.log(response);
     Alert.alert('Datos inválidos', [
-      { text: 'OK', onPress: () => console.log('OK Pressed') },
+      {text: 'OK', onPress: () => console.log('OK Pressed')},
     ]);
   };
 
-  const deviceSession = (response) => {
+  const deviceSession = response => {
     console.log('deviceSession');
     console.log(response);
     setDeviceSId(response);
   };
 
   const submitData = () => {
-    
-    
-    
-      const myHeaders = new Headers();
+    const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('xAuthToken', token);
-      const toSendData = {
-        sessiondId: deviceSId,
-        cardToken: cardToken.id,
-        method: 'card',
-        amount: 500,
-        currency: 'MXN',
-        description: `Pago de sesión con ${name}`,
-        customer: {
-          name: cardHolder.split(' ')[0],
-          last_name: cardHolder.split(' ')[1],
-          email: userLogged.email,
-        },
-        cardHolder: cardHolder,
-        therapist_id: _id,
-        day,
-        hour,
-        online,
-      }
-      console.log("What is going to be fetched: ", toSendData);
-      fetch(`${API_URL}/payment/charge`, {
-        method: 'post',
-        headers: myHeaders,
-        body: JSON.stringify(toSendData),
-      }).then(res => res.json())
-      .then(data=>{
+    const toSendData = {
+      sessiondId: deviceSId,
+      cardToken: cardToken,
+      method: 'card',
+      amount: 500,
+      currency: 'MXN',
+      description: `Pago de sesión con ${name}`,
+      customer: {
+        name: cardHolder.split(' ')[0],
+        last_name: cardHolder.split(' ')[1],
+        email: userLogged.email,
+      },
+      cardHolder: cardHolder,
+      therapist_id: _id,
+      day,
+      hour,
+      type,
+      online,
+    };
+    console.log('What is going to be fetched: ', toSendData);
+    fetch(`${API_URL}/payment/charge`, {
+      method: 'post',
+      headers: myHeaders,
+      body: JSON.stringify(toSendData),
+    })
+      .then(res => res.json())
+      .then(data => {
         console.log(`Data received on fetch: ${data}`);
         if (data._id) {
           setLoading(false);
@@ -144,7 +144,7 @@ function PayModal({
               },
             ],
           );
-        }else {
+        } else {
           setLoading(false);
           Alert.alert(
             `Upss ${userLogged.name}!`,
@@ -161,11 +161,10 @@ function PayModal({
           );
         }
       })
-    .catch(e=>{
-      setLoading(false);
-      console.error(`Error del fetch al server: ${JSON.stringify(e)}`);
-      
-    }) ;
+      .catch(e => {
+        setLoading(false);
+        console.error(`Error del fetch al server: ${e}`);
+      });
   };
   /* const generatePayRequest = () => {
     setLoading(true);
@@ -202,8 +201,8 @@ function PayModal({
         }}>
         <Openpay
           isProductionMode={false}
-          merchantId = {merchantId}
-          publicKey = {publicKey}
+          merchantId={merchantId}
+          publicKey={publicKey}
           //address={address} //optional
           successToken={successToken}
           failToken={failToken}
@@ -227,13 +226,13 @@ function PayModal({
               shadowOpacity: 0.25,
               shadowRadius: 4,
               elevation: 5,
-              backgroundColor: mainColor,
+              backgroundColor: secondaryColor,
             }}>
             <Text
               style={{
                 width: '100%',
                 textAlign: 'center',
-                color: secondaryColor,
+                color: mainColor,
                 fontSize: 30,
                 fontWeight: '700',
                 marginBottom: 25,
@@ -308,7 +307,6 @@ function PayModal({
               </View>
             ) : (
               <View style={styles.buttons}>
-                
                 <Pressable
                   style={[styles.button, styles.buttonCancel]}
                   onPress={() => {
@@ -371,7 +369,7 @@ const styles = StyleSheet.create({
     width: '30%',
   },
   textStyle: {
-    color: "white",
+    color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
   },

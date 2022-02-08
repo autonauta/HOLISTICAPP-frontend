@@ -29,7 +29,7 @@ const defaultImage = require('../assets/avatar.png');
 //--------------------------MAIN EXPORT FUNCTION------------------------------------------
 function Main({navigation, route}) {
   const [modalVisible, setModalVisible] = useState(false);
-  const [data, setData] = useState([]);
+  const [therapists, setTherapists] = useState([]);
   const [loading, setLoading] = useState(true);
   //------------------------------States for user data and user Calendar data----------------
   const [userLogged, setUserLogged] = useState({});
@@ -62,17 +62,29 @@ function Main({navigation, route}) {
       };
     }, []),
   );
-
+  const showAlert = message => {
+    Alert.alert(
+      'Ups!!',
+      message, //modificar al error real
+      [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+    );
+  };
   //------------------------------Function for Querying the therapists available..............
   const getTherapistsData = async () => {
     setLoading(true);
-    await fetch(`${API_URL}/users`)
-      .then(res => res.json())
-      .then(results => {
+    try {
+      const res = await fetch(`${API_URL}/users`);
+      const results = await res.json();
+      if (results.error) {
+        showAlert(results.error);
+      } else {
         const therapists = results;
-        setData(therapists);
+        setTherapists(therapists);
         setLoading(false);
-      });
+      }
+    } catch (err) {
+      showAlert(err);
+    }
   };
   //------------------------------Function for Rendering the Therapists cards..............
   const renderList = item => {
@@ -96,7 +108,7 @@ function Main({navigation, route}) {
       }
     };
     return (
-      userLogged.name && (
+      userLogged._id != item._id && (
         <Card
           style={styles.myCard}
           onPress={() =>
@@ -106,20 +118,14 @@ function Main({navigation, route}) {
             <Image style={styles.image} source={getImage(item.image)}></Image>
             <View style={styles.cardText}>
               <Text style={styles.cardTitle}>{item.name}</Text>
-              {item.categories ? (
+              {item.categories && (
                 <Text style={styles.cardSubtitle}>{item.categories[0]}</Text>
-              ) : (
-                <></>
               )}
-              {item.categories ? (
+              {item.categories && (
                 <Text style={styles.cardSubtitle}>{item.categories[1]}</Text>
-              ) : (
-                <></>
               )}
-              {item.categories ? (
+              {item.categories && (
                 <Text style={styles.cardSubtitle}>{item.categories[2]}</Text>
-              ) : (
-                <></>
               )}
               <View
                 style={{
@@ -186,7 +192,7 @@ function Main({navigation, route}) {
       ) : (
         <FlatList
           style={styles.flatList}
-          data={data}
+          data={therapists}
           renderItem={({item}) => {
             return renderList(item);
           }}
@@ -197,37 +203,68 @@ function Main({navigation, route}) {
       <Filters
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        data={data}
-        setData={setData}
+        therapists={therapists}
+        setTherapists={setTherapists}
         setLoading={setLoading}
       />
     </SafeAreaView>
   );
 }
-var TITLE_FONT_SIZE = 35;
-var TITLE_HEIGHT = 40;
-var PROMOS_HEIGHT = 140;
-var CARD_HEIGHT = 180;
-var IMAGE_HEIGHT = 100;
-var CARD_TITLE = 20;
-var CARD_SUBTITLE = 15;
-var STARS_SIZE = 20;
-var NAV_HEIGHT = 60;
+var TITLE_FONT_SIZE;
+var TITLE_HEIGHT;
+var PROMOS_HEIGHT;
+var CARD_HEIGHT;
+var IMAGE_HEIGHT;
+var CARD_TITLE;
+var CARD_SUBTITLE;
+var STARS_SIZE;
+var NAV_HEIGHT;
 
 var STATUS_BAR_HEIGHT = StatusBar.currentHeight;
 var CONTAINER_HEIGHT =
   Dimensions.get('screen').height - StatusBar.currentHeight;
 
 if (PixelRatio.get() <= 2) {
-  TITLE_FONT_SIZE = 22;
+}
+
+//RESPONSIVE STYLES BASED ON PIXEL RATIO
+
+//Telefonos con resoluciones altas
+if (PixelRatio.get() >= 2.8 && PixelRatio.get() < 3.6) {
+  TITLE_FONT_SIZE = 31;
+  TITLE_HEIGHT = 40;
+  PROMOS_HEIGHT = 140;
+  CARD_HEIGHT = 160;
+  IMAGE_HEIGHT = 100;
+  CARD_TITLE = 28;
+  CARD_SUBTITLE = 15;
+  STARS_SIZE = 20;
+  NAV_HEIGHT = 60;
+}
+//Telefonos con resoluciones medias
+if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 2.8) {
+  TITLE_FONT_SIZE = 30;
+  TITLE_HEIGHT = 40;
+  PROMOS_HEIGHT = 140;
+  CARD_HEIGHT = 150;
+  IMAGE_HEIGHT = 100;
+  CARD_TITLE = 28;
+  CARD_SUBTITLE = 15;
+  STARS_SIZE = 20;
+  NAV_HEIGHT = 60;
+}
+//Telefonos con resoluciones bajas
+if (PixelRatio.get() >= 1 && PixelRatio.get() < 2.2) {
+  TITLE_FONT_SIZE = 25;
   PROMOS_HEIGHT = 110;
-  CARD_HEIGHT = 85;
+  CARD_HEIGHT = 100;
   IMAGE_HEIGHT = 60;
   CARD_TITLE = 16;
   CARD_SUBTITLE = 12;
   STARS_SIZE = 20;
   NAV_HEIGHT = 60;
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -251,6 +288,7 @@ const styles = StyleSheet.create({
     height: TITLE_HEIGHT,
   },
   flatList: {
+    flex: 1,
     width: '96%',
   },
   myCard: {

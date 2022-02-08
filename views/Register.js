@@ -112,23 +112,22 @@ function Register({navigation}) {
             secureTextEntry
             onChangeText={text => setPassConfirm(text)}></TextInput>
         </View>
-
-        <Button
-          style={styles.button}
-          mode="contained"
-          onPress={() => {
-            submitData();
-          }}>
-          Enviar
-        </Button>
-        <Text
-          style={styles.textButton}
-          onPress={() => {
-            navigation.navigate('Login');
-          }}>
-          Ya tienes una cuenta?
-        </Text>
       </ScrollView>
+      <Button
+        style={styles.button}
+        mode="contained"
+        onPress={() => {
+          submitData();
+        }}>
+        Enviar
+      </Button>
+      <Text
+        style={styles.textButton}
+        onPress={() => {
+          navigation.navigate('Login');
+        }}>
+        Ya tienes una cuenta?
+      </Text>
     </SafeAreaView>
   );
 }
@@ -141,12 +140,12 @@ const theme = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: mainColor,
     paddingTop: 20,
   },
   title: {
+    flex: 1,
     color: 'white',
     fontSize: 35,
     marginBottom: 30,
@@ -181,7 +180,7 @@ const styles = StyleSheet.create({
   },
   textButton: {
     marginTop: 30,
-    marginBottom: 10,
+    marginBottom: 30,
     color: 'white',
     fontSize: 16,
   },

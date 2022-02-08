@@ -85,13 +85,29 @@ function Navbar({
     </View>
   );
 }
-var NAV_HEIGHT = 50;
-var ICON_SIZE = 30;
-var NAV_MARGIN_TOP = 20;
-if (PixelRatio.get() <= 2) {
-  NAV_HEIGHT = 60;
-  NAV_MARGIN_TOP = 0;
-  ICON_SIZE = 24;
+var NAV_HEIGHT;
+var ICON_SIZE;
+var NAV_MARGIN_TOP;
+
+//RESPONSIVE STYLES BASED ON PIXEL RATIO
+
+//Telefonos con resoluciones altas
+if (PixelRatio.get() >= 2.8 && PixelRatio.get() < 3.6) {
+  NAV_HEIGHT = 50;
+  NAV_MARGIN_TOP = 5;
+  ICON_SIZE = 26;
+}
+//Telefonos con resoluciones medias
+if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 2.8) {
+  NAV_HEIGHT = 40;
+  ICON_SIZE = 25;
+  NAV_MARGIN_TOP = 8;
+}
+//Telefonos con resoluciones bajas
+if (PixelRatio.get() >= 1 && PixelRatio.get() < 2.2) {
+  NAV_HEIGHT = 34;
+  NAV_MARGIN_TOP = 5;
+  ICON_SIZE = 21;
 }
 const styles = StyleSheet.create({
   navbar: {

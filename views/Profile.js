@@ -11,6 +11,7 @@ import {
   Pressable,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CommonActions} from '@react-navigation/native';
 //---------------------------------IMPORTS-----------------------------
 import {mainColor, secondaryColor, tertiaryColor, textColor1} from '../config';
 import PasswordChange from './modals/PasswordChange';
@@ -42,6 +43,7 @@ function Profile({navigation, route}) {
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
+  const [city, setCity] = useState('');
   const [categories, setCategories] = useState('');
   const [description, setDescription] = useState('');
   //-------------------------------------------------------------------------------------------
@@ -73,12 +75,16 @@ function Profile({navigation, route}) {
   const [oThursday, setOThursday] = useState(false);
   const [oFriday, setOFriday] = useState(false);
   const [oSaturday, setOSaturday] = useState(false);
-
+  const goToLogin = CommonActions.reset({
+    index: 1,
+    routes: [{name: 'Login'}],
+    key: null,
+  });
   const logOut = () => {
     const keys = ['xauthtoken', 'user', 'userCalendar'];
     AsyncStorage.multiRemove(keys).then(res => {
       console.log('Items removed from storage');
-      navigation.navigate('Login');
+      navigation.dispatch(goToLogin);
     });
   };
   function isEmpty(obj) {
@@ -194,6 +200,8 @@ function Profile({navigation, route}) {
         setLastName={setLastName}
         phone={phone}
         setPhone={setPhone}
+        city={city}
+        setCity={setCity}
       />
       <Step2
         categories={categories}
@@ -322,9 +330,6 @@ var BUTTON_HEIGHT = 40;
 var BUTTON_FONT_SIZE = 16;
 var BUTTON_MARGIN_BOTTOM = 20;
 
-var STATUS_BAR_HEIGHT = StatusBar.currentHeight;
-var CONTAINER_HEIGHT =
-  Dimensions.get('screen').height - StatusBar.currentHeight;
 if (PixelRatio.get() <= 2) {
   BUTTON_HEIGHT = 25;
   BUTTON_FONT_SIZE = 11;

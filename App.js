@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
+import {PixelRatio, Dimensions} from 'react-native';
 import Main from './views/Main';
 import Register from './views/Register';
 import Login from './views/Login';
@@ -17,6 +18,7 @@ import StoreHome from './views/store/StoreHome';
 import Product from './views/store/Product';
 import Chat from './views/Chat';
 import VideoChat from './views/VideoChat';
+import MediaChat from './views/MediaChat';
 import Atemporal from './views/Atemporal';
 import TherapistDashboard from './views/TherapistDashboard';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -24,6 +26,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import UserContext from './Context/UserContext';
 
 const Stack = createStackNavigator();
+const {width, height} = Dimensions.get('screen');
+console.log('DEVICE PIXEL RATIO: ', PixelRatio.get());
+console.log(`Ancho: ${width}, Alto: ${height}`);
 function App() {
   return (
     <NavigationContainer>
@@ -52,6 +57,7 @@ function App() {
         <Stack.Screen name="Product" component={Product} />
         <Stack.Screen name="Chat" component={Chat} />
         <Stack.Screen name="VideoChat" component={VideoChat} />
+        <Stack.Screen name="MediaChat" component={MediaChat} />
         <Stack.Screen name="Atemporal" component={Atemporal} />
       </Stack.Navigator>
     </NavigationContainer>
