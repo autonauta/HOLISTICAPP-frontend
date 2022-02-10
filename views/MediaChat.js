@@ -7,15 +7,19 @@ import {
   Dimensions,
   StatusBar,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {AutoScrollFlatList} from 'react-native-autoscroll-flatlist';
 import {Button} from 'react-native-paper';
+import ImagePicker from 'react-native-image-crop-picker';
 import {
   API_URL,
   mainColor,
   secondaryColor,
   tertiaryColor,
-  textColor2,
+  VIDEO_UPLOAD_PRESET,
+  CLOUDINARY_VIDEO_URL,
+  CLOUD_NAME,
 } from '../config';
 function MediaChat({navigation, route}) {
   const [messageList, setMessageList] = useState([]);
@@ -38,6 +42,96 @@ function MediaChat({navigation, route}) {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const submitData = videoUrl => {
+    const myHeaders = new Headers();
+
+    myHeaders.append('Content-Type', 'application/json');
+    myHeaders.append('xAuthToken', token);
+    console.log(`From submit data object to send to API: ${imageUrl}`);
+    fetch(`${API_URL}/profile/edit`, {
+      method: 'post',
+      headers: myHeaders,
+      body: JSON.stringify({
+        author: userLogged._id,
+        room: item._id,
+        video: {uri: videoUrl},
+        time: new Date(Date.now()).getTime(),
+      }),
+    })
+      .then(data => {
+        console.log(`Response from API change image: ${JSON.stringify(data)}`);
+        user = {...userLogged, image: {uri: imageUrl}};
+        setUserLogged(user);
+        _storeData('user', JSON.stringify(user));
+        Alert.alert(
+          `Perfecto ${userLogged.name}!`,
+          `Hemos actualizado tu imagen.`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                console.log('OK pressed');
+              },
+            },
+          ],
+        );
+        console.log(`Converted on image update: ${JSON.stringify(userLogged)}`);
+        setImageModalVisible(!imageModalVisible);
+      })
+      .catch(err => {
+        console.log(err);
+        Alert.alert(
+          `Lo sentimos ${userLogged.name}!`,
+          `Hubo un error al actualizar tu imagen. Por favor intenta mas tarde`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                console.log('OK PRESSED');
+              },
+            },
+          ],
+        );
+      });
+  };
+  const uploadVideo = file => {
+    const data = new FormData();
+    data.append('file', file);
+    data.append('upload_preset', VIDEO_UPLOAD_PRESET);
+    data.append('cloud_name', CLOUD_NAME);
+
+    try {
+      fetch(CLOUDINARY_VIDEO_URL, {
+        method: 'post',
+        body: data,
+      })
+        .then(res => res.json())
+        .then(receivedVideo => {
+          console.log(receivedVideo);
+          console.log(receivedVideo.url);
+          //submitData(receivedVideo.secure_url);
+        });
+    } catch (error) {
+      console.log(`Error: ${error}`);
+    }
+  };
+  const addMedia = () => {
+    ImagePicker.openPicker({
+      mediaType: 'video',
+    }).then(video => {
+      if (video) {
+        console.log(JSON.stringify(video));
+        let newFile = {
+          uri: video.path,
+          type: `video/${video.path.split('.')[2]}`,
+          name: `${userLogged.email}_video.${video.path.split('.')[2]}`,
+        };
+        console.log(JSON.stringify(newFile));
+        uploadVideo(newFile);
+      } else console.log('Error video not found');
+    });
   };
 
   const renderList = item => {
@@ -91,11 +185,13 @@ function MediaChat({navigation, route}) {
       </View>
       <Button
         style={styles.button}
-        icon="send"
+        icon="camera"
         mode="contained"
         onPress={() => {
           addMedia();
-        }}></Button>
+        }}>
+        SUBE UN VIDEO
+      </Button>
     </SafeAreaView>
   );
 }
@@ -163,13 +259,12 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   button: {
+    width: '90%',
     position: 'absolute',
     bottom: 30,
     right: 30,
-    width: 30,
-    height: 60,
     paddingLeft: 18,
-    borderRadius: 100,
+    borderRadius: 8,
     backgroundColor: 'green',
     display: 'flex',
     justifyContent: 'center',

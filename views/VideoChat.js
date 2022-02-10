@@ -33,12 +33,18 @@ function VideoChat({route}) {
     todayDate.getTime() - todayDate.getTimezoneOffset() * 60 * 1000,
   );
   let thisMonth = appDate.getMonth() === todayDate.getMonth();
-  let thisDay = todayDate.getDate() === appDate.getDate();
+  let thisDay = todayDate.getUTCDate() === appDate.getUTCDate();
   let notToday =
     !thisMonth || (thisMonth && appDate.getDate() > todayDate.getDate());
   let today = thisMonth && thisDay;
   let now = todayDate.getUTCHours() >= appDate.getUTCHours();
   let missingHours = appDate.getUTCHours() - todayDate.getUTCHours();
+  console.log('today Date: ', todayDate);
+  console.log('app date: ', appDate);
+  console.log('today day: ', todayDate.getUTCDate());
+  console.log('today month: ', todayDate.getMonth());
+  console.log('app day: ', appDate.getUTCDate());
+  console.log('app month: ', appDate.getMonth());
   var myPeer = null;
   var call = null;
   const room = item._id;
@@ -134,12 +140,7 @@ function VideoChat({route}) {
         setComunication();
         console.log('Entered useFocusEffect setting comunication');
       }
-      console.log('today Date: ', todayDate);
-      console.log('app date: ', appDate);
-      console.log('today day: ', todayDate.getDate());
-      console.log('today month: ', todayDate.getMonth());
-      console.log('app day: ', appDate.getDate());
-      console.log('app month: ', appDate.getMonth());
+
       return () => {
         // Do something when the screen is unfocused
         if (call) {
@@ -148,7 +149,7 @@ function VideoChat({route}) {
           console.log('call.close called from leaving the view');
         }
         if (myPeer) myPeer.destroy();
-        socket.emit('leave_room', room);
+        if (socket) socket.emit('leave_room', room);
         console.log('video chat screen unfocused');
       };
     }, []),
@@ -189,15 +190,39 @@ function VideoChat({route}) {
           style={{
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height,
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
           <View style={styles.frontNoStream}>
             {lStream && (
-              <RTCView
-                objectFit="cover"
-                style={{width: '100%', height: '100%'}}
-                streamURL={lStream.toURL()}
-                mirror={true}
-              />
+              <>
+                <RTCView
+                  objectFit="cover"
+                  style={{width: '100%', height: '100%'}}
+                  streamURL={lStream.toURL()}
+                  mirror={true}
+                />
+                <View
+                  style={{
+                    position: 'relative',
+                    bottom: Dimensions.get('window').height / 1.5,
+                    width: '80%',
+                    backgroundColor: 'rgba(4, 118, 208, 0.9)',
+                    justifyContent: 'center',
+                    borderRadius: 10,
+                    padding: 20,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      textAlign: 'center',
+                      fontWeight: '700',
+                      color: 'white',
+                    }}>
+                    ¡Espera a que el otro usuario se conecte!
+                  </Text>
+                </View>
+              </>
             )}
           </View>
         </View>
@@ -271,15 +296,6 @@ function VideoChat({route}) {
               missingHours > 1 ? 'horas' : 'hora'
             } para que el terapeuta pueda iniciar la llamada. ¡Regresa mas tarde!`}</Text>
           )}
-          {today && now && (
-            <Text style={styles.legend}>{`Es hora de tu cita!`}</Text>
-          )}
-          {today && now && (
-            <Text
-              style={
-                styles.legend
-              }>{`!Espera a que el terapeuta inicie la llamada!`}</Text>
-          )}
         </View>
       )}
     </SafeAreaView>
@@ -301,7 +317,8 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     width: Dimensions.get('screen').width,
-
+    paddingRight: 20,
+    paddingLeft: 20,
     height: CONTAINER_HEIGHT,
     backgroundColor: 'transparent',
     justifyContent: 'center',
@@ -348,6 +365,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     zIndex: 100,
+    alignItems: 'center',
   },
   backStream: {
     width: '100%',

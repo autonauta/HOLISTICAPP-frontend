@@ -17,8 +17,8 @@ import {
   secondaryColor,
   textColor2,
   tertiaryColor,
-  CLOUDINARY_URL,
-  UPLOAD_PRESET,
+  CLOUDINARY_IMAGE_URL,
+  IMAGE_UPLOAD_PRESET,
   CLOUD_NAME,
 } from '../../config';
 import {Button} from 'react-native-paper';
@@ -103,11 +103,11 @@ function ImageChange({
   const uploadImage = img => {
     const data = new FormData();
     data.append('file', img);
-    data.append('upload_preset', UPLOAD_PRESET);
+    data.append('upload_preset', IMAGE_UPLOAD_PRESET);
     data.append('cloud_name', CLOUD_NAME);
 
     try {
-      fetch(CLOUDINARY_URL, {
+      fetch(CLOUDINARY_IMAGE_URL, {
         method: 'post',
         body: data,
       })
