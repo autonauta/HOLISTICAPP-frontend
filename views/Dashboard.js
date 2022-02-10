@@ -96,10 +96,9 @@ function Dashboard({route, navigation}) {
           : item.type == 'online'
           ? tertiaryColor
           : secondaryColor,
-      fontSize: 30,
+      fontSize: APOINTEE_NAME_SIZE,
       fontWeight: '700',
     };
-    const iconSize = 30;
     return (
       <Card style={styles.myCard} onPress={() => navigateTo(item)}>
         <View style={styles.cardView}>
@@ -125,21 +124,21 @@ function Dashboard({route, navigation}) {
                   marginTop: 10,
                 }}
                 name="connected-tv"
-                size={iconSize}
+                size={ICON_SIZE}
                 color={markColor}
               />
             ) : item.type === 'presencial' ? (
               <Icon
                 style={{alignSelf: 'flex-start', marginLeft: 10, marginTop: 10}}
                 name="group"
-                size={iconSize}
+                size={ICON_SIZE}
                 color={markColor}
               />
             ) : (
               <Icon
                 style={{alignSelf: 'flex-start', marginLeft: 10, marginTop: 10}}
                 name="timer-off"
-                size={iconSize}
+                size={ICON_SIZE}
                 color={markColor}
               />
             )}
@@ -192,32 +191,42 @@ function Dashboard({route, navigation}) {
   );
 }
 
-var CONTAINER_HEIGHT =
-  Dimensions.get('screen').height - StatusBar.currentHeight;
-var CARD_HEIGHT = 160;
-var CARD_TITLE = 18;
-var CARD_SUBTITLE = 15;
-var NAME_SIZE = 40;
+//RESPONSIVE STYLES BASED ON PIXEL RATIO
+var CARD_HEIGHT;
+var CARD_TITLE;
+var CARD_SUBTITLE;
+var APOINTEE_NAME_SIZE;
+var TITLE_FONT_SIZE;
+var ICON_SIZE;
 
-var CONTAINER_HEIGHT =
-  Dimensions.get('screen').height - StatusBar.currentHeight;
-
-if (PixelRatio.get() <= 2) {
-  CARD_HEIGHT = 80;
-  CARD_TITLE = 16;
+//Telefonos con resoluciones medias
+if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 3.6) {
+  CARD_HEIGHT = 160;
+  CARD_TITLE = 18;
   CARD_SUBTITLE = 15;
-  NAME_SIZE = 30;
+  APOINTEE_NAME_SIZE = 30;
+  TITLE_FONT_SIZE = 30;
+  ICON_SIZE = 26;
+}
+//Telefonos con resoluciones bajas
+if (PixelRatio.get() >= 1 && PixelRatio.get() < 2.2) {
+  CARD_HEIGHT = 125;
+  CARD_TITLE = 14;
+  CARD_SUBTITLE = 14;
+  APOINTEE_NAME_SIZE = 24;
+  TITLE_FONT_SIZE = 25;
+  ICON_SIZE = 22;
 }
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: mainColor,
-    height: CONTAINER_HEIGHT,
     alignItems: 'center',
     paddingBottom: 10,
   },
   title: {
     color: tertiaryColor,
-    fontSize: 35,
+    fontSize: TITLE_FONT_SIZE,
     fontWeight: '600',
     padding: 10,
     alignSelf: 'flex-start',
@@ -283,7 +292,7 @@ const styles = StyleSheet.create({
     color: textColor1,
     fontSize: CARD_TITLE,
   },
-  cardSubtitle: {color: textColor1, fontSize: 22},
+  cardSubtitle: {color: textColor1, fontSize: CARD_SUBTITLE},
   noAppointmentsText: {
     color: textColor2,
   },

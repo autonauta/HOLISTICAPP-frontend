@@ -152,23 +152,8 @@ var BUTTON_MARGIN_TOP;
 var INPUT_MARGIN_BOTTOM;
 var TEXT_BUTTON_FONT_SIZE;
 
-//Telefonos con resoluciones altas
-if (PixelRatio.get() >= 2.8 && PixelRatio.get() < 3.6) {
-  TITLE_FONT_SIZE = 30;
-  TITLE_MARGIN_BOTTOM = 0;
-  LABEL_FONT_SIZE = 17;
-  IMAGE_SIZE = 70;
-  IMAGE_MARGIN_BOTTOM = 0;
-  INPUT_WIDTH = '90%';
-  INPUT_PADDING = 6;
-  TEXTINPUT_FONT_SIZE = 18;
-  BUTTON_WIDTH = '90%';
-  BUTTON_MARGIN_TOP = 0;
-  INPUT_MARGIN_BOTTOM = 10;
-  TEXT_BUTTON_FONT_SIZE = 18;
-}
 //Telefonos con resoluciones medianas
-if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 2.8) {
+if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 3.6) {
   TITLE_FONT_SIZE = 30;
   TITLE_MARGIN_BOTTOM = 0;
   LABEL_FONT_SIZE = 17;

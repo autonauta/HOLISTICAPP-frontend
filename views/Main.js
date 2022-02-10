@@ -210,6 +210,8 @@ function Main({navigation, route}) {
     </SafeAreaView>
   );
 }
+
+//RESPONSIVE STYLES BASED ON PIXEL RATIO
 var TITLE_FONT_SIZE;
 var TITLE_HEIGHT;
 var PROMOS_HEIGHT;
@@ -219,15 +221,6 @@ var CARD_TITLE;
 var CARD_SUBTITLE;
 var STARS_SIZE;
 var ICON_SIZE;
-
-var STATUS_BAR_HEIGHT = StatusBar.currentHeight;
-var CONTAINER_HEIGHT =
-  Dimensions.get('screen').height - StatusBar.currentHeight;
-
-if (PixelRatio.get() <= 2) {
-}
-
-//RESPONSIVE STYLES BASED ON PIXEL RATIO
 
 //Telefonos con resoluciones altas
 if (PixelRatio.get() >= 2.8 && PixelRatio.get() < 3.6) {
@@ -269,7 +262,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: mainColor,
-    height: CONTAINER_HEIGHT,
     alignItems: 'center',
   },
   promos: {

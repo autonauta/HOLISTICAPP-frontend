@@ -8,6 +8,7 @@ import {
   Dimensions,
   ActivityIndicator,
   StatusBar,
+  PixelRatio,
 } from 'react-native';
 import {Button} from 'react-native-paper';
 import {AutoScrollFlatList} from 'react-native-autoscroll-flatlist';
@@ -205,14 +206,39 @@ function Chat({route}) {
     </SafeAreaView>
   );
 }
-var CONTAINER_HEIGHT = Dimensions.get('screen').height;
-var TITLE_FONT_SIZE = 35;
-var TITLE_HEIGHT = 50;
+var TITLE_FONT_SIZE;
+var MESSAGE_SIZE;
+var TIME_SIZE;
+var TEXT_INPUT_WIDTH;
+var TEXT_INPUT_FONT_SIZE;
+var BUTTON_WIDTH;
+var BUTTON_HEIGHT;
+
+//Telefonos con resoluciones medianas
+if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 3.6) {
+  TITLE_FONT_SIZE = 30;
+  MESSAGE_SIZE = 18;
+  TIME_SIZE = 16;
+  TEXT_INPUT_WIDTH = '98%';
+  TEXT_INPUT_FONT_SIZE = 16;
+  BUTTON_WIDTH = '15%';
+  BUTTON_HEIGHT = '90%';
+}
+//Telefonos con resoluciones pequeñas
+if (PixelRatio.get() >= 1 && PixelRatio.get() < 2.2) {
+  TITLE_FONT_SIZE = 25;
+  MESSAGE_SIZE = 14;
+  TIME_SIZE = 12;
+  TEXT_INPUT_WIDTH = '95%';
+  TEXT_INPUT_FONT_SIZE = 14;
+  BUTTON_WIDTH = '5%';
+  BUTTON_HEIGHT = '90%';
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    height: CONTAINER_HEIGHT,
     alignItems: 'center',
   },
   title: {
@@ -220,7 +246,6 @@ const styles = StyleSheet.create({
     fontSize: TITLE_FONT_SIZE,
     fontWeight: '600',
     paddingLeft: 10,
-    height: TITLE_HEIGHT,
     backgroundColor: mainColor,
     width: '100%',
     justifyContent: 'center',
@@ -230,28 +255,38 @@ const styles = StyleSheet.create({
     paddingTop: 7,
     width: Dimensions.get('window').width,
   },
+
+  footer: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    height: 70,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
   textInputView: {
-    width: '80%',
+    flex: 100,
     alignItems: 'center',
   },
   textInput: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 20,
-    padding: 5,
-    marginLeft: 10,
+    width: TEXT_INPUT_WIDTH,
+    height: '80%',
+    borderRadius: 15,
     paddingLeft: 10,
-    backgroundColor: textColor1,
+    backgroundColor: 'lightgrey',
     color: 'black',
-    fontSize: 16,
+    fontSize: TEXT_INPUT_FONT_SIZE,
     elevation: 3,
   },
   button: {
-    width: '15%',
-    height: '100%',
+    flex: 0.1,
+    height: BUTTON_HEIGHT,
     paddingLeft: 20,
     marginRight: 5,
-    borderRadius: 100,
+    borderRadius: 20,
     backgroundColor: 'green',
     display: 'flex',
     justifyContent: 'center',
@@ -290,23 +325,14 @@ const styles = StyleSheet.create({
   },
   messageText: {
     color: 'white',
-    fontSize: 17,
+    fontSize: MESSAGE_SIZE,
   },
   messageTime: {
     alignSelf: 'flex-end',
-    color: textColor2,
+    color: 'gray',
+    fontSize: TIME_SIZE,
   },
-  footer: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: '100%',
-    height: 70,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
+
   userConnected: {
     fontSize: 18,
     fontWeight: '700',

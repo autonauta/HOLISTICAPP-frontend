@@ -100,7 +100,7 @@ function TherapistDashboard({route, navigation}) {
           : item.type == 'online'
           ? tertiaryColor
           : secondaryColor,
-      fontSize: APOINTEE_SIZE,
+      fontSize: APOINTEE_NAME_SIZE,
       fontWeight: '700',
     };
 
@@ -123,23 +123,23 @@ function TherapistDashboard({route, navigation}) {
           <View style={styles.typeOf}>
             {item.type === 'online' ? (
               <Icon
-                style={{alignSelf: 'flex-start', marginLeft: 10}}
+                style={{alignSelf: 'flex-start', marginLeft: 10, marginTop: 10}}
                 name="connected-tv"
-                size={iconSize}
+                size={ICON_SIZE}
                 color={textColor2}
               />
             ) : item.type === 'presencial' ? (
               <Icon
-                style={{alignSelf: 'flex-start', marginLeft: 10}}
+                style={{alignSelf: 'flex-start', marginLeft: 10, marginTop: 10}}
                 name="group"
-                size={iconSize}
+                size={ICON_SIZE}
                 color={textColor2}
               />
             ) : (
               <Icon
-                style={{alignSelf: 'flex-start', marginLeft: 10}}
+                style={{alignSelf: 'flex-start', marginLeft: 10, marginTop: 10}}
                 name="timer-off"
-                size={iconSize}
+                size={ICON_SIZE}
                 color={textColor2}
               />
             )}
@@ -180,31 +180,31 @@ function TherapistDashboard({route, navigation}) {
   );
 }
 
-var TITLE_FONT_SIZE = 35;
-var CARD_HEIGHT = 180;
-var CARD_TITLE = 20;
-var CARD_SUBTITLE = 15;
-var APOINTEE_SIZE = 40;
-if (PixelRatio > 2 && PixelRatio <= 3) {
-  var TITLE_FONT_SIZE = 35;
-  var CARD_HEIGHT = 18;
-  var CARD_TITLE = 20;
-  var CARD_SUBTITLE = 15;
-  var APOINTEE_SIZE = 40;
-}
-if (PixelRatio > 1.4 && PixelRatio <= 2) {
-  TITLE_FONT_SIZE = 25;
-  CARD_HEIGHT = 95;
-  CARD_TITLE = 16;
-  CARD_SUBTITLE = 16;
-  APOINTEE_SIZE = 20;
-}
-if (PixelRatio <= 1.4) {
+//RESPONSIVE STYLES BASED ON PIXEL RATIO
+var CARD_HEIGHT;
+var CARD_TITLE;
+var CARD_SUBTITLE;
+var APOINTEE_NAME_SIZE;
+var TITLE_FONT_SIZE;
+var ICON_SIZE;
+
+//Telefonos con resoluciones medias
+if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 3.6) {
+  CARD_HEIGHT = 160;
+  CARD_TITLE = 18;
+  CARD_SUBTITLE = 15;
+  APOINTEE_NAME_SIZE = 30;
   TITLE_FONT_SIZE = 30;
-  CARD_HEIGHT = 60;
-  CARD_TITLE = 16;
-  CARD_SUBTITLE = 12;
-  APOINTEE_SIZE = 40;
+  ICON_SIZE = 26;
+}
+//Telefonos con resoluciones bajas
+if (PixelRatio.get() >= 1 && PixelRatio.get() < 2.2) {
+  CARD_HEIGHT = 120;
+  CARD_TITLE = 14;
+  CARD_SUBTITLE = 14;
+  APOINTEE_NAME_SIZE = 24;
+  TITLE_FONT_SIZE = 25;
+  ICON_SIZE = 22;
 }
 const styles = StyleSheet.create({
   container: {
@@ -220,7 +220,6 @@ const styles = StyleSheet.create({
     padding: 10,
     alignSelf: 'flex-start',
     marginLeft: 10,
-    marginBottom: 20,
   },
   flatList: {
     width: '96%',
@@ -238,63 +237,53 @@ const styles = StyleSheet.create({
   },
   cardTextOnline: {
     width: '100%',
-    height: '30%',
+    height: '25%',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     backgroundColor: tertiaryColor,
     paddingLeft: 10,
     paddingRight: 10,
-    paddingTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   cardTextPresencial: {
     width: '100%',
-    height: '30%',
+    height: '25%',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     backgroundColor: secondaryColor,
     paddingLeft: 10,
     paddingRight: 10,
-    paddingTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   cardTextAtemporal: {
     width: '100%',
-    height: '30%',
+    height: '25%',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
-    backgroundColor: tertiaryColor,
+    backgroundColor: 'grey',
     paddingLeft: 10,
     paddingRight: 10,
-    paddingTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   typeOf: {
     width: '100%',
-    height: '70%',
-    justifyContent: 'center',
+    height: '100%',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   cardTitle: {
     color: textColor1,
     fontSize: CARD_TITLE,
-    justifyContent: 'center',
   },
   cardSubtitle: {color: textColor1, fontSize: CARD_SUBTITLE},
-  cardApointeeName: {
-    color: tertiaryColor,
-    fontSize: APOINTEE_SIZE,
-    fontWeight: '700',
-  },
   noAppointmentsText: {
-    marginTop: 30,
-    color: textColor1,
+    color: textColor2,
   },
 });
 
