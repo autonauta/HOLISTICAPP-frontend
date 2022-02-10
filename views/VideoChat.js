@@ -80,8 +80,8 @@ function VideoChat({route}) {
     const stream = await mediaDevices.getUserMedia({
       audio: true,
       video: {
-        width: Dimensions.get('window').height,
-        height: Dimensions.get('window').width,
+        width: Dimensions.get('window').height / 2,
+        height: Dimensions.get('window').width / 2,
         frameRate: {
           ideal: 60,
           min: 15,

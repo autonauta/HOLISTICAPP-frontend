@@ -28,11 +28,11 @@ function MediaChat({navigation, route}) {
   const getMessages = () => {
     setLoading(true);
     try {
-      fetch(`${API_URL}/messages/${item._id}`)
+      fetch(`${API_URL}/messages/media/${item._id}`)
         .then(res => res.json())
         .then(response => {
           if (response.error) {
-            console.error(`${response.error}`);
+            console.error(`${response.message}`);
             setLoading(false);
           } else if (response) {
             setMessageList(response);
@@ -43,57 +43,41 @@ function MediaChat({navigation, route}) {
       console.error(error);
     }
   };
-
+  const makeId = () => {
+    var result = '';
+    var characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < 16; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  };
   const submitData = videoUrl => {
     const myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('xAuthToken', token);
-    console.log(`From submit data object to send to API: ${imageUrl}`);
-    fetch(`${API_URL}/profile/edit`, {
+    const messageData = {
+      key: makeId(),
+      TherapistId: item.userIdTherapist,
+      ClientId: item.userIdApointee,
+      room: item._id,
+      author: userLogged._id,
+      media: {uri: videoUrl},
+      time: new Date(Date.now()).getTime(),
+    };
+    fetch(`${API_URL}/messages/media`, {
       method: 'post',
       headers: myHeaders,
-      body: JSON.stringify({
-        author: userLogged._id,
-        room: item._id,
-        video: {uri: videoUrl},
-        time: new Date(Date.now()).getTime(),
-      }),
+      body: JSON.stringify(messageData),
     })
       .then(data => {
         console.log(`Response from API change image: ${JSON.stringify(data)}`);
-        user = {...userLogged, image: {uri: imageUrl}};
-        setUserLogged(user);
-        _storeData('user', JSON.stringify(user));
-        Alert.alert(
-          `Perfecto ${userLogged.name}!`,
-          `Hemos actualizado tu imagen.`,
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                console.log('OK pressed');
-              },
-            },
-          ],
-        );
-        console.log(`Converted on image update: ${JSON.stringify(userLogged)}`);
-        setImageModalVisible(!imageModalVisible);
+        getMessages();
       })
       .catch(err => {
         console.log(err);
-        Alert.alert(
-          `Lo sentimos ${userLogged.name}!`,
-          `Hubo un error al actualizar tu imagen. Por favor intenta mas tarde`,
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                console.log('OK PRESSED');
-              },
-            },
-          ],
-        );
       });
   };
   const uploadVideo = file => {
@@ -111,7 +95,7 @@ function MediaChat({navigation, route}) {
         .then(receivedVideo => {
           console.log(receivedVideo);
           console.log(receivedVideo.url);
-          //submitData(receivedVideo.secure_url);
+          submitData(receivedVideo.secure_url);
         });
     } catch (error) {
       console.log(`Error: ${error}`);
@@ -150,7 +134,7 @@ function MediaChat({navigation, route}) {
     );
   };
   useEffect(() => {
-    //getMessages();
+    getMessages();
   }, []);
   return (
     <SafeAreaView style={styles.container}>
