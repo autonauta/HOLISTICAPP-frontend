@@ -13,6 +13,8 @@ import {mainColor} from '../config';
 
 function VideoPlayer({route, navigation}) {
   const item = route.params.item;
+  const uri = {uri: item.media.uri.replace('.mp4', '.m3u8'), type: 'm3u8'};
+  console.log('New uri: ', uri);
   const videoPlayer = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -88,7 +90,7 @@ function VideoPlayer({route, navigation}) {
           ref={videoPlayer}
           resizeMode={screenType}
           onFullScreen={isFullScreen}
-          source={item.media}
+          source={uri}
           style={styles.mediaPlayer}
           volume={10}
         />

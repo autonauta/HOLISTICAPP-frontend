@@ -7,7 +7,6 @@ import {
   Dimensions,
   StatusBar,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import {AutoScrollFlatList} from 'react-native-autoscroll-flatlist';
 import {Button} from 'react-native-paper';
@@ -29,6 +28,9 @@ function MediaChat({navigation, route}) {
   const [loading, setLoading] = useState(false);
   const {token, userLogged, item} = route.params;
   const [backgroundMode, setbackgroundMode] = useState(true);
+  const [compressProgress, setCompressProgress] = useState(0);
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const getMessages = () => {
     setLoading(true);
     try {
@@ -79,14 +81,18 @@ function MediaChat({navigation, route}) {
       body: JSON.stringify(messageData),
     })
       .then(data => {
-        console.log(`Response from API change image: ${JSON.stringify(data)}`);
-        getMessages();
+        if (data.error) console.error(data.message);
+        else {
+          console.log('Messages received');
+          getMessages();
+        }
       })
       .catch(err => {
         console.log(err);
       });
   };
   const compressVideo = async videoPath => {
+    setIsCompressing(true);
     console.log(videoPath);
     const result = await Video.compress(
       videoPath,
@@ -97,12 +103,15 @@ function MediaChat({navigation, route}) {
       progress => {
         if (backgroundMode) {
           console.log('Compression Progress: ', progress);
+          setCompressProgress(progress);
         } else {
-          setCompressingProgress(progress);
+          setCompressProgress(progress);
         }
       },
     );
     if (result) {
+      setIsCompressing(false);
+      setCompressProgress(0);
       const realPath = 'file:///' + result.slice(7);
       console.log('REAL PATH: ', realPath);
       let newFile = {
@@ -112,9 +121,13 @@ function MediaChat({navigation, route}) {
       };
       console.log(JSON.stringify(newFile));
       uploadVideo(newFile);
+    } else {
+      setCompressProgress(0);
+      setIsCompressing(false);
     }
   };
   const uploadVideo = file => {
+    setIsUploading(true);
     const data = new FormData();
     data.append('file', file);
     data.append('upload_preset', VIDEO_UPLOAD_PRESET);
@@ -126,12 +139,14 @@ function MediaChat({navigation, route}) {
       })
         .then(res => res.json())
         .then(receivedVideo => {
+          setIsUploading(false);
           console.log(receivedVideo);
           console.log(receivedVideo.url);
           submitData(receivedVideo.secure_url);
         });
     } catch (error) {
       console.log(`Error: ${error}`);
+      setIsUploading(false);
     }
   };
   const addMedia = () => {
@@ -155,7 +170,7 @@ function MediaChat({navigation, route}) {
         }}>
         <View
           style={
-            item.author === userLogged.name
+            item.author === userLogged._id
               ? styles.messageBubbleMe
               : styles.messageBubbleYou
           }>
@@ -190,7 +205,7 @@ function MediaChat({navigation, route}) {
           flex: 1,
           width: '100%',
           alignItems: 'center',
-          paddingBottom: 60,
+          paddingBottom: 100,
         }}>
         <Text style={styles.title}>Media Chat</Text>
         {loading ? (
@@ -208,15 +223,54 @@ function MediaChat({navigation, route}) {
           />
         )}
       </View>
-      <Button
-        style={styles.button}
-        icon="camera"
-        mode="contained"
-        onPress={() => {
-          addMedia();
-        }}>
-        SUBE UN VIDEO
-      </Button>
+
+      {!isCompressing && !isUploading && (
+        <Button
+          style={styles.button}
+          icon="camera"
+          mode="contained"
+          onPress={() => {
+            addMedia();
+          }}>
+          SUBE UN VIDEO
+        </Button>
+      )}
+      {isCompressing && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(4, 118, 208, 0.9)',
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={{color: 'white', fontSize: 30}}>
+            Comprimiendo video...
+          </Text>
+          <Text style={{color: 'white', fontSize: 30}}>
+            {Math.trunc(compressProgress * 100)} %
+          </Text>
+        </View>
+      )}
+      {isUploading && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(4, 118, 208, 0.9)',
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={{color: 'white', fontSize: 30}}>Subiendo video...</Text>
+          <ActivityIndicator size="large" color="white" />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -230,6 +284,7 @@ var TITLE_HEIGHT = 50;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingBottom: 20,
     backgroundColor: mainColor,
     height: CONTAINER_HEIGHT,
     alignItems: 'center',
@@ -253,6 +308,7 @@ const styles = StyleSheet.create({
   messageContainer: {
     backgroundColor: 'transparent',
     width: '100%',
+    elevation: 0,
   },
   messageBubbleMe: {
     width: '80%',
@@ -285,10 +341,6 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '90%',
-    position: 'absolute',
-    bottom: 30,
-    right: 30,
-    paddingLeft: 18,
     borderRadius: 8,
     backgroundColor: 'green',
     display: 'flex',

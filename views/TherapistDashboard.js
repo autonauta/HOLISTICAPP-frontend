@@ -47,12 +47,12 @@ function TherapistDashboard({route, navigation}) {
       .then(response => response.json())
       .then(res => {
         const data = res;
-        console.log(data);
+        console.log('From get appointments: ', data);
         setAppointments(data);
         setLoading(false);
       })
       .catch(error => {
-        console.log(error);
+        console.log('From catch error: ', error);
       });
   };
   useFocusEffect(
