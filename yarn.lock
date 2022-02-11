@@ -5886,6 +5886,11 @@ react-native-codegen@^0.0.6:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
+react-native-compressor@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/react-native-compressor/-/react-native-compressor-1.5.1.tgz#6031152ab9571a300b412a15afce373fa8764999"
+  integrity sha512-hljt8iCyyAVUiejZUQOEnOIQ38xgj8W+Pu710yVpEsfK4xZJFFxSjdwjK810i32qYXBV+y+4MJWqfBk7SPYMAg==
+
 react-native-credit-card-form-ui@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/react-native-credit-card-form-ui/-/react-native-credit-card-form-ui-1.2.5.tgz#7decdaa975dcf8a7f011a49f340af66bd4b6880b"

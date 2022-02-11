@@ -1,5 +1,6 @@
 package com.holisticapp;
 
+import com.reactnativecompressor.CompressorPackage;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;

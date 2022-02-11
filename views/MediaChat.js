@@ -14,6 +14,7 @@ import {Button} from 'react-native-paper';
 import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Card} from 'react-native-paper';
+import {Video, getRealPath} from 'react-native-compressor';
 import {
   API_URL,
   mainColor,
@@ -27,6 +28,7 @@ function MediaChat({navigation, route}) {
   const [messageList, setMessageList] = useState([]);
   const [loading, setLoading] = useState(false);
   const {token, userLogged, item} = route.params;
+  const [backgroundMode, setbackgroundMode] = useState(true);
   const getMessages = () => {
     setLoading(true);
     try {
@@ -84,12 +86,39 @@ function MediaChat({navigation, route}) {
         console.log(err);
       });
   };
+  const compressVideo = async videoPath => {
+    console.log(videoPath);
+    const result = await Video.compress(
+      videoPath,
+      {
+        compressionMethod: 'auto',
+        minimumFileSizeForCompress: 5,
+      },
+      progress => {
+        if (backgroundMode) {
+          console.log('Compression Progress: ', progress);
+        } else {
+          setCompressingProgress(progress);
+        }
+      },
+    );
+    if (result) {
+      const realPath = 'file:///' + result.slice(7);
+      console.log('REAL PATH: ', realPath);
+      let newFile = {
+        uri: realPath,
+        type: `video/${realPath.split('.')[2]}`,
+        name: `${userLogged.email}_video.${realPath.split('.')[2]}`,
+      };
+      console.log(JSON.stringify(newFile));
+      uploadVideo(newFile);
+    }
+  };
   const uploadVideo = file => {
     const data = new FormData();
     data.append('file', file);
     data.append('upload_preset', VIDEO_UPLOAD_PRESET);
     data.append('cloud_name', CLOUD_NAME);
-
     try {
       fetch(CLOUDINARY_VIDEO_URL, {
         method: 'post',
@@ -111,13 +140,7 @@ function MediaChat({navigation, route}) {
     }).then(video => {
       if (video) {
         console.log(JSON.stringify(video));
-        let newFile = {
-          uri: video.path,
-          type: `video/${video.path.split('.')[2]}`,
-          name: `${userLogged.email}_video.${video.path.split('.')[2]}`,
-        };
-        console.log(JSON.stringify(newFile));
-        uploadVideo(newFile);
+        compressVideo(video.path);
       } else console.log('Error video not found');
     });
   };
