@@ -13,7 +13,7 @@ import {
   StatusBar,
   SafeAreaView,
 } from 'react-native';
-import {Card, Button} from 'react-native-paper';
+import {Card} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Navbar from '../views/Navbar';
@@ -222,20 +222,8 @@ var CARD_SUBTITLE;
 var STARS_SIZE;
 var ICON_SIZE;
 
-//Telefonos con resoluciones altas
-if (PixelRatio.get() >= 2.8 && PixelRatio.get() < 3.6) {
-  TITLE_FONT_SIZE = 31;
-  TITLE_HEIGHT = 40;
-  PROMOS_HEIGHT = 140;
-  CARD_HEIGHT = 160;
-  IMAGE_HEIGHT = 100;
-  CARD_TITLE = 28;
-  CARD_SUBTITLE = 15;
-  ICON_SIZE = 25;
-  STARS_SIZE = 20;
-}
 //Telefonos con resoluciones medias
-if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 2.8) {
+if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 3.6) {
   TITLE_FONT_SIZE = 30;
   TITLE_HEIGHT = 40;
   PROMOS_HEIGHT = 140;

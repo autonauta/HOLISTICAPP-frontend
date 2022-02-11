@@ -6,13 +6,13 @@ import {
   Text,
   SafeAreaView,
   Alert,
-  Image,
+  StatusBar,
   TextInput,
   PixelRatio,
 } from 'react-native';
 import {Button} from 'react-native-paper';
 import {CommonActions} from '@react-navigation/native';
-import {API_URL, mainColor, secondaryColor, textColor1} from '../config';
+import {API_URL, mainColor, secondaryColor, tertiaryColor} from '../config';
 
 const iconImage = require('../assets/icon.png');
 
@@ -61,8 +61,13 @@ function passwordRecovery({navigation}) {
   };
   return (
     <SafeAreaView style={styles.container}>
-      {/* <Image source={iconImage} style={styles.image}></Image> */}
-      <Text style={styles.title}>Recuperación de contraseña</Text>
+      <StatusBar
+        animated={true}
+        backgroundColor={mainColor}
+        barStyle={'default'}
+        showHideTransition={'none'}
+      />
+      <Text style={styles.title}>holisticapp</Text>
       <View style={styles.textInputView}>
         <Text style={styles.label}>correo</Text>
         <TextInput
@@ -84,9 +89,18 @@ function passwordRecovery({navigation}) {
     </SafeAreaView>
   );
 }
-let titleFontSize = 35;
-if (PixelRatio.get() <= 2) {
-  titleFontSize = 20;
+//RESPONSIVE STYLES BASED ON PIXEL RATIO
+var TITLE_FONT_SIZE;
+var TITLE_HEIGHT;
+
+//Telefonos con resoluciones medias
+if (PixelRatio.get() >= 2.2 && PixelRatio.get() < 3.6) {
+  TITLE_FONT_SIZE = 30;
+  TITLE_HEIGHT = 40;
+}
+//Telefonos con resoluciones bajas
+if (PixelRatio.get() >= 1 && PixelRatio.get() < 2.2) {
+  TITLE_FONT_SIZE = 25;
 }
 
 const styles = StyleSheet.create({
@@ -98,11 +112,12 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   title: {
-    width: '60%',
-    color: secondaryColor,
-    fontSize: titleFontSize,
-    marginBottom: 30,
-    textAlign: 'center',
+    color: tertiaryColor,
+    fontSize: TITLE_FONT_SIZE,
+    fontWeight: '600',
+    alignSelf: 'flex-start',
+    marginLeft: 10,
+    height: TITLE_HEIGHT,
   },
   textInputView: {
     width: '90%',

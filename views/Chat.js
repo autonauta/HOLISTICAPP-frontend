@@ -134,7 +134,7 @@ function Chat({route}) {
               ? styles.messageBubbleMe
               : styles.messageBubbleYou
           }>
-          <Text style={styles.messageText}>{item.media}</Text>
+          <Text style={styles.messageText}>{item.message}</Text>
           <Text style={styles.messageTime}>{item.time}</Text>
         </View>
       </View>

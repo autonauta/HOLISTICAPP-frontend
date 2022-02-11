@@ -19,6 +19,7 @@ import Product from './views/store/Product';
 import Chat from './views/Chat';
 import VideoChat from './views/VideoChat';
 import MediaChat from './views/MediaChat';
+import VideoPlayer from './views/VideoPlayer';
 import Atemporal from './views/Atemporal';
 import TherapistDashboard from './views/TherapistDashboard';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -58,6 +59,7 @@ function App() {
         <Stack.Screen name="Chat" component={Chat} />
         <Stack.Screen name="VideoChat" component={VideoChat} />
         <Stack.Screen name="MediaChat" component={MediaChat} />
+        <Stack.Screen name="VideoPlayer" component={VideoPlayer} />
         <Stack.Screen name="Atemporal" component={Atemporal} />
       </Stack.Navigator>
     </NavigationContainer>

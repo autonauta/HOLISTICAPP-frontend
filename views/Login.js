@@ -47,7 +47,8 @@ function Login({navigation}) {
   //Function for posting the data to the backend server
   const submitData = async () => {
     setLoggingIn(true);
-    const loginData = {email, password};
+    const emailLower = email.toLocaleLowerCase();
+    const loginData = {email: emailLower, password};
     try {
       const res = await fetch(`${API_URL}/auth`, {
         method: 'post',
@@ -58,7 +59,9 @@ function Login({navigation}) {
       });
       const data = await res.json();
       if (data.error) {
-        showAlert(data.error);
+        setLoggingIn(false);
+        console.log('From server response: ', data.message);
+        showAlert(data.message);
       } else if (data.token) {
         const token = data.token;
         const userLogged = data.user;
@@ -70,10 +73,9 @@ function Login({navigation}) {
         setLoggingIn(false);
         navigation.navigate('Home', {token, userLogged});
       }
-    } catch (err) {
-      showAlert(
-        '¡Ese usuario no existe o el password es incorrecto. Verifica tus datos!',
-      );
+    } catch (data) {
+      console.log(data.message);
+      showAlert(err);
       setLoggingIn(false);
     }
   };

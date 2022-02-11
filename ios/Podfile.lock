@@ -272,15 +272,20 @@ PODS:
     - React-Core
   - react-native-camera/RN (4.2.1):
     - React-Core
-  - react-native-image-picker (4.7.1):
+  - react-native-image-picker (4.7.3):
     - React-Core
   - react-native-openpay (3.0.2):
     - React
   - react-native-safe-area-context (3.3.2):
     - React-Core
+  - react-native-video (5.2.0):
+    - React-Core
+    - react-native-video/Video (= 5.2.0)
+  - react-native-video/Video (5.2.0):
+    - React-Core
   - react-native-webrtc (1.94.1):
     - React-Core
-  - react-native-webview (11.16.0):
+  - react-native-webview (11.17.2):
     - React-Core
   - React-perflogger (0.64.1)
   - React-RCTActionSheet (0.64.1):
@@ -348,7 +353,7 @@ PODS:
     - React-perflogger (= 0.64.1)
   - ReactNativeGetLocation (2.2.1):
     - React-Core
-  - RNCAsyncStorage (1.15.15):
+  - RNCAsyncStorage (1.16.1):
     - React-Core
   - RNCCheckbox (0.5.9):
     - React-Core
@@ -358,7 +363,7 @@ PODS:
     - React-Core
   - RNDateTimePicker (3.5.2):
     - React-Core
-  - RNDeviceInfo (8.4.8):
+  - RNDeviceInfo (8.4.9):
     - React-Core
   - RNGestureHandler (1.10.3):
     - React-Core
@@ -373,7 +378,7 @@ PODS:
     - TOCropViewController
   - RNPermissions (3.2.0):
     - React-Core
-  - RNScreens (3.10.2):
+  - RNScreens (3.11.0):
     - React-Core
     - React-RCTImage
   - RNVectorIcons (9.0.0):
@@ -430,6 +435,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-openpay (from `../node_modules/react-native-openpay`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webrtc (from `../node_modules/react-native-webrtc`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -525,6 +531,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-openpay"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-video:
+    :path: "../node_modules/react-native-video"
   react-native-webrtc:
     :path: "../node_modules/react-native-webrtc"
   react-native-webview:
@@ -614,11 +622,12 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 124e8f99992490d0d13e0649d950d3e1aae06fe9
   React-jsinspector: 500a59626037be5b3b3d89c5151bc3baa9abf1a9
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
-  react-native-image-picker: 5fe0a96bef4935bbdfb02f59b910bf40d5526109
+  react-native-image-picker: 4e6008ad8c2321622affa2c85432a5ebd02d480c
   react-native-openpay: 5f740c99bf6e4291da7faa89311ceea5805e5201
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
+  react-native-video: a4c2635d0802f983594b7057e1bce8f442f0ad28
   react-native-webrtc: 2f20515f3ebb9dbf1f2aad638cc7573396cf948f
-  react-native-webview: 28a8636d97ee641f2ee8f20492d7a6c269c1d703
+  react-native-webview: 380c1a03ec94b7ed764dac8db1e7c9952d08c93a
   React-perflogger: aad6d4b4a267936b3667260d1f649b6f6069a675
   React-RCTActionSheet: fc376be462c9c8d6ad82c0905442fd77f82a9d2a
   React-RCTAnimation: ba0a1c3a2738be224a08092fa7f1b444ab77d309
@@ -632,16 +641,16 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: ff951a0c241bfaefc4940a3f1f1a229e7cb32fa6
   ReactCommon: bedc99ed4dae329c4fcf128d0c31b9115e5365ca
   ReactNativeGetLocation: d6b15cb2a2023ab7703f756501bad86d3ecf6fea
-  RNCAsyncStorage: 0bef6a21517c0254bd6bd59a3672963abfa0d18e
+  RNCAsyncStorage: b49b4e38a1548d03b74b30e558a1d18465b94be7
   RNCCheckbox: 6369808337432cdbd5025d62ceced2480b4c51df
   RNCMaskedView: c298b644a10c0c142055b3ae24d83879ecb13ccd
   RNCPicker: 0991c56da7815c0cf946d6f63cf920b25296e5f6
   RNDateTimePicker: 7658208086d86d09e1627b5c34ba0cf237c60140
-  RNDeviceInfo: 0400a6d0c94186d1120c3cbd97b23abc022187a9
+  RNDeviceInfo: 4944cf8787b9c5bffaf301fda68cc1a2ec003341
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNImageCropPicker: 73891a709e6fd8a47d32104d942757971f220aee
   RNPermissions: f7ebe52db07c00901127966ca080b4ec6a6ceb0a
-  RNScreens: d6da2b9e29cf523832c2542f47bf1287318b1868
+  RNScreens: fd535547baa4ef8aeaee1a8b1e3ffd17b8df44a4
   RNVectorIcons: 4143ba35feebab8fdbe6bc43d1e776b393d47ac8
   TOCropViewController: 3105367e808b7d3d886a74ff59bf4804e7d3ab38
   Yoga: a7de31c64fe738607e7a3803e3f591a4b1df7393

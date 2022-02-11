@@ -12,6 +12,8 @@ import {
 import {AutoScrollFlatList} from 'react-native-autoscroll-flatlist';
 import {Button} from 'react-native-paper';
 import ImagePicker from 'react-native-image-crop-picker';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {Card} from 'react-native-paper';
 import {
   API_URL,
   mainColor,
@@ -58,6 +60,8 @@ function MediaChat({navigation, route}) {
 
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('xAuthToken', token);
+    const today = new Date(Date.now());
+    const timeSent = today.getUTCHours() + ':' + today.getUTCMinutes();
     const messageData = {
       key: makeId(),
       TherapistId: item.userIdTherapist,
@@ -65,7 +69,7 @@ function MediaChat({navigation, route}) {
       room: item._id,
       author: userLogged._id,
       media: {uri: videoUrl},
-      time: new Date(Date.now()).getTime(),
+      time: timeSent,
     };
     fetch(`${API_URL}/messages/media`, {
       method: 'post',
@@ -120,17 +124,31 @@ function MediaChat({navigation, route}) {
 
   const renderList = item => {
     return (
-      <View style={styles.messageContainer}>
+      <Card
+        style={styles.messageContainer}
+        onPress={() => {
+          console.log('MEDIA PRESSED');
+          navigation.navigate('VideoPlayer', {item});
+        }}>
         <View
           style={
             item.author === userLogged.name
               ? styles.messageBubbleMe
               : styles.messageBubbleYou
           }>
-          <Text style={styles.messageText}>{item.message}</Text>
+          <Icon
+            style={{
+              alignSelf: 'flex-start',
+              marginLeft: 10,
+              marginTop: 10,
+            }}
+            name="ondemand-video"
+            size={40}
+            color={'white'}
+          />
           <Text style={styles.messageTime}>{item.time}</Text>
         </View>
-      </View>
+      </Card>
     );
   };
   useEffect(() => {
@@ -207,13 +225,14 @@ const styles = StyleSheet.create({
   flatList: {
     paddingTop: 7,
     width: Dimensions.get('window').width,
+    zIndex: 100,
   },
   messageContainer: {
+    backgroundColor: 'transparent',
     width: '100%',
   },
   messageBubbleMe: {
-    minWidth: '30%',
-    maxWidth: '90%',
+    width: '80%',
     padding: 8,
     paddingRight: 20,
     paddingBottom: 5,
@@ -224,8 +243,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   messageBubbleYou: {
-    minWidth: '30%',
-    maxWidth: '90%',
+    width: '80%',
     padding: 8,
     alignSelf: 'flex-start',
     paddingRight: 20,
