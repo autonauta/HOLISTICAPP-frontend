@@ -20,9 +20,17 @@ export const SOCKET_IO = ENV_SOCKET_IO;
 export const PEER_JS_URL = ENV_PEER_JS;
 export const PEER_JS_PORT = ENV_PEER_JS_PORT;
 
-export const mainColor = '#041F60';
+/* export const mainColor = '#041F60';
 export const secondaryColor = '#0476D0';
 export const tertiaryColor = '#2CEEF0';
+export const textColor1 = '#E8DED2';
+export const textColor2 = '#303030';
+export const markColor = 'gray';
+export const textColor3 = 'black'; */
+
+export const mainColor = '#236360';
+export const secondaryColor = '#16602F';
+export const tertiaryColor = '#7ACBC9';
 export const textColor1 = '#E8DED2';
 export const textColor2 = '#787A91';
 export const markColor = 'gray';

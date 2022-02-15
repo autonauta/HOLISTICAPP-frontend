@@ -58,6 +58,7 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - glog (0.3.5)
   - libevent (2.1.12)
+  - NextLevelSessionExporter (0.4.6)
   - OpenSSL-Universal (1.1.180)
   - Permission-Camera (3.2.0):
     - RNPermissions
@@ -272,11 +273,16 @@ PODS:
     - React-Core
   - react-native-camera/RN (4.2.1):
     - React-Core
+  - react-native-compressor (1.5.1):
+    - NextLevelSessionExporter
+    - React-Core
   - react-native-image-picker (4.7.3):
     - React-Core
   - react-native-openpay (3.0.2):
     - React
   - react-native-safe-area-context (3.3.2):
+    - React-Core
+  - react-native-splash-screen (3.3.0):
     - React-Core
   - react-native-video (5.2.0):
     - React-Core
@@ -432,9 +438,11 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - react-native-compressor (from `../node_modules/react-native-compressor`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-openpay (from `../node_modules/react-native-openpay`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webrtc (from `../node_modules/react-native-webrtc`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -476,6 +484,7 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - libevent
+    - NextLevelSessionExporter
     - OpenSSL-Universal
     - TOCropViewController
     - YogaKit
@@ -525,12 +534,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-compressor:
+    :path: "../node_modules/react-native-compressor"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-openpay:
     :path: "../node_modules/react-native-openpay"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-splash-screen:
+    :path: "../node_modules/react-native-splash-screen"
   react-native-video:
     :path: "../node_modules/react-native-video"
   react-native-webrtc:
@@ -603,6 +616,7 @@ SPEC CHECKSUMS:
   FlipperKit: 8a20b5c5fcf9436cac58551dc049867247f64b00
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  NextLevelSessionExporter: 4d8aa5e617f1c709724f2453efe5d4628480f65a
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   Permission-Camera: 53efcbb755b0e8bdf253dbb27cc7559ccfce8480
   Permission-LocationAccuracy: c13bf629b614be250031458cf81d6a2e9dcdf64f
@@ -622,9 +636,11 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 124e8f99992490d0d13e0649d950d3e1aae06fe9
   React-jsinspector: 500a59626037be5b3b3d89c5151bc3baa9abf1a9
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
+  react-native-compressor: 5a0b45b4a6c0e552c30beff681d3f16a5911e9a2
   react-native-image-picker: 4e6008ad8c2321622affa2c85432a5ebd02d480c
   react-native-openpay: 5f740c99bf6e4291da7faa89311ceea5805e5201
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
+  react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-video: a4c2635d0802f983594b7057e1bce8f442f0ad28
   react-native-webrtc: 2f20515f3ebb9dbf1f2aad638cc7573396cf948f
   react-native-webview: 380c1a03ec94b7ed764dac8db1e7c9952d08c93a

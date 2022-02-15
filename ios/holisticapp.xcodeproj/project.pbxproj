@@ -13,7 +13,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		295644D5562D47B73C3F12FA /* libPods-holisticapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F0FCCCD7310DE49178B9709 /* libPods-holisticapp.a */; };
 		65457CA3FBAA0FBE6B2D7235 /* libPods-holisticapp-holisticappTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7851E282DAABAB8BC89B4BC5 /* libPods-holisticapp-holisticappTests.a */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		81AB9BB82411601600AC10FF /* 1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* 1024.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,7 +50,7 @@
 		69D11CFC1A0548C1AE5EC93E /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		6DA9EABD32A04D39A94876EF /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		7851E282DAABAB8BC89B4BC5 /* libPods-holisticapp-holisticappTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-holisticapp-holisticappTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = holisticapp/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* 1024.png */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = image.png; name = 1024.png; path = holisticapp/Images.xcassets/AppIcon.appiconset/1024.png; sourceTree = "<group>"; };
 		89ADCB9C40E14732A7B55D8D /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		A220EB9AEAAF50A27DB99AA3 /* Pods-holisticapp-holisticappTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-holisticapp-holisticappTests.debug.xcconfig"; path = "Target Support Files/Pods-holisticapp-holisticappTests/Pods-holisticapp-holisticappTests.debug.xcconfig"; sourceTree = "<group>"; };
 		AD49FA2F5C0C4FCD8018D16D /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -129,7 +129,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				81AB9BB72411601600AC10FF /* 1024.png */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = holisticapp;
@@ -282,7 +282,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				81AB9BB82411601600AC10FF /* 1024.png in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
