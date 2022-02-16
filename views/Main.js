@@ -176,7 +176,7 @@ function Main({navigation, route}) {
         barStyle={'default'}
         showHideTransition={'none'}
       />
-      <Text style={styles.title}>holisticapp</Text>
+      <Text style={styles.title}>holistica</Text>
 
       <Navbar
         navigation={navigation}
