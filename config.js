@@ -32,7 +32,7 @@ export const mainColor = '#236360';
 export const secondaryColor = '#16602F';
 export const tertiaryColor = '#7ACBC9';
 export const textColor1 = '#E8DED2';
-export const textColor2 = '#787A91';
+export const textColor2 = '#303030';
 export const markColor = 'gray';
 export const textColor3 = 'black';
 
