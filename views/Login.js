@@ -38,7 +38,7 @@ const _storeData = async (keyName, value) => {
     console.log(error);
   }
 };
-
+//Starts the component
 function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

@@ -303,7 +303,7 @@ function PayModal({
             </View>
             {loading ? (
               <View style={styles.buttons}>
-                <ActivityIndicator size="large" color={secondaryColor} />
+                <ActivityIndicator size="large" color={mainColor} />
               </View>
             ) : (
               <View style={styles.buttons}>
