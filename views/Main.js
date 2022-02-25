@@ -6,7 +6,6 @@ import {
   Text,
   View,
   Image,
-  Dimensions,
   FlatList,
   ActivityIndicator,
   PixelRatio,
